@@ -6,7 +6,7 @@ Parent class for the specific input handlers
  */
 
 //might end up as abstract class
-public class InputHandler {
+public abstract class InputHandler {
     //member variables for inputs
 
     public InputHandler(){
