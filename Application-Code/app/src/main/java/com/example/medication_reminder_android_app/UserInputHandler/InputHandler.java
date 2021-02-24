@@ -3,6 +3,8 @@ package com.example.medication_reminder_android_app.UserInputHandler;
 /*
 This class handles userInterface input
 Parent class for the specific input handlers
+
+TODO: add input handler class to instantiate handlers
  */
 
 //might end up as abstract class
