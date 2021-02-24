@@ -1,6 +1,7 @@
 package com.example.medication_reminder_android_app.NotificationRelay;
 
 /*
+THis is the base class
 This class handles formatting and sending notifications to the user
 This handles external notifications
  */
