@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class MedicationRow {
-
+    //Variables and columns
     @PrimaryKey (autoGenerate = true)
     private int id;
 
@@ -37,11 +37,21 @@ public class MedicationRow {
     @ColumnInfo (name = "tags")
     private String tags;
 
-    //constructor
-    public MedicationRow(){
-        //TODO
+    //Constructor
+    public MedicationRow(String medicationName, String inputDosage, boolean ifRecurring, String inputTimeRule, int reminderId,
+                         String inputAcknowledgements, String inputWarnings, String inputIngredients, String inputTags){
+        this.medName = medicationName;
+        this.dosage = inputDosage;
+        this.recurring = ifRecurring;
+        this.timeRule = inputTimeRule;
+        this.reminderID = reminderId;
+        this.acknowledgements = inputAcknowledgements;
+        this.warnings = inputWarnings;
+        this.ingredients = inputIngredients;
+        this.tags = inputTags;
     }
 
+    //Getter Methods
     public int getId(){
         return this.id;
     }
@@ -80,5 +90,48 @@ public class MedicationRow {
 
     public String getTags(){
         return this.tags;
+    }
+
+
+    //Setter Methods
+    public void setId(int inputId){
+        this.id = inputId;
+    }
+
+    public void setMedName(String medicationName){
+        this.medName = medicationName;
+    }
+
+    public void setDosage(String inputDosage){
+        this.dosage = inputDosage;
+    }
+
+    public void setRecurring(boolean ifRecurring){
+        this.recurring = ifRecurring;
+    }
+
+    public void setTimeRule(String recurringRule){
+        this.timeRule = recurringRule;
+    }
+
+    public void setReminderID(int reminderId){
+        this.reminderID = reminderId;
+    }
+
+    public void setAcknowledgements(String acknowledgement){
+        //TODO might need to handle the list of acknowledgements here
+        this.acknowledgements = acknowledgement;
+    }
+
+    public void setWarnings(String inputWarnings){
+        this.warnings = inputWarnings;
+    }
+
+    public void setIngredients(String inputIngredients){
+        this.ingredients = inputIngredients;
+    }
+
+    public void setTags(String inputTags){
+        this.tags = inputTags;
     }
 }
