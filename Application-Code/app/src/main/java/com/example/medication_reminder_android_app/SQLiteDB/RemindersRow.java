@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
 @author Aliza Siddiqui
 @lastModified 2/24/2021
 */
-public class ReminderRows {
+public class RemindersRow {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -26,12 +26,13 @@ public class ReminderRows {
     private int med_appt_ident; // Will help Reminders Table connect with Medication Table (if Medication Reminder) and
                                 // Doctor Table (if Appointment Reminder)
     
-    public ReminderRows(String Class, String Time, String Date){
+    public RemindersRow(String Class, String Time, String Date){
         this.classification = Class;
         this.time = Time;
         this.date = Date;
 
     }
+
 
     public String getClassification(){
         return this.classification;
@@ -44,5 +45,10 @@ public class ReminderRows {
     public int getDate(){
         return this.date;
     }
+
+    public int getReminderTableID(){
+        return id;                      //Returns the primary key of the specific Reminder entity
+    }
+
 
 }
