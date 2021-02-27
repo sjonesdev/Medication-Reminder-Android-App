@@ -11,10 +11,11 @@ This is the class for the Filter component to access the SQLite DB
  */
 
 
-public class FilterDAO {
+public interface FilterDAO {
 
-    public FilterDAO(){
-
-    }
+    //selects any medications that have the inputted tag
+    //this method should be called successively for each tag the user inputs
+    @Query("SELECT * FROM MedicationTable WHERE tags LIKE '%tag%'")
+    public loadFilteredMedications(String tag);
 
 }
