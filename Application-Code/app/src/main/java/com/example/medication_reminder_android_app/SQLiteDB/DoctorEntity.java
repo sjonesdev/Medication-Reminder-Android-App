@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey;
 @Entity
 public class DoctorEntity {
 
-    public Doctor(String drName, String phone, String officeLoc, String notes, String tags, String officeHrs, String hospitalName, int aptID){
+    public DoctorEntity(String drName, String phone, String officeLoc, String notes, String tags, String officeHrs, String hospitalName, int aptID){
 
         this.drName = drName;
         this.phone = phone;
@@ -23,7 +23,7 @@ public class DoctorEntity {
 
     }
 
-    public Doctor(){
+    public DoctorEntity(){
     } //default constructor
 
 

@@ -5,7 +5,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class MedicationRow {
+public class MedicationEntity {
     //Variables and columns
     @PrimaryKey (autoGenerate = true)
     private int id;
@@ -38,8 +38,8 @@ public class MedicationRow {
     private String tags;
 
     //Constructor
-    public MedicationRow(String medicationName, String inputDosage, boolean ifRecurring, String inputTimeRule, int reminderId,
-                         String inputAcknowledgements, String inputWarnings, String inputIngredients, String inputTags){
+    public MedicationEntity(String medicationName, String inputDosage, boolean ifRecurring, String inputTimeRule, int reminderId,
+                            String inputAcknowledgements, String inputWarnings, String inputIngredients, String inputTags){
         this.medName = medicationName;
         this.dosage = inputDosage;
         this.recurring = ifRecurring;
