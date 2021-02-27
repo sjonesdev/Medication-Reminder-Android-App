@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 @Entity
 /**
 @author Aliza Siddiqui
-@lastModified 2/24/2021
+@lastModified 2/27/2021
 */
 public class RemindersRow {
     @PrimaryKey(autoGenerate = true)

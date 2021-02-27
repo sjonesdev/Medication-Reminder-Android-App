@@ -8,6 +8,10 @@ import androidx.room.PrimaryKey;
 //doctor phone number
 
 @Entity
+/**
+@author Karley Waguespack
+@lastModified 2/27/2021 by Aliza Siddiqui
+*/
 public class DoctorEntity {
 
     public DoctorEntity(String drName, String phone, String officeLoc, String notes, String tags, String officeHrs, String hospitalName, int aptID){

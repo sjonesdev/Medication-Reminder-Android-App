@@ -5,6 +5,10 @@ import androidx.room.ColumnInfo;
 import androidx.room.PrimaryKey;
 
 @Entity
+/**
+  @author Aliza Siddiqui
+  @lastModified 2/27/2021
+*/
 public class AppointmentEntity{
     @PrimaryKey
     public int id;
