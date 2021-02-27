@@ -58,4 +58,64 @@ public class DoctorEntity {
     private int aptID;
 
 
+    //Getters
+    public String getDoctorName(){    
+        return this.drName;
+    }
+
+    public String getOffice(){
+        return this.officeLoc;
+    }
+
+    public String getNotes(){
+        return this.notes;
+    }
+
+    public String getTags(){
+        return this.tags;
+    }
+
+    public String getOfficeHours(){
+        return this.officeHrs;
+    }
+
+    public String getHospitalName(){
+        return this.hospitalName;
+    }
+    
+    public int getDoctorTableID(){
+        return this.docID;                   //Returns the primary key of the specific Doctor Information entity
+    }
+
+    //setters
+
+    public void setDoctorName(String Name){    
+        this.drName = Name;
+    }
+
+    public void setOffice(String Location){
+        this.officeLoc = Location;
+    }
+
+    public void setNotes(String Notes){
+        this.notes = Notes;
+    }
+
+    public void setTags(String Tags){
+        this.tags = Tags;
+    }
+
+    public void setOfficeHours(String Hours){
+        this.officeHrs = Hours;
+    }
+
+    public void setHospitalName(String Hospital){
+        this.hospitalName = Hospital;
+    }
+    
+    
+
+
+
+
 }
