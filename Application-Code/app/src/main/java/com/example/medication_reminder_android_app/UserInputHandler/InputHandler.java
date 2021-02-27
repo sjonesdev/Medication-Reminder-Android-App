@@ -5,6 +5,8 @@ This class handles userInterface input
 Parent class for the specific input handlers
  */
 
+import java.util.Map;
+
 //might end up as abstract class
 public abstract class InputHandler {
     //member variables for inputs
@@ -13,9 +15,10 @@ public abstract class InputHandler {
 
     }
 
-    private void parseInfo(){
-        //TODO
-        //method to parse XML from the UI
+    public abstract void inputRequest(Map<String,String> info);
+
+    protected void sendInput() {
+
     }
 
     public void sendToDB(){
