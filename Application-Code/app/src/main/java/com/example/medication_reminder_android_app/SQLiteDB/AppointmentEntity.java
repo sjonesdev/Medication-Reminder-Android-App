@@ -5,7 +5,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class AppointmentRow {
+public class AppointmentEntity{
     @PrimaryKey
     public int id;
 
@@ -27,7 +27,7 @@ public class AppointmentRow {
     @ColumnInfo(name = "DoctorTableID")
     private int docTabID = new DoctorTable().getDoctorTableID();
 
-    public AppointmentRow(String Location, String Tags, String Notes, String Type){
+    public AppointmentEntity(String Location, String Tags, String Notes, String Type){
        this.location = Location;
        this.tags = Tags;
        this.notes = Notes;
