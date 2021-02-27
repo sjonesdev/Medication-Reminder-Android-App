@@ -5,6 +5,10 @@ import androidx.room.ColumnInfo;
 import androidx.room.PrimaryKey;
 
 @Entity
+/**
+  @author Aliza Siddiqui
+  @lastModified 2/27/2021
+*/
 public class AppointmentEntity{
     @PrimaryKey
     public int id;
@@ -34,6 +38,7 @@ public class AppointmentEntity{
        this.typeOfAppt = Type;
     }
 
+    //Getters
     public String getLocation(){
         return this.location;
     }
@@ -54,6 +59,24 @@ public class AppointmentEntity{
         return this.id;           //Returns the primary key of the specific Appointment entity
     }
 
+    //Setters
+    public void setLocation(String Location){
+        this.location = Location;
+    }
+
+    public void setTags(String Tags){
+       this.tags = Tags;
+    }
+
+    public void setNotes(String Notes){
+        this.notes = Notes;
+    }
+
+    public void setTypeOfAppt(String ApptType){
+        this.typeOfAppt = ApptType;
+    }
+
+   
     
 }
 

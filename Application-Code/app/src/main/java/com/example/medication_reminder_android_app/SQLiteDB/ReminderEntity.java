@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey;
 @Entity
 /**
 @author Aliza Siddiqui
-@lastModified 2/24/2021
+@lastModified 2/27/2021
 */
-public class RemindersRow {
+public class ReminderEntity{
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -26,7 +26,7 @@ public class RemindersRow {
     private int med_appt_ident; // Will help Reminders Table connect with Medication Table (if Medication Reminder) and
                                 // Doctor Table (if Appointment Reminder)
     
-    public RemindersRow(String Class, String Time, String Date){
+    public ReminderEntity(String Class, String Time, String Date){
         this.classification = Class;
         this.time = Time;
         this.date = Date;

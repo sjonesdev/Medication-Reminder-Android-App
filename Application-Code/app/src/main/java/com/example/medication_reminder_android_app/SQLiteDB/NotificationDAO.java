@@ -10,10 +10,26 @@ Notification Data Access Object.
 This is the class for the Notification component to access the SQLite DB
  */
 
-public class NotificationDAO {
+public interface NotificationDAO {
 
-    public NotificationDAO(){
+    //out of app notifications needs to be able to get all reminder information
+    @Query(
+            "WITH OrderedTable AS (" +
+                "SELECT * FROM ReminderEntity" +
+                "ORDER BY date, time" +
+            ")" +
+            "SELECT TOP 1 * FROM OrderedTable"
+    )
+    public selectNextReminder();
 
-    }
+    //in app notifications only needs top five notifications
+    @Query(
+            "WITH OrderedTable AS (" +
+                    "SELECT * FROM ReminderEntity" +
+                    "ORDER BY date, time" +
+                    ")" +
+                    "SELECT TOP 5 * FROM OrderedTable"
+    )
+    public selectNextFiveReminders();
 
 }
