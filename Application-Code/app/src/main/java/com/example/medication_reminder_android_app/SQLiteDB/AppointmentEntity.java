@@ -26,10 +26,10 @@ public class AppointmentEntity{
     private String typeOfAppt; //Classifies specifically what the appointment will consist of if not Doctor (i.e MRI, blood donation, etc.)
     
     @ColumnInfo(name = "RemindTableID")
-    private int remindTabID = new RemindersRow().getReminderTableID();git git
+    private int remindTabID;
 
     @ColumnInfo(name = "DoctorTableID")
-    private int docTabID = new DoctorTable().getDoctorTableID();
+    private int docTabID;
 
     public AppointmentEntity(String Location, String Tags, String Notes, String Type){
        this.location = Location;
