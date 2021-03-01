@@ -8,6 +8,8 @@ import androidx.room.PrimaryKey;
 /**
 @author Aliza Siddiqui
 @lastModified 2/27/2021
+ //Interval Array
+ //Keeping track of the next index; will be given to you
 */
 public class ReminderEntity{
     @PrimaryKey(autoGenerate = true)
@@ -25,11 +27,14 @@ public class ReminderEntity{
     @ColumnInfo(autoGenerate = true)
     private int med_appt_ident; // Will help Reminders Table connect with Medication Table (if Medication Reminder) and
                                 // Doctor Table (if Appointment Reminder)
+    @ColumnInfo(name = "TimeInterval")
+    private int timeIntervalIndex; //Will specify how many days to wait before sending a specific notification again
     
-    public ReminderEntity(String Class, String Time, String Date){
+    public ReminderEntity(String Class, String Time, String Date, int TimeIndex){
         this.classification = Class;
         this.time = Time;
         this.date = Date;
+        this.timeIntervalIndex = TimeIndex;
 
     }
 
