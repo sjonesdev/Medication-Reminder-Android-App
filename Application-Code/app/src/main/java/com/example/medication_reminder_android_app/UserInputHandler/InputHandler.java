@@ -1,13 +1,13 @@
 package com.example.medication_reminder_android_app.UserInputHandler;
 
-/*
-This class handles userInterface input
-Parent class for the specific input handlers
- */
-
 import java.util.Map;
 
-//might end up as abstract class
+/**
+ *
+ *
+ * @author Samuel Jones
+ * @since 3-1-2021
+ */
 public abstract class InputHandler {
     //member variables for inputs
 
@@ -15,7 +15,7 @@ public abstract class InputHandler {
 
     }
 
-    public abstract void inputRequest(Map<String,String> info);
+    abstract void inputRequest(Map<String,String> info);
 
     protected void sendInput() {
 
