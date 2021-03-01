@@ -15,7 +15,8 @@ public interface FilterDAO {
 
     //selects any medications that have the inputted tag
     //this method should be called successively for each tag the user inputs
-    @Query("SELECT * FROM MedicationTable WHERE tags LIKE '%tag%'")
-    public loadFilteredMedications(String tag);
+    //TODO see how to make sure the parameter is being used, not the string ":tag"
+    @Query("SELECT * FROM MedicationEntity WHERE tags LIKE '%:tag%'")
+    public MedicationEntity[] loadFilteredMedications(String tag);
 
 }

@@ -4,6 +4,7 @@ package com.example.medication_reminder_android_app.SQLiteDB;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 /*
@@ -31,9 +32,9 @@ public interface InputHandlerDAO {
     public int deleteReminder(ReminderEntity reminder);
 
     //delete all methods
-    @Query("DELETE * FROM MedicationEntity")
+    @Query("DELETE FROM MedicationEntity")
     public void clearAllMedications();
-    @Query("DELETE * FROM ReminderEntity")
+    @Query("DELETE FROM ReminderEntity")
     public void clearAllReminders();
 
     //sort all reminders by time

@@ -26,7 +26,7 @@ public class AppointmentEntity{
     private String typeOfAppt; //Classifies specifically what the appointment will consist of if not Doctor (i.e MRI, blood donation, etc.)
     
     @ColumnInfo(name = "RemindTableID")
-    private int remindTabID = new RemindersRow().getReminderTableID();
+    private int remindTabID = new RemindersRow().getReminderTableID();git git
 
     @ColumnInfo(name = "DoctorTableID")
     private int docTabID = new DoctorTable().getDoctorTableID();
