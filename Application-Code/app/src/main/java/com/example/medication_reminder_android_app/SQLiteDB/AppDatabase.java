@@ -11,12 +11,12 @@ import androidx.room.Room;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
 
-@Database(entities = {MedicationEntity.class, DoctorEntity.class, AppointmentTable.class}, version = 1)
-public class AppDatabase extends RoomDatabase {
-    //TODO remove the comments from the DAO's below
-    //public abstract FilterDAO filterDAO();
-    //public abstract InputHandlerDAO inputHandlerDAO();
-    //public abstract NotificationDAO notificationDAO();
+@Database(entities = {MedicationEntity.class, DoctorEntity.class, AppointmentEntity.class}, version = 1)
+public abstract class AppDatabase extends RoomDatabase {
+
+    public abstract FilterDAO filterDAO();
+    public abstract InputHandlerDAO inputHandlerDAO();
+    public abstract NotificationDAO notificationDAO();
 
     private  static AppDatabase INSTANCE;
 
