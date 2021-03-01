@@ -38,12 +38,4 @@ public interface InputHandlerDAO {
 
     //sort all reminders by time
 
-
-
-
-
-
-
-
-
 }
