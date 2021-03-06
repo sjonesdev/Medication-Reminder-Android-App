@@ -8,12 +8,7 @@ This handles external notifications
 
 
 /*notes:
-    -particular reason for wanting classification as an int? unnecessary conversion involved
     -just doing medications; don't include any implementation code for appointment notifications
-
-    -how do we retrieve an entity from a table given its id?
-    -what class fromSQLite db should be imported?
-    -what method to use to retrieve data
 
  */
 
@@ -31,20 +26,31 @@ public class Notifications {
 
     protected String[] getData() {
 
-        //need to figure out how to use these methods
-        ReminderEntity[] reminder = db.getReminders(1).getValue();
-
-        //need to get the reminder then use the medication ID to get the medication
-        MedicationEntity med = new MedicationEntity("Advil", "10mg", 1, "10:00", 1, "-", "-", "-", "-");
-
-
-
-        //create a string array for storing all info
+        //string info array to be returned
         String[] infoArray = new String[2];
-        //type of reminder (med = MED, appt = APPT, extraneous ??);
-        infoArray[0] = reminder.getClassification();
-        //medication name
-        infoArray[1] = med.getMedName();
+
+        //gets the reminder entity object from livedata type
+        ReminderEntity[] reminderArray = db.getReminders(1).getValue();
+        //we just got one reminder, grab it
+        ReminderEntity reminder = reminderArray[0];
+
+        //what type of reminder is it?
+        String reminderType = reminder.getClassification();
+        //store immediately in the info array. TODO: figure out what to do for extraneous appts
+        infoArray[0] = reminderType;
+
+        if(reminderType.equals("MED")){
+            //retrieve the medication object from the reminder
+            MedicationEntity med = db.getMedById(reminder.getMedApptId());
+            //get the med name
+            infoArray[1] = med.getMedName();
+        } else{
+            //otherwise, we have an appointment;
+            //TODO create appointment entity from id
+            //TODO regular appointments get APPT, Extraneous ones get EAPPT
+
+        }
+
 
         return infoArray;
     }
