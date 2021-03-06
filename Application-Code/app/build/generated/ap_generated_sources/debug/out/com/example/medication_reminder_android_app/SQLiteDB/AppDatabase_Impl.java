@@ -23,17 +23,19 @@ import java.util.Set;
 
 @SuppressWarnings({"unchecked", "deprecation"})
 public final class AppDatabase_Impl extends AppDatabase {
+  private volatile DataAccessObject _dataAccessObject;
+
   @Override
   protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration configuration) {
     final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(1) {
       @Override
       public void createAllTables(SupportSQLiteDatabase _db) {
-        _db.execSQL("CREATE TABLE IF NOT EXISTS `MedicationTable` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `med_name` TEXT, `warnings` TEXT)");
-        _db.execSQL("CREATE TABLE IF NOT EXISTS `DoctorTable` (`id` INTEGER NOT NULL, PRIMARY KEY(`id`))");
-        _db.execSQL("CREATE TABLE IF NOT EXISTS `AppointmentTable` (`id` INTEGER NOT NULL, PRIMARY KEY(`id`))");
-        _db.execSQL("CREATE TABLE IF NOT EXISTS `RemindersTable` (`id` INTEGER NOT NULL, PRIMARY KEY(`id`))");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `MedicationTable` (`primaryKey` INTEGER PRIMARY KEY AUTOINCREMENT, `med_name` TEXT, `dosage` TEXT, `recurring` INTEGER, `time_rule` TEXT, `reminder_id` INTEGER, `acknowledgements` TEXT, `warnings` TEXT, `ingredients` TEXT, `tags` TEXT)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `DoctorTable` (`primaryKey` INTEGER PRIMARY KEY AUTOINCREMENT, `doctor name` TEXT, `phone` TEXT, `office location` TEXT, `notes` TEXT, `tags` TEXT, `hours` TEXT, `hospital name` TEXT, `appointment id` INTEGER)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `AppointmentTable` (`primaryKey` INTEGER, `Appointment Location` TEXT, `Tags` TEXT, `Notes` TEXT, `TypeOfAppt` TEXT, `RemindTableID` INTEGER, `DoctorTableID` INTEGER, PRIMARY KEY(`primaryKey`))");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `ReminderTable` (`primaryKey` INTEGER PRIMARY KEY AUTOINCREMENT, `Classification` TEXT, `ApptTime` TEXT, `ApptDate` TEXT, `MedApptID` INTEGER, `TimeInterval` INTEGER)");
         _db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '71740aaf023512f3f6cb2e9d88c724a9')");
+        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6937977007928a1a3be5204291f54980')");
       }
 
       @Override
@@ -41,7 +43,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         _db.execSQL("DROP TABLE IF EXISTS `MedicationTable`");
         _db.execSQL("DROP TABLE IF EXISTS `DoctorTable`");
         _db.execSQL("DROP TABLE IF EXISTS `AppointmentTable`");
-        _db.execSQL("DROP TABLE IF EXISTS `RemindersTable`");
+        _db.execSQL("DROP TABLE IF EXISTS `ReminderTable`");
         if (mCallbacks != null) {
           for (int _i = 0, _size = mCallbacks.size(); _i < _size; _i++) {
             mCallbacks.get(_i).onDestructiveMigration(_db);
@@ -80,55 +82,81 @@ public final class AppDatabase_Impl extends AppDatabase {
 
       @Override
       protected RoomOpenHelper.ValidationResult onValidateSchema(SupportSQLiteDatabase _db) {
-        final HashMap<String, TableInfo.Column> _columnsMedicationTable = new HashMap<String, TableInfo.Column>(3);
-        _columnsMedicationTable.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashMap<String, TableInfo.Column> _columnsMedicationTable = new HashMap<String, TableInfo.Column>(10);
+        _columnsMedicationTable.put("primaryKey", new TableInfo.Column("primaryKey", "INTEGER", false, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("med_name", new TableInfo.Column("med_name", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsMedicationTable.put("dosage", new TableInfo.Column("dosage", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsMedicationTable.put("recurring", new TableInfo.Column("recurring", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsMedicationTable.put("time_rule", new TableInfo.Column("time_rule", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsMedicationTable.put("reminder_id", new TableInfo.Column("reminder_id", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsMedicationTable.put("acknowledgements", new TableInfo.Column("acknowledgements", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("warnings", new TableInfo.Column("warnings", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsMedicationTable.put("ingredients", new TableInfo.Column("ingredients", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsMedicationTable.put("tags", new TableInfo.Column("tags", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysMedicationTable = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesMedicationTable = new HashSet<TableInfo.Index>(0);
         final TableInfo _infoMedicationTable = new TableInfo("MedicationTable", _columnsMedicationTable, _foreignKeysMedicationTable, _indicesMedicationTable);
         final TableInfo _existingMedicationTable = TableInfo.read(_db, "MedicationTable");
         if (! _infoMedicationTable.equals(_existingMedicationTable)) {
-          return new RoomOpenHelper.ValidationResult(false, "MedicationTable(com.example.medication_reminder_android_app.SQLiteDB.MedicationTable).\n"
+          return new RoomOpenHelper.ValidationResult(false, "MedicationTable(com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity).\n"
                   + " Expected:\n" + _infoMedicationTable + "\n"
                   + " Found:\n" + _existingMedicationTable);
         }
-        final HashMap<String, TableInfo.Column> _columnsDoctorTable = new HashMap<String, TableInfo.Column>(1);
-        _columnsDoctorTable.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashMap<String, TableInfo.Column> _columnsDoctorTable = new HashMap<String, TableInfo.Column>(9);
+        _columnsDoctorTable.put("primaryKey", new TableInfo.Column("primaryKey", "INTEGER", false, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsDoctorTable.put("doctor name", new TableInfo.Column("doctor name", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsDoctorTable.put("phone", new TableInfo.Column("phone", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsDoctorTable.put("office location", new TableInfo.Column("office location", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsDoctorTable.put("notes", new TableInfo.Column("notes", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsDoctorTable.put("tags", new TableInfo.Column("tags", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsDoctorTable.put("hours", new TableInfo.Column("hours", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsDoctorTable.put("hospital name", new TableInfo.Column("hospital name", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsDoctorTable.put("appointment id", new TableInfo.Column("appointment id", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysDoctorTable = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesDoctorTable = new HashSet<TableInfo.Index>(0);
         final TableInfo _infoDoctorTable = new TableInfo("DoctorTable", _columnsDoctorTable, _foreignKeysDoctorTable, _indicesDoctorTable);
         final TableInfo _existingDoctorTable = TableInfo.read(_db, "DoctorTable");
         if (! _infoDoctorTable.equals(_existingDoctorTable)) {
-          return new RoomOpenHelper.ValidationResult(false, "DoctorTable(com.example.medication_reminder_android_app.SQLiteDB.DoctorTable).\n"
+          return new RoomOpenHelper.ValidationResult(false, "DoctorTable(com.example.medication_reminder_android_app.SQLiteDB.DoctorEntity).\n"
                   + " Expected:\n" + _infoDoctorTable + "\n"
                   + " Found:\n" + _existingDoctorTable);
         }
-        final HashMap<String, TableInfo.Column> _columnsAppointmentTable = new HashMap<String, TableInfo.Column>(1);
-        _columnsAppointmentTable.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashMap<String, TableInfo.Column> _columnsAppointmentTable = new HashMap<String, TableInfo.Column>(7);
+        _columnsAppointmentTable.put("primaryKey", new TableInfo.Column("primaryKey", "INTEGER", false, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsAppointmentTable.put("Appointment Location", new TableInfo.Column("Appointment Location", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsAppointmentTable.put("Tags", new TableInfo.Column("Tags", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsAppointmentTable.put("Notes", new TableInfo.Column("Notes", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsAppointmentTable.put("TypeOfAppt", new TableInfo.Column("TypeOfAppt", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsAppointmentTable.put("RemindTableID", new TableInfo.Column("RemindTableID", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsAppointmentTable.put("DoctorTableID", new TableInfo.Column("DoctorTableID", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysAppointmentTable = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesAppointmentTable = new HashSet<TableInfo.Index>(0);
         final TableInfo _infoAppointmentTable = new TableInfo("AppointmentTable", _columnsAppointmentTable, _foreignKeysAppointmentTable, _indicesAppointmentTable);
         final TableInfo _existingAppointmentTable = TableInfo.read(_db, "AppointmentTable");
         if (! _infoAppointmentTable.equals(_existingAppointmentTable)) {
-          return new RoomOpenHelper.ValidationResult(false, "AppointmentTable(com.example.medication_reminder_android_app.SQLiteDB.AppointmentTable).\n"
+          return new RoomOpenHelper.ValidationResult(false, "AppointmentTable(com.example.medication_reminder_android_app.SQLiteDB.AppointmentEntity).\n"
                   + " Expected:\n" + _infoAppointmentTable + "\n"
                   + " Found:\n" + _existingAppointmentTable);
         }
-        final HashMap<String, TableInfo.Column> _columnsRemindersTable = new HashMap<String, TableInfo.Column>(1);
-        _columnsRemindersTable.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
-        final HashSet<TableInfo.ForeignKey> _foreignKeysRemindersTable = new HashSet<TableInfo.ForeignKey>(0);
-        final HashSet<TableInfo.Index> _indicesRemindersTable = new HashSet<TableInfo.Index>(0);
-        final TableInfo _infoRemindersTable = new TableInfo("RemindersTable", _columnsRemindersTable, _foreignKeysRemindersTable, _indicesRemindersTable);
-        final TableInfo _existingRemindersTable = TableInfo.read(_db, "RemindersTable");
-        if (! _infoRemindersTable.equals(_existingRemindersTable)) {
-          return new RoomOpenHelper.ValidationResult(false, "RemindersTable(com.example.medication_reminder_android_app.SQLiteDB.RemindersTable).\n"
-                  + " Expected:\n" + _infoRemindersTable + "\n"
-                  + " Found:\n" + _existingRemindersTable);
+        final HashMap<String, TableInfo.Column> _columnsReminderTable = new HashMap<String, TableInfo.Column>(6);
+        _columnsReminderTable.put("primaryKey", new TableInfo.Column("primaryKey", "INTEGER", false, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminderTable.put("Classification", new TableInfo.Column("Classification", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminderTable.put("ApptTime", new TableInfo.Column("ApptTime", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminderTable.put("ApptDate", new TableInfo.Column("ApptDate", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminderTable.put("MedApptID", new TableInfo.Column("MedApptID", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsReminderTable.put("TimeInterval", new TableInfo.Column("TimeInterval", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysReminderTable = new HashSet<TableInfo.ForeignKey>(0);
+        final HashSet<TableInfo.Index> _indicesReminderTable = new HashSet<TableInfo.Index>(0);
+        final TableInfo _infoReminderTable = new TableInfo("ReminderTable", _columnsReminderTable, _foreignKeysReminderTable, _indicesReminderTable);
+        final TableInfo _existingReminderTable = TableInfo.read(_db, "ReminderTable");
+        if (! _infoReminderTable.equals(_existingReminderTable)) {
+          return new RoomOpenHelper.ValidationResult(false, "ReminderTable(com.example.medication_reminder_android_app.SQLiteDB.ReminderEntity).\n"
+                  + " Expected:\n" + _infoReminderTable + "\n"
+                  + " Found:\n" + _existingReminderTable);
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "71740aaf023512f3f6cb2e9d88c724a9", "fb43859000121965d10f48ab39a56f4e");
+    }, "6937977007928a1a3be5204291f54980", "d02f73195637e03e606d4479e72ccf99");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(configuration.context)
         .name(configuration.name)
         .callback(_openCallback)
@@ -141,7 +169,7 @@ public final class AppDatabase_Impl extends AppDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "MedicationTable","DoctorTable","AppointmentTable","RemindersTable");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "MedicationTable","DoctorTable","AppointmentTable","ReminderTable");
   }
 
   @Override
@@ -153,13 +181,27 @@ public final class AppDatabase_Impl extends AppDatabase {
       _db.execSQL("DELETE FROM `MedicationTable`");
       _db.execSQL("DELETE FROM `DoctorTable`");
       _db.execSQL("DELETE FROM `AppointmentTable`");
-      _db.execSQL("DELETE FROM `RemindersTable`");
+      _db.execSQL("DELETE FROM `ReminderTable`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();
       _db.query("PRAGMA wal_checkpoint(FULL)").close();
       if (!_db.inTransaction()) {
         _db.execSQL("VACUUM");
+      }
+    }
+  }
+
+  @Override
+  public DataAccessObject dataAccessObject() {
+    if (_dataAccessObject != null) {
+      return _dataAccessObject;
+    } else {
+      synchronized(this) {
+        if(_dataAccessObject == null) {
+          _dataAccessObject = new DataAccessObject_Impl(this);
+        }
+        return _dataAccessObject;
       }
     }
   }

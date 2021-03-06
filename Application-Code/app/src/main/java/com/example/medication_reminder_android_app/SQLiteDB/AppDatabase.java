@@ -10,13 +10,18 @@ import androidx.room.RoomDatabase;
 import androidx.room.Room;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
+/**
+ * @author Hayley Roberts
+ * @lastModified 3/5/2021 by Hayley Roberts
+ */
 
-@Database(entities = {MedicationEntity.class, DoctorEntity.class, AppointmentEntity.class}, version = 1)
+//if we want a copy of schema in a file, change exportSchema to true
+// https://stackoverflow.com/questions/44322178/room-schema-export-directory-is-not-provided-to-the-annotation-processor-so-we
+
+@Database(entities = {MedicationEntity.class, DoctorEntity.class, AppointmentEntity.class, ReminderEntity.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
-    public abstract FilterDAO filterDAO();
-    public abstract InputHandlerDAO inputHandlerDAO();
-    public abstract NotificationDAO notificationDAO();
+    public abstract DataAccessObject dataAccessObject();
 
     private  static AppDatabase INSTANCE;
 

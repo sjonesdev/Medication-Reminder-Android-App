@@ -7,14 +7,16 @@ import androidx.room.PrimaryKey;
 //doctor name
 //doctor phone number
 
-@Entity
 /**
 @author Karley Waguespack
-@lastModified 2/27/2021 by Aliza Siddiqui
+ @lastModified 3/5/2021 by Hayley Roberts
 */
+
+@Entity(tableName = "DoctorTable")
 public class DoctorEntity {
 
-    public DoctorEntity(String drName, String phone, String officeLoc, String notes, String tags, String officeHrs, String hospitalName, int aptID){
+    public DoctorEntity(String drName, String phone, String officeLoc, String notes, String tags,
+                        String officeHrs, String hospitalName, Integer apptID){
 
         this.drName = drName;
         this.phone = phone;
@@ -23,19 +25,16 @@ public class DoctorEntity {
         this.tags = tags;
         this.officeHrs = officeHrs;
         this.hospitalName = hospitalName;
-        this.aptID = aptID;
+        this.apptID = apptID;
 
     }
-
-    public DoctorEntity(){
-    } //default constructor
 
 
     //need to add getter and setter methods for each attribute
 
 
     @PrimaryKey(autoGenerate = true)
-    private int docID;
+    private Integer primaryKey;
 
     @ColumnInfo(name = "doctor name")
     private String drName;
@@ -59,15 +58,17 @@ public class DoctorEntity {
     private String hospitalName;
 
     @ColumnInfo(name = "appointment id")
-    private int aptID;
+    private Integer apptID;
 
 
     //Getters
-    public String getDoctorName(){    
+    public String getDrName(){
         return this.drName;
     }
 
-    public String getOffice(){
+    public String getPhone() { return this.phone; }
+
+    public String getOfficeLoc(){
         return this.officeLoc;
     }
 
@@ -79,26 +80,31 @@ public class DoctorEntity {
         return this.tags;
     }
 
-    public String getOfficeHours(){
+    public String getOfficeHrs(){
         return this.officeHrs;
     }
 
     public String getHospitalName(){
         return this.hospitalName;
     }
+
+    public Integer getApptID() { return this.apptID; }
     
-    public int getDoctorTableID(){
-        return this.docID;                   //Returns the primary key of the specific Doctor Information entity
+    public Integer getPrimaryKey(){
+        return this.primaryKey;                   //Returns the primary key of the specific Doctor Information entity
     }
 
     //setters
+    public void setPrimaryKey(Integer primaryKey) { this.primaryKey = primaryKey; }
 
-    public void setDoctorName(String Name){    
+    public void setDrName(String Name){
         this.drName = Name;
     }
 
-    public void setOffice(String Location){
-        this.officeLoc = Location;
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public void setOfficeLoc(String officeLoc){
+        this.officeLoc = officeLoc;
     }
 
     public void setNotes(String Notes){
@@ -109,17 +115,15 @@ public class DoctorEntity {
         this.tags = Tags;
     }
 
-    public void setOfficeHours(String Hours){
-        this.officeHrs = Hours;
+    public void setOfficeHrs(String officeHrs){
+        this.officeHrs = officeHrs;
     }
 
-    public void setHospitalName(String Hospital){
-        this.hospitalName = Hospital;
+    public void setHospitalName(String hospitalName){
+        this.hospitalName = hospitalName;
     }
     
-    
-
-
+    public void setApptID(Integer apptID) { this.apptID = apptID; }
 
 
 }
