@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 /**
  * @author Hayley Roberts
- * @lastModified 3/5/2021 by Hayley Roberts
+ * @lastModified 3/6/2021 by Karley Waguespack
  */
 
 
@@ -35,6 +35,8 @@ public class DatabaseRepository {  //extends
     private void reminderAsyncFinished(ReminderEntity[] r){ reminders.setValue(r); }
     private void medicationAsyncFilterFinished(MedicationEntity[] m) { meds.setValue(m); }
     private void getMedByNameAsyncFinished(MedicationEntity m) { singleMed = m; }
+    /*added by Karley*/
+    private void getMedByIdAsyncFinished(MedicationEntity m) {singleMed = m; }
     private void getReminderAsyncFinished(ReminderEntity r) { singleReminder = r; }
 
     public MutableLiveData<MedicationEntity[]> filterMedications(String[] tags){
@@ -49,6 +51,12 @@ public class DatabaseRepository {  //extends
 
     public MedicationEntity getMedByName(String medName){
         new AsyncGetMedByName(dao, this).execute(medName);
+        return singleMed;
+    }
+
+    /*added by Karley*/
+    public MedicationEntity getMedById(Integer medId){
+        new AsyncGetMedById(dao, this).execute(String.valueOf(medId));
         return singleMed;
     }
 
@@ -141,6 +149,29 @@ public class DatabaseRepository {  //extends
             delegate.getMedByNameAsyncFinished(result);
         }
     }
+
+
+    /*added by Karley*/
+    private static class AsyncGetMedById extends AsyncTask<String, Void, MedicationEntity>{
+        private final DataAccessObject dao;
+        private final DatabaseRepository delegate;
+
+        public AsyncGetMedById(DataAccessObject filter, DatabaseRepository repo){
+            dao = filter;
+            delegate = repo;
+        }
+
+        @Override
+        protected MedicationEntity doInBackground(String... params){
+            return dao.getMedicationById(Integer.valueOf(params[0])); //parsed to an integer
+        }
+
+        @Override
+        protected void onPostExecute(MedicationEntity result){
+            delegate.getMedByIdAsyncFinished(result);
+        }
+    }
+
 
     private static class AsyncGetReminderByName extends AsyncTask<String, Void, ReminderEntity>{
         private final DatabaseRepository delegate;

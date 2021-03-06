@@ -17,20 +17,22 @@ This handles external notifications
 
  */
 
-import com.example.medication_reminder_android_app.SQLiteDB.ReminderEntity;
-import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
+import androidx.lifecycle.MutableLiveData;
 import com.example.medication_reminder_android_app.SQLiteDB.*;
 
 public class Notifications {
 
-    public Notifications(){
+    private DatabaseRepository db;
+
+    public Notifications(DatabaseRepository repo){
+        db = repo;
 
     }
 
     protected String[] getData() {
 
         //need to figure out how to use these methods
-        ReminderEntity reminder = MainViewModel.getReminders()
+        ReminderEntity[] reminder = db.getReminders(1).getValue();
 
         //need to get the reminder then use the medication ID to get the medication
         MedicationEntity med = new MedicationEntity("Advil", "10mg", 1, "10:00", 1, "-", "-", "-", "-");
