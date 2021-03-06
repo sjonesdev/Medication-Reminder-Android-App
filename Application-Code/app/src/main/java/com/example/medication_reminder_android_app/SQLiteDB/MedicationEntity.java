@@ -4,11 +4,16 @@ import androidx.room.Entity;
 import androidx.room.ColumnInfo;
 import androidx.room.PrimaryKey;
 
-@Entity
+/**
+ * @author Hayley Roberts
+ * @lastModified 3/5/2021 by Hayley Roberts
+ */
+
+@Entity(tableName = "MedicationTable")
 public class MedicationEntity {
     //Variables and columns
     @PrimaryKey (autoGenerate = true)
-    private int id;
+    private Integer primaryKey;
 
     @ColumnInfo (name = "med_name")
     private String medName;
@@ -17,13 +22,13 @@ public class MedicationEntity {
     private String dosage;
 
     @ColumnInfo (name = "recurring")
-    private boolean recurring;
+    private Integer recurring; //technically boolean but sqlite doesnt support
 
     @ColumnInfo (name = "time_rule")
     private String timeRule;
 
     @ColumnInfo (name  = "reminder_id")
-    private int reminderID;
+    private Integer reminderID;
 
     @ColumnInfo (name = "acknowledgements")
     private String acknowledgements;
@@ -38,22 +43,22 @@ public class MedicationEntity {
     private String tags;
 
     //Constructor
-    public MedicationEntity(String medicationName, String inputDosage, boolean ifRecurring, String inputTimeRule, int reminderId,
-                            String inputAcknowledgements, String inputWarnings, String inputIngredients, String inputTags){
-        this.medName = medicationName;
-        this.dosage = inputDosage;
-        this.recurring = ifRecurring;
-        this.timeRule = inputTimeRule;
-        this.reminderID = reminderId;
-        this.acknowledgements = inputAcknowledgements;
-        this.warnings = inputWarnings;
-        this.ingredients = inputIngredients;
-        this.tags = inputTags;
+    public MedicationEntity(String medName, String dosage, Integer recurring, String timeRule, Integer reminderID,
+                            String acknowledgements, String warnings, String ingredients, String tags){
+        this.medName = medName;
+        this.dosage = dosage;
+        this.recurring = recurring;
+        this.timeRule = timeRule;
+        this.reminderID = reminderID;
+        this.acknowledgements = acknowledgements;
+        this.warnings = warnings;
+        this.ingredients = ingredients;
+        this.tags = tags;
     }
 
     //Getter Methods
-    public int getId(){
-        return this.id;
+    public Integer getPrimaryKey(){
+        return this.primaryKey;
     }
 
     public String getMedName(){
@@ -64,7 +69,7 @@ public class MedicationEntity {
         return this.dosage;
     }
 
-    public boolean isRecurring(){
+    public Integer getRecurring(){
         return this.recurring;
     }
 
@@ -72,7 +77,7 @@ public class MedicationEntity {
         return this.timeRule;
     }
 
-    public int getReminderID(){
+    public Integer getReminderID(){
         return this.reminderID;
     }
 
@@ -94,9 +99,7 @@ public class MedicationEntity {
 
 
     //Setter Methods
-    public void setId(int inputId){
-        this.id = inputId;
-    }
+    public void setPrimaryKey(Integer primaryKey){ this.primaryKey = primaryKey; }
 
     public void setMedName(String medicationName){
         this.medName = medicationName;
@@ -106,7 +109,7 @@ public class MedicationEntity {
         this.dosage = inputDosage;
     }
 
-    public void setRecurring(boolean ifRecurring){
+    public void setRecurring(Integer ifRecurring){
         this.recurring = ifRecurring;
     }
 
@@ -114,14 +117,12 @@ public class MedicationEntity {
         this.timeRule = recurringRule;
     }
 
-    public void setReminderID(int reminderId){
+    public void setReminderID(Integer reminderId){
         this.reminderID = reminderId;
     }
 
-    public void setAcknowledgements(String acknowledgement){
-        //TODO might need to handle the list of acknowledgements here
-        this.acknowledgements = acknowledgement;
-    }
+    //TODO may need to edit this
+    public void setAcknowledgements(String acknowledgement){ this.acknowledgements = acknowledgement; }
 
     public void setWarnings(String inputWarnings){
         this.warnings = inputWarnings;

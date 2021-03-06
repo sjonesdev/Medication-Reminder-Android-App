@@ -4,14 +4,15 @@ import androidx.room.Entity;
 import androidx.room.ColumnInfo;
 import androidx.room.PrimaryKey;
 
-@Entity
 /**
   @author Aliza Siddiqui
-  @lastModified 2/27/2021
+ @lastModified 3/5/2021 by Hayley Roberts
 */
+
+@Entity(tableName = "AppointmentTable")
 public class AppointmentEntity{
     @PrimaryKey
-    public int id;
+    public Integer primaryKey;
 
     @ColumnInfo(name = "Appointment Location")
     private String location; //Location of the appointment
@@ -26,16 +27,18 @@ public class AppointmentEntity{
     private String typeOfAppt; //Classifies specifically what the appointment will consist of if not Doctor (i.e MRI, blood donation, etc.)
     
     @ColumnInfo(name = "RemindTableID")
-    private int remindTabID;
+    private Integer remindTabID;
 
     @ColumnInfo(name = "DoctorTableID")
-    private int docTabID;
+    private Integer docTabID;
 
-    public AppointmentEntity(String Location, String Tags, String Notes, String Type){
-       this.location = Location;
-       this.tags = Tags;
-       this.notes = Notes;
-       this.typeOfAppt = Type;
+    public AppointmentEntity(String location, String tags, String notes, String typeOfAppt, Integer remindTabID, Integer docTabID){
+       this.location = location;
+       this.tags = tags;
+       this.notes = notes;
+       this.typeOfAppt = typeOfAppt;
+       this.remindTabID = remindTabID;
+       this.docTabID = docTabID;
     }
 
     //Getters
@@ -55,8 +58,12 @@ public class AppointmentEntity{
         return this.typeOfAppt;
     }
 
-    public int getApptTableID(){
-        return this.id;           //Returns the primary key of the specific Appointment entity
+    public Integer getRemindTabID() { return this.remindTabID; }
+
+    public Integer getDocTabID() { return this.docTabID; }
+
+    public Integer getPrimaryKey(){
+        return this.primaryKey;           //Returns the primary key of the specific Appointment entity
     }
 
     //Setters
@@ -76,8 +83,10 @@ public class AppointmentEntity{
         this.typeOfAppt = ApptType;
     }
 
-   
-    
+    public void setRemindTabID(Integer remindTabID) { this.remindTabID = remindTabID; }
+
+    public void setDocTabID(Integer docTabID) { this.docTabID = docTabID; }
+
 }
 
 
