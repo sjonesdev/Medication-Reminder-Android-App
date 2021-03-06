@@ -16,4 +16,6 @@ public interface NotificationDAO {
     @Query("SELECT * FROM ReminderEntity ORDER BY ApptDate, ApptTime LIMIT :numberOfReminders")
     public ReminderEntity[] selectNextReminders(int numberOfReminders);
 
+
+
 }
