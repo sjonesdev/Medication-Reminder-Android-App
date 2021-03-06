@@ -24,6 +24,19 @@ public class Notifications {
 
     }
 
+    /*
+    Gets data about the next upcoming reminder
+    returns a string array of information needed to build notification.
+
+    Array contents:
+                0th element: medication or doctor name (or type of appointment if no doctor)
+                1st element: notification type
+
+    Notification type key:
+                Medication = "MED"
+                Doctor Appointment = "APPT"
+                Extraneous Appointment = "EAPPT"
+     */
     protected String[] getData() {
 
         //string info array to be returned
@@ -36,7 +49,7 @@ public class Notifications {
 
         //what type of reminder is it?
         String reminderType = reminder.getClassification();
-        //store immediately in the info array. TODO: figure out what to do for extraneous appts
+        //store immediately in the info array.
         infoArray[0] = reminderType;
 
         if(reminderType.equals("MED")){
@@ -47,7 +60,7 @@ public class Notifications {
         } else{
             //otherwise, we have an appointment;
             //TODO create appointment entity from id
-            //TODO regular appointments get APPT, Extraneous ones get EAPPT
+            //TODO regular appointments get APPT, Extraneous ones get EAPPT; check if it has a doctorId
 
         }
 
