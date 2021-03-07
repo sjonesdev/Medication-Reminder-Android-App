@@ -12,7 +12,7 @@ import androidx.room.Query;
 
 /**
  * @author Hayley Roberts
- * @lastModified 3/5/2021 by Hayley Roberts
+ * @lastModified 3/6/2021 by Karley Waguespack
  */
 
 @Dao
@@ -31,6 +31,10 @@ public interface DataAccessObject {
     //get a medication by name
     @Query("SELECT * FROM MedicationTable WHERE med_name LIKE :name")
     public MedicationEntity getMedicationByName(String name);
+
+    //get a medication by id
+    @Query("SELECT * FROM MedicationTable WHERE primaryKey LIKE :medId")
+    public MedicationEntity getMedicationById(Integer medId);
 
     @Delete
     public int deleteMedication(MedicationEntity medication);

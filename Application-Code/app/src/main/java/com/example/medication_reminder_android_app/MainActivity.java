@@ -9,10 +9,11 @@ https://developer.android.com/guide/components/activities/activity-lifecycle#jav
 
 import android.os.Bundle;
 
-public class Activity {
+public class MainActivity {
 
     public void onCreate(Bundle savedInstanceState){
         //TODO
+
         //setContentView(UI)
     }
 
