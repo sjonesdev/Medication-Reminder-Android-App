@@ -17,6 +17,7 @@ public class ReminderEntity{
     @PrimaryKey(autoGenerate = true)
     private Integer primaryKey;
 
+    //This value is going to be a character so M for medication and A for appointment
     @ColumnInfo(name = "Classification")
     private String classification; // This categorizes the type of reminder (Medication or Appointment)
 

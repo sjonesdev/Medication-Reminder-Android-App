@@ -43,7 +43,7 @@ public class DatabaseRepository {  //extends
     }
 
     public MutableLiveData<ReminderEntity[]> getReminders(int numOfReminders){
-        new AsyncNotificationReminder(dao, this).execute(String.valueOf(numOfReminders));
+        new AsyncNotificationReminder(dao, this).execute(numOfReminders);
         return reminders;
     }
 
@@ -52,8 +52,13 @@ public class DatabaseRepository {  //extends
         return singleMed;
     }
 
-    public ReminderEntity getReminderByName(int entityId){
-        new AsyncGetReminderByName(dao, this).execute(String.valueOf(entityId));
+    public MedicationEntity getMedById(int entityId){
+        new AsyncGetMedById(dao, this).execute(entityId);
+        return singleMed;
+    }
+
+    public ReminderEntity getReminderById(int entityId){
+        new AsyncGetReminderById(dao, this).execute(String.valueOf(entityId));
         return singleReminder;
     }
 
@@ -142,11 +147,31 @@ public class DatabaseRepository {  //extends
         }
     }
 
-    private static class AsyncGetReminderByName extends AsyncTask<String, Void, ReminderEntity>{
+    private static class AsyncGetMedById extends AsyncTask<Integer, Void, MedicationEntity>{
+        private final DataAccessObject dao;
+        private final DatabaseRepository delegate;
+
+        public AsyncGetMedById(DataAccessObject filter, DatabaseRepository repo){
+            dao = filter;
+            delegate = repo;
+        }
+
+        @Override
+        protected MedicationEntity doInBackground(Integer... params){
+            return dao.getMedicationById(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(MedicationEntity result){
+            delegate.getMedByNameAsyncFinished(result);
+        }
+    }
+
+    private static class AsyncGetReminderById extends AsyncTask<String, Void, ReminderEntity>{
         private final DatabaseRepository delegate;
         private final DataAccessObject dao;
 
-        public AsyncGetReminderByName(DataAccessObject filter, DatabaseRepository repo){
+        public AsyncGetReminderById(DataAccessObject filter, DatabaseRepository repo){
             dao = filter;
             delegate = repo;
         }
@@ -163,7 +188,7 @@ public class DatabaseRepository {  //extends
     }
 
 
-    private static class AsyncNotificationReminder extends AsyncTask<String, Void, ReminderEntity[]>{
+    private static class AsyncNotificationReminder extends AsyncTask<Integer, Void, ReminderEntity[]>{
         private final DatabaseRepository delegate;
         private final DataAccessObject dao;
 
@@ -173,16 +198,8 @@ public class DatabaseRepository {  //extends
         }
 
         @Override
-        protected ReminderEntity[] doInBackground(String... strings){
-            int numOfReminders;
-            try {
-                numOfReminders = Integer.parseInt(strings[0]);
-            } catch (Exception e){
-                System.out.println("Execption thrown DataBaseRepository AsyncNotif " + e);
-                numOfReminders = 0;
-            }
-
-            return dao.selectNextReminders(numOfReminders);
+        protected ReminderEntity[] doInBackground(Integer... params){
+            return dao.selectNextReminders(params[0]);
         }
 
         @Override

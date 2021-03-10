@@ -9,6 +9,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 /**
  * @author Hayley Roberts
@@ -32,6 +33,10 @@ public interface DataAccessObject {
     @Query("SELECT * FROM MedicationTable WHERE med_name LIKE :name")
     public MedicationEntity getMedicationByName(String name);
 
+    @Query("SELECT * FROM MedicationTable WHERE primaryKey LIKE :pk")
+    public MedicationEntity getMedicationById(Integer pk);
+
+    //Deletions
     @Delete
     public int deleteMedication(MedicationEntity medication);
 
@@ -61,6 +66,12 @@ public interface DataAccessObject {
 
     @Delete
     public int deleteReminder(ReminderEntity reminder);
+
+    @Query("DELETE FROM ReminderTable WHERE Classification like 'M'")
+    public int deleteAllMedicationReminders();
+
+    @Query("DELETE FROM ReminderTable WHERE Classification like 'A'")
+    public int deleteAllAppointmentReminders();
 
     @Query("DELETE FROM ReminderTable")
     public void clearAllReminders();

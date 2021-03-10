@@ -36,11 +36,12 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     //methods to insert rows into tables
-    public void insertMedication(String medicationName, String inputDosage, boolean ifRecurring, String inputTimeRule, int reminderId,
-                                 String inputAcknowledgements, String inputWarnings, String inputIngredients, String inputTags){
+    public void insertMedication(String medicationName, String inputDosage, boolean ifRecurring, String firstDate,
+                                 String inputTimeRule, int reminderId, String inputAcknowledgements,
+                                 String inputWarnings, String inputIngredients, String inputTags){
         Integer recurringBool = ifRecurring? 1 : 0;
-        MedicationEntity medication = new MedicationEntity(medicationName, inputDosage, recurringBool, inputTimeRule, reminderId,
-                inputAcknowledgements, inputWarnings, inputIngredients, inputTags);
+        MedicationEntity medication = new MedicationEntity(medicationName, inputDosage, recurringBool, firstDate,
+                inputTimeRule, reminderId, inputAcknowledgements, inputWarnings, inputIngredients, inputTags);
         repository.insertMed(medication);
     }
 
@@ -69,9 +70,10 @@ public class MainViewModel extends AndroidViewModel {
         repository.deleteMed(m);
     }
 
-    //TODO when delete medication, delete reminders associated with it
     public void deleteMedication(String medName){
         MedicationEntity m = repository.getMedByName(medName);
+        Integer medRid = m.getReminderID();
+        repository.deleteReminder(repository.getReminderByName(medRid));
         repository.deleteMed(m);
     }
 

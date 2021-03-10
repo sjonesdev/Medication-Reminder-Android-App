@@ -24,6 +24,9 @@ public class MedicationEntity {
     @ColumnInfo (name = "recurring")
     private Integer recurring; //technically boolean but sqlite doesnt support
 
+    @ColumnInfo (name = "first_date")
+    private String firstDate;
+
     @ColumnInfo (name = "time_rule")
     private String timeRule;
 
@@ -43,11 +46,13 @@ public class MedicationEntity {
     private String tags;
 
     //Constructor
-    public MedicationEntity(String medName, String dosage, Integer recurring, String timeRule, Integer reminderID,
+    //TODO start date and end date,
+    public MedicationEntity(String medName, String dosage, Integer recurring, String firstDate, String timeRule, Integer reminderID,
                             String acknowledgements, String warnings, String ingredients, String tags){
         this.medName = medName;
         this.dosage = dosage;
         this.recurring = recurring;
+        this.firstDate = firstDate;
         this.timeRule = timeRule;
         this.reminderID = reminderID;
         this.acknowledgements = acknowledgements;
@@ -72,6 +77,8 @@ public class MedicationEntity {
     public Integer getRecurring(){
         return this.recurring;
     }
+
+    public String getFirstDate() { return this.firstDate; }
 
     public String getTimeRule(){
         return this.timeRule;
@@ -112,6 +119,8 @@ public class MedicationEntity {
     public void setRecurring(Integer ifRecurring){
         this.recurring = ifRecurring;
     }
+
+    public void setFirstDate(String firstDate) { this.firstDate = firstDate; }
 
     public void setTimeRule(String recurringRule){
         this.timeRule = recurringRule;

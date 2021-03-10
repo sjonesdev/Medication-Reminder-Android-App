@@ -36,13 +36,13 @@ public class DoctorEntity {
     @PrimaryKey(autoGenerate = true)
     private Integer primaryKey;
 
-    @ColumnInfo(name = "doctor name")
+    @ColumnInfo(name = "doctor_name")
     private String drName;
 
     @ColumnInfo(name = "phone")
     private String phone;
 
-    @ColumnInfo(name = "office location")
+    @ColumnInfo(name = "office_location")
     private String officeLoc;
 
     @ColumnInfo(name = "notes")
@@ -54,10 +54,10 @@ public class DoctorEntity {
     @ColumnInfo(name = "hours")
     private String officeHrs;
 
-    @ColumnInfo(name = "hospital name")
+    @ColumnInfo(name = "hospital_name")
     private String hospitalName;
 
-    @ColumnInfo(name = "appointment id")
+    @ColumnInfo(name = "appointment_id")
     private Integer apptID;
 
 
