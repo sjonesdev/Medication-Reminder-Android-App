@@ -4,23 +4,17 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
-public class InfoViewActivity extends Activity {
+public class NotificationActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.info_view);
+        setContentView(R.layout.notification_view);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        findViewById(R.id.back_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     @Override

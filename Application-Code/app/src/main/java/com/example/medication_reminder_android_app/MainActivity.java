@@ -14,14 +14,13 @@ public class MainActivity extends Activity {
 
         findViewById(R.id.viewInfoButton).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //setContentView(R.layout.info_view);
-                //startActivity(new Intent(MainActivity.this, InfoViewActivity.class));
+                startActivity(new Intent(MainActivity.this, InfoViewActivity.class));
             }
         });
 
         findViewById(R.id.viewNotifsButton).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
+                startActivity(new Intent(MainActivity.this, NotificationActivity.class));
             }
         });
 

@@ -4,23 +4,32 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
-public class InfoViewActivity extends Activity {
+public class InfoInputActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.info_view);
+        setContentView(R.layout.info_input);
+
+        findViewById(R.id.discard_med_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //empty text boxes before finishing
+                finish();
+            }
+        });
+
+        findViewById(R.id.save_med_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //call Sam's input method
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        findViewById(R.id.back_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     @Override
