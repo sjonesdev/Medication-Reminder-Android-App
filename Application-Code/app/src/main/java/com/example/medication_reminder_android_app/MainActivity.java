@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
 
         findViewById(R.id.viewSettingsButton).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             }
         });
     }

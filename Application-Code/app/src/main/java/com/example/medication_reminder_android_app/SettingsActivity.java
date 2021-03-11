@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-public class NotificationActivity extends Activity {
+public class SettingsActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -17,7 +17,7 @@ public class NotificationActivity extends Activity {
     public void onStart() {
         super.onStart();
 
-        findViewById(R.id.notifs_back_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.settings_back_button).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 finish();
             }

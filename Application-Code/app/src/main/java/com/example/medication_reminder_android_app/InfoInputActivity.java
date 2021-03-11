@@ -23,6 +23,7 @@ public class InfoInputActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //call Sam's input method
+                finish();
             }
         });
     }
