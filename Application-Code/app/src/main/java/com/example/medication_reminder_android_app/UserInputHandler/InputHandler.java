@@ -18,9 +18,6 @@ public abstract class InputHandler {
 
     abstract void inputRequest(Map<String,String> info);
 
-
-    protected void sendInput() {
-        //TODO
-    }
+    abstract void deleteRequest(String name);
 
 }
