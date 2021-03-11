@@ -36,29 +36,51 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     //methods to insert rows into tables
-    public void insertMedication(String medicationName, String inputDosage, boolean ifRecurring, String firstDate,
-                                 String inputTimeRule, int reminderId, String inputAcknowledgements,
-                                 String inputWarnings, String inputIngredients, String inputTags){
+    //TODO Reminder Id handling
+    //Maybe have all insertion return the primary keys
+    //For timing purposes maybe i have this method creating a reminder row inside of it.
+    public Integer insertMedication(String medicationName, String inputDosage, boolean ifRecurring, String firstDate,
+                                 String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags){
         Integer recurringBool = ifRecurring? 1 : 0;
         MedicationEntity medication = new MedicationEntity(medicationName, inputDosage, recurringBool, firstDate,
-                inputTimeRule, reminderId, inputAcknowledgements, inputWarnings, inputIngredients, inputTags);
+                inputTimeRule, 0, "", inputWarnings, inputIngredients, inputTags);
         repository.insertMed(medication);
+        return medication.getPrimaryKey();
     }
 
-    public void insertReminder(String classification, String time, String date, Integer timeIntervalIndex, Integer medApptId){
+    public void insertMedAndReminder(){
+        //TODO insert medication and reminder
+    }
+
+    public void updateAcknowledgements(MedicationEntity m, String newAcknowedgementList){
+        repository.updateAcknowledgements(m, newAcknowedgementList);
+    }
+
+    public void updateAcknowledgements(String medName, String newAcknowledgementList){
+        MedicationEntity m = repository.getMedByName(medName);
+        repository.updateAcknowledgements(m, newAcknowledgementList);
+    }
+
+    public void updateAcknowledgements(Integer MedPrimaryKey, String newAcknowledgementList){
+        MedicationEntity m = repository.getMedById(MedPrimaryKey);
+        repository.updateAcknowledgements(m, newAcknowledgementList);
+    }
+
+    public Integer insertReminder(String classification, String time, String date, Integer timeIntervalIndex, Integer medApptId){
         ReminderEntity reminder = new ReminderEntity(classification, time, date, timeIntervalIndex, medApptId);
         repository.insertReminder(reminder);
+        return reminder.getPrimaryKey();
     }
 
 
     //methods to delete rows from tables
     public void deleteReminder(MedicationEntity medEntity){
-        ReminderEntity r = repository.getReminderByName(medEntity.getReminderID());
+        ReminderEntity r = repository.getReminderById(medEntity.getReminderID());
         repository.deleteReminder(r);
     }
 
     public void deleteReminder(AppointmentEntity apptEntity){
-        ReminderEntity r = repository.getReminderByName(apptEntity.getRemindTabID());
+        ReminderEntity r = repository.getReminderById(apptEntity.getRemindTabID());
         repository.deleteReminder(r);
     }
 
@@ -73,7 +95,7 @@ public class MainViewModel extends AndroidViewModel {
     public void deleteMedication(String medName){
         MedicationEntity m = repository.getMedByName(medName);
         Integer medRid = m.getReminderID();
-        repository.deleteReminder(repository.getReminderByName(medRid));
+        repository.deleteReminder(repository.getReminderById(medRid));
         repository.deleteMed(m);
     }
 

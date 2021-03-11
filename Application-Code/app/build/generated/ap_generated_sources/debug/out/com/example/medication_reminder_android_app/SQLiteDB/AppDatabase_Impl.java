@@ -30,12 +30,12 @@ public final class AppDatabase_Impl extends AppDatabase {
     final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(1) {
       @Override
       public void createAllTables(SupportSQLiteDatabase _db) {
-        _db.execSQL("CREATE TABLE IF NOT EXISTS `MedicationTable` (`primaryKey` INTEGER PRIMARY KEY AUTOINCREMENT, `med_name` TEXT, `dosage` TEXT, `recurring` INTEGER, `time_rule` TEXT, `reminder_id` INTEGER, `acknowledgements` TEXT, `warnings` TEXT, `ingredients` TEXT, `tags` TEXT)");
-        _db.execSQL("CREATE TABLE IF NOT EXISTS `DoctorTable` (`primaryKey` INTEGER PRIMARY KEY AUTOINCREMENT, `doctor name` TEXT, `phone` TEXT, `office location` TEXT, `notes` TEXT, `tags` TEXT, `hours` TEXT, `hospital name` TEXT, `appointment id` INTEGER)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `MedicationTable` (`primaryKey` INTEGER PRIMARY KEY AUTOINCREMENT, `med_name` TEXT, `dosage` TEXT, `recurring` INTEGER, `first_date` TEXT, `time_rule` TEXT, `reminder_id` INTEGER, `acknowledgements` TEXT, `warnings` TEXT, `ingredients` TEXT, `tags` TEXT)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `DoctorTable` (`primaryKey` INTEGER PRIMARY KEY AUTOINCREMENT, `doctor_name` TEXT, `phone` TEXT, `office_location` TEXT, `notes` TEXT, `tags` TEXT, `hours` TEXT, `hospital_name` TEXT, `appointment_id` INTEGER)");
         _db.execSQL("CREATE TABLE IF NOT EXISTS `AppointmentTable` (`primaryKey` INTEGER, `Appointment Location` TEXT, `Tags` TEXT, `Notes` TEXT, `TypeOfAppt` TEXT, `RemindTableID` INTEGER, `DoctorTableID` INTEGER, PRIMARY KEY(`primaryKey`))");
         _db.execSQL("CREATE TABLE IF NOT EXISTS `ReminderTable` (`primaryKey` INTEGER PRIMARY KEY AUTOINCREMENT, `Classification` TEXT, `ApptTime` TEXT, `ApptDate` TEXT, `MedApptID` INTEGER, `TimeInterval` INTEGER)");
         _db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6937977007928a1a3be5204291f54980')");
+        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e78330e8ed69cdf36559ca40faac6af6')");
       }
 
       @Override
@@ -82,11 +82,12 @@ public final class AppDatabase_Impl extends AppDatabase {
 
       @Override
       protected RoomOpenHelper.ValidationResult onValidateSchema(SupportSQLiteDatabase _db) {
-        final HashMap<String, TableInfo.Column> _columnsMedicationTable = new HashMap<String, TableInfo.Column>(10);
+        final HashMap<String, TableInfo.Column> _columnsMedicationTable = new HashMap<String, TableInfo.Column>(11);
         _columnsMedicationTable.put("primaryKey", new TableInfo.Column("primaryKey", "INTEGER", false, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("med_name", new TableInfo.Column("med_name", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("dosage", new TableInfo.Column("dosage", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("recurring", new TableInfo.Column("recurring", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsMedicationTable.put("first_date", new TableInfo.Column("first_date", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("time_rule", new TableInfo.Column("time_rule", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("reminder_id", new TableInfo.Column("reminder_id", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("acknowledgements", new TableInfo.Column("acknowledgements", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
@@ -104,14 +105,14 @@ public final class AppDatabase_Impl extends AppDatabase {
         }
         final HashMap<String, TableInfo.Column> _columnsDoctorTable = new HashMap<String, TableInfo.Column>(9);
         _columnsDoctorTable.put("primaryKey", new TableInfo.Column("primaryKey", "INTEGER", false, 1, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsDoctorTable.put("doctor name", new TableInfo.Column("doctor name", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsDoctorTable.put("doctor_name", new TableInfo.Column("doctor_name", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsDoctorTable.put("phone", new TableInfo.Column("phone", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsDoctorTable.put("office location", new TableInfo.Column("office location", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsDoctorTable.put("office_location", new TableInfo.Column("office_location", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsDoctorTable.put("notes", new TableInfo.Column("notes", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsDoctorTable.put("tags", new TableInfo.Column("tags", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsDoctorTable.put("hours", new TableInfo.Column("hours", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsDoctorTable.put("hospital name", new TableInfo.Column("hospital name", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsDoctorTable.put("appointment id", new TableInfo.Column("appointment id", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsDoctorTable.put("hospital_name", new TableInfo.Column("hospital_name", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsDoctorTable.put("appointment_id", new TableInfo.Column("appointment_id", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysDoctorTable = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesDoctorTable = new HashSet<TableInfo.Index>(0);
         final TableInfo _infoDoctorTable = new TableInfo("DoctorTable", _columnsDoctorTable, _foreignKeysDoctorTable, _indicesDoctorTable);
@@ -156,7 +157,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "6937977007928a1a3be5204291f54980", "d02f73195637e03e606d4479e72ccf99");
+    }, "e78330e8ed69cdf36559ca40faac6af6", "1c4776b2aceb2877adeeb8b66c7660d3");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(configuration.context)
         .name(configuration.name)
         .callback(_openCallback)

@@ -70,6 +70,10 @@ public class DatabaseRepository {  //extends
         new AsyncInsertReminder(dao).execute(r);
     }
 
+    public void updateAcknowledgements(MedicationEntity m, String acknowledgementList) {
+        new AsyncUpdateAcknowledgement(dao, m).execute(acknowledgementList);
+    }
+
     public void deleteMed(MedicationEntity m){
         new AsyncDeleteMedication(dao).execute(m);
     }
@@ -88,9 +92,6 @@ public class DatabaseRepository {  //extends
 
 
 
-
-
-    //TODO
     //Async classes so can do queries in background
     private static class AsyncFilter extends AsyncTask<String, Void, MedicationEntity[]>{
         private final DataAccessObject dao;
@@ -236,6 +237,23 @@ public class DatabaseRepository {  //extends
             dao.insertReminder(reminders[0]);
             return null;
         }
+    }
+
+    private static class AsyncUpdateAcknowledgement extends AsyncTask<String, Void, Void>{
+        private final DataAccessObject dao;
+        private final MedicationEntity m;
+
+        public AsyncUpdateAcknowledgement(DataAccessObject inputHandler, MedicationEntity medEntity){
+            dao = inputHandler;
+            m = medEntity;
+        }
+
+        @Override
+        protected Void doInBackground(String... params){
+            dao.updateAcknowledgements(m.getPrimaryKey(), params[0]);
+            return null;
+        }
+
     }
 
     private static class AsyncDeleteMedication extends AsyncTask<MedicationEntity, Void, Void>{
