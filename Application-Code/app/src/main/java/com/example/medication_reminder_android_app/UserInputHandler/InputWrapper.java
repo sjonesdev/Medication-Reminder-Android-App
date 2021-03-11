@@ -1,5 +1,7 @@
 package com.example.medication_reminder_android_app.UserInputHandler;
 
+import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
+
 import java.security.InvalidParameterException;
 import java.util.Map;
 
@@ -11,6 +13,7 @@ import java.util.Map;
  */
 public class InputWrapper {
 
+    MainViewModel mainViewModel;
     MedicationInputHandler medicationInputHandler;
     DoctorInputHandler doctorInputHandler;
     AppointmentInputHandler appointmentInputHandler;
@@ -24,8 +27,8 @@ public class InputWrapper {
      * @author Samuel Jones
      * @since 3-1-2021
      */
-    public InputWrapper() {
-        medicationInputHandler = new MedicationInputHandler();
+    public InputWrapper(MainViewModel mainViewModel) {
+        medicationInputHandler = new MedicationInputHandler(mainViewModel);
         doctorInputHandler = new DoctorInputHandler();
         appointmentInputHandler = new AppointmentInputHandler();
     }
@@ -56,6 +59,32 @@ public class InputWrapper {
                 break;
             default:
                 throw new InvalidParameterException("Invalid input type");
+        }
+    }
+
+
+    /**
+     * Requests the deletion of an entry from the internal database with the given type and name
+     * @param type The type of entry
+     * @param name The name of the entry
+     * @throws InvalidParameterException If type is invalid or name string is null
+     */
+    public void processInput(InputType type, String name) throws InvalidParameterException {
+        if(name == null) {
+            throw new InvalidParameterException("Invalid name String");
+        }
+        switch (type) {
+            case Medication:
+                medicationInputHandler.deleteRequest(name);
+                break;
+            case Doctor:
+                //doctorInputHandler.inputRequest(input); TODO
+                break;
+            case Appointment:
+                //appointmentInputHandler.inputRequest(input); TODO
+                break;
+            default:
+                throw new InvalidParameterException("Invalid type");
         }
     }
 
