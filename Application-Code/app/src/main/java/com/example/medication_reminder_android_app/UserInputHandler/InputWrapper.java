@@ -69,7 +69,7 @@ public class InputWrapper {
      * @param name The name of the entry
      * @throws InvalidParameterException If type is invalid or name string is null
      */
-    public void processInput(InputType type, String name) throws InvalidParameterException {
+    public void processDeleteRequest(InputType type, String name) throws InvalidParameterException {
         if(name == null) {
             throw new InvalidParameterException("Invalid name String");
         }
