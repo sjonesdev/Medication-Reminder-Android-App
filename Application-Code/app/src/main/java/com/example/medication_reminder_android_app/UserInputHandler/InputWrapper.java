@@ -88,4 +88,9 @@ public class InputWrapper {
         }
     }
 
+
+    public void processAcknowledgement(InputType type, String name) {
+
+    }
+
 }
