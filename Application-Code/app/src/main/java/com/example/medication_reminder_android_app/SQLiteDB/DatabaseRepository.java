@@ -74,6 +74,13 @@ public class DatabaseRepository {  //extends
         new AsyncUpdateAcknowledgement(dao, m).execute(acknowledgementList);
     }
 
+    //update the ReminderEntity with next date and time.
+    //Date should be formatted as YYYY-MM-DD, and time should be formatted as HH:MM
+    public void updateReminderDateAndTime(ReminderEntity r, String date, String time){
+        String dateTime = date + " " + time;
+        new AsyncReminderUpdateDateTime(dao, r).execute(dateTime);
+    }
+
     public void deleteMed(MedicationEntity m){
         new AsyncDeleteMedication(dao).execute(m);
     }
@@ -81,6 +88,10 @@ public class DatabaseRepository {  //extends
     public void deleteReminder(ReminderEntity r){
         new AsyncDeleteReminder(dao).execute(r);
     }
+
+    public void deleteAllMedReminders() { new AsyncDeleteAllMedReminders(dao).execute(); }
+
+    public void deleteAllApptReminders() { new AsyncDeleteAllApptReminders(dao).execute(); }
 
     public void deleteAllMeds(){
         new AsyncDeleteAllMeds(dao).execute();
@@ -256,6 +267,24 @@ public class DatabaseRepository {  //extends
 
     }
 
+    private static class AsyncReminderUpdateDateTime extends AsyncTask<String, Void, Void>{
+        private final DataAccessObject dao;
+        private final ReminderEntity r;
+
+        public AsyncReminderUpdateDateTime(DataAccessObject d, ReminderEntity reminderEntity){
+            dao = d;
+            r = reminderEntity;
+        }
+
+        @Override
+        protected Void doInBackground(String... params){
+            String[] dateTime = params[0].split(" ");
+            dao.updateDateAndTime(r.getPrimaryKey(), dateTime[0], dateTime[1]);
+            return null;
+        }
+
+    }
+
     private static class AsyncDeleteMedication extends AsyncTask<MedicationEntity, Void, Void>{
         private final DataAccessObject dao;
 
@@ -283,6 +312,35 @@ public class DatabaseRepository {  //extends
             return null;
         }
     }
+
+    private static class AsyncDeleteAllMedReminders extends AsyncTask<Void, Void, Void>{
+        private final DataAccessObject dao;
+
+        public AsyncDeleteAllMedReminders(DataAccessObject d){
+            dao = d;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params){
+            dao.deleteAllMedicationReminders();
+            return null;
+        }
+    }
+
+    private static class AsyncDeleteAllApptReminders extends AsyncTask<Void, Void, Void>{
+        private final DataAccessObject dao;
+
+        public AsyncDeleteAllApptReminders(DataAccessObject d){
+            dao = d;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params){
+            dao.deleteAllAppointmentReminders();
+            return null;
+        }
+    }
+
 
     private static class AsyncDeleteAllMeds extends AsyncTask<Void, Void, Void>{
         private final DataAccessObject dao;

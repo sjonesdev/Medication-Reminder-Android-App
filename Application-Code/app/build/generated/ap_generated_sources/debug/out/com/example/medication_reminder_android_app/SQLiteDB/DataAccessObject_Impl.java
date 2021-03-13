@@ -30,7 +30,11 @@ public final class DataAccessObject_Impl implements DataAccessObject {
 
   private final EntityDeletionOrUpdateAdapter<AppointmentEntity> __deletionAdapterOfAppointmentEntity;
 
+  private final SharedSQLiteStatement __preparedStmtOfUpdateAcknowledgements;
+
   private final SharedSQLiteStatement __preparedStmtOfClearAllMedications;
+
+  private final SharedSQLiteStatement __preparedStmtOfUpdateDateAndTime;
 
   private final SharedSQLiteStatement __preparedStmtOfDeleteAllMedicationReminders;
 
@@ -235,10 +239,24 @@ public final class DataAccessObject_Impl implements DataAccessObject {
         }
       }
     };
+    this.__preparedStmtOfUpdateAcknowledgements = new SharedSQLiteStatement(__db) {
+      @Override
+      public String createQuery() {
+        final String _query = "UPDATE MedicationTable SET acknowledgements = ? WHERE primarykey LIKE ?";
+        return _query;
+      }
+    };
     this.__preparedStmtOfClearAllMedications = new SharedSQLiteStatement(__db) {
       @Override
       public String createQuery() {
         final String _query = "DELETE FROM MedicationTable";
+        return _query;
+      }
+    };
+    this.__preparedStmtOfUpdateDateAndTime = new SharedSQLiteStatement(__db) {
+      @Override
+      public String createQuery() {
+        final String _query = "UPDATE ReminderTable SET ApptDate = ?, ApptTime = ? WHERE rowid LIKE ?";
         return _query;
       }
     };
@@ -347,6 +365,32 @@ public final class DataAccessObject_Impl implements DataAccessObject {
   }
 
   @Override
+  public void updateAcknowledgements(final Integer pk, final String a) {
+    __db.assertNotSuspendingTransaction();
+    final SupportSQLiteStatement _stmt = __preparedStmtOfUpdateAcknowledgements.acquire();
+    int _argIndex = 1;
+    if (a == null) {
+      _stmt.bindNull(_argIndex);
+    } else {
+      _stmt.bindString(_argIndex, a);
+    }
+    _argIndex = 2;
+    if (pk == null) {
+      _stmt.bindNull(_argIndex);
+    } else {
+      _stmt.bindLong(_argIndex, pk);
+    }
+    __db.beginTransaction();
+    try {
+      _stmt.executeUpdateDelete();
+      __db.setTransactionSuccessful();
+    } finally {
+      __db.endTransaction();
+      __preparedStmtOfUpdateAcknowledgements.release(_stmt);
+    }
+  }
+
+  @Override
   public void clearAllMedications() {
     __db.assertNotSuspendingTransaction();
     final SupportSQLiteStatement _stmt = __preparedStmtOfClearAllMedications.acquire();
@@ -357,6 +401,34 @@ public final class DataAccessObject_Impl implements DataAccessObject {
     } finally {
       __db.endTransaction();
       __preparedStmtOfClearAllMedications.release(_stmt);
+    }
+  }
+
+  @Override
+  public void updateDateAndTime(final int primaryKey, final String date, final String time) {
+    __db.assertNotSuspendingTransaction();
+    final SupportSQLiteStatement _stmt = __preparedStmtOfUpdateDateAndTime.acquire();
+    int _argIndex = 1;
+    if (date == null) {
+      _stmt.bindNull(_argIndex);
+    } else {
+      _stmt.bindString(_argIndex, date);
+    }
+    _argIndex = 2;
+    if (time == null) {
+      _stmt.bindNull(_argIndex);
+    } else {
+      _stmt.bindString(_argIndex, time);
+    }
+    _argIndex = 3;
+    _stmt.bindLong(_argIndex, primaryKey);
+    __db.beginTransaction();
+    try {
+      _stmt.executeUpdateDelete();
+      __db.setTransactionSuccessful();
+    } finally {
+      __db.endTransaction();
+      __preparedStmtOfUpdateDateAndTime.release(_stmt);
     }
   }
 

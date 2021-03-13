@@ -36,7 +36,7 @@ public interface DataAccessObject {
     @Query("SELECT * FROM MedicationTable WHERE primaryKey LIKE :pk")
     public MedicationEntity getMedicationById(Integer pk);
 
-    @Query("UPDATE MedicationTable SET acknowledgements to :a WHERE primarykey LIKE :pk")
+    @Query("UPDATE MedicationTable SET acknowledgements = :a WHERE primarykey LIKE :pk")
     public void updateAcknowledgements(Integer pk, String a);
 
     //Deletions
@@ -66,6 +66,9 @@ public interface DataAccessObject {
     //LiveData here because we want the UI to update when there are new reminders.
     @Query("SELECT * FROM ReminderTable ORDER BY ApptDate, ApptTime LIMIT :numberOfReminders")
     public ReminderEntity[] selectNextReminders(int numberOfReminders);
+
+    @Query("UPDATE ReminderTable SET ApptDate = :date, ApptTime = :time WHERE rowid LIKE :primaryKey")
+    public void updateDateAndTime(int primaryKey, String date, String time);
 
     @Delete
     public int deleteReminder(ReminderEntity reminder);

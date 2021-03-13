@@ -35,6 +35,19 @@ public class MainViewModel extends AndroidViewModel {
         return repository.getReminders(numOfReminders);
     }
 
+    public MutableLiveData<String[]> getAllMedNames(){
+        MutableLiveData<String[]> retVal = new MutableLiveData<>();
+        MedicationEntity[] meds = getMeds().getValue();
+        String[] medNames = new String[meds.length];
+
+        for(int i = 0; i < meds.length; i++){
+            medNames[i] = meds[i].getMedName();
+        }
+
+        retVal.setValue(medNames);
+        return retVal;
+    }
+
     //methods to insert rows into tables
     //TODO Reminder Id handling
     //Maybe have all insertion return the primary keys
@@ -103,10 +116,12 @@ public class MainViewModel extends AndroidViewModel {
     //methods to clear tables of all values
     public void deleteAllMedications(){
         repository.deleteAllMeds();
+        repository.deleteAllMedReminders();
     }
 
     public void deleteAllReminders(){
         repository.deleteAllReminders();
     }
+
 
 }
