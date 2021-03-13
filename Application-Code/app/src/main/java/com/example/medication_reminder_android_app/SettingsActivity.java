@@ -10,7 +10,7 @@ public class SettingsActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.notification_view);
+        setContentView(R.layout.settings_menu);
     }
 
     @Override
