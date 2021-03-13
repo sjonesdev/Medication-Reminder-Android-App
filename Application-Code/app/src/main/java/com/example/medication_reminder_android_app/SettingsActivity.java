@@ -11,17 +11,27 @@ public class SettingsActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_menu);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
 
         findViewById(R.id.settings_back_button).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 finish();
             }
         });
+
+        findViewById(R.id.deleteAll).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+
+
+            }
+        });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
     }
 
     @Override
@@ -47,4 +57,10 @@ public class SettingsActivity extends Activity {
         //TODO
         super.onDestroy();
     }
+
+
+
+
+
+
 }
