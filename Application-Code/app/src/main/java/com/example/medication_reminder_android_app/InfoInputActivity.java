@@ -1,39 +1,35 @@
 package com.example.medication_reminder_android_app;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-public class MainActivity extends Activity {
+public class InfoInputActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.info_input);
 
-        findViewById(R.id.viewInfoButton).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.discard_med_button).setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, InfoViewActivity.class));
+                //empty text boxes before finishing
+                finish();
             }
         });
 
-        findViewById(R.id.viewNotifsButton).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.save_med_button).setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, NotificationActivity.class));
-            }
-        });
-
-        findViewById(R.id.viewSettingsButton).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                //call Sam's input method
+                finish();
             }
         });
     }
 
     @Override
     public void onStart() {
-
         super.onStart();
     }
 

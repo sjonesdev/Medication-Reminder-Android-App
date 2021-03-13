@@ -5,28 +5,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-public class InfoViewActivity extends Activity {
+public class SettingsActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.info_view);
+        setContentView(R.layout.settings_menu);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        findViewById(R.id.info_back_button).setOnClickListener(new View.OnClickListener() {
-            @Override
+
+        findViewById(R.id.settings_back_button).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 finish();
-            }
-        });
-
-        findViewById(R.id.add_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(InfoViewActivity.this, InfoInputActivity.class));
             }
         });
     }

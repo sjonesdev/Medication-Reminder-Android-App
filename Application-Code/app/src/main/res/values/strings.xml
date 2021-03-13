@@ -13,4 +13,18 @@
     <string name="view_my_info">View My Info</string>
     <string name="notifications">Notifications</string>
     <string name="settings">Settings</string>
+
+    <string name="new_med_button">Add</string>
+    <string name="back">Back</string>
+
+    <string name="add_new_med">Add New Medication</string>
+    <string name="name">Name</string>
+    <string name="dosage">Dosage</string>
+    <string name="time">Time</string>
+    <string name="days">Days</string>
+    <string name="recurring">Recurring</string>
+    <string name="discard">Discard</string>
+    <string name="save">Save</string>
+
+
 </resources>

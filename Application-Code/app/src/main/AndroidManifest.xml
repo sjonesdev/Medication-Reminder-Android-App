@@ -19,6 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".InfoViewActivity"></activity>
+        <activity android:name=".InfoInputActivity"></activity>
+        <activity android:name=".NotificationActivity"></activity>
+        <activity android:name=".SettingsActivity"></activity>
+
     </application>
 
 </manifest>
