@@ -55,12 +55,12 @@ public class Notifications {
         if(reminderType.equals("MED")){
             //retrieve the medication object from the reminder
             MedicationEntity med = db.getMedById(reminder.getMedApptId());
-            //get the med name
+            //put the med name in the array
             infoArray[1] = med.getMedName();
         } else{
-            //otherwise, we have an appointment;
+            //otherwise, we have an appointment; will be completed when we get to viable
             //TODO create appointment entity from id
-            //TODO regular appointments get APPT, Extraneous ones get EAPPT; check if it has a doctorId
+            //TODO check if it has a doctorId and assign appropriate notification type
 
         }
 
