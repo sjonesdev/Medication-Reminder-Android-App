@@ -31,7 +31,7 @@ public class ReminderEntity{
     private Integer medApptId; // Will help Reminders Table connect with Medication Table (if Medication Reminder) and
                                 // Appointment Table (if Appointment Reminder)
     @ColumnInfo(name = "TimeInterval")
-    private Integer timeIntervalIndex; //Will specify how many days to wait before sending a specific notification again
+    private Integer timeIntervalIndex; //Will keep track of which timeInterval in the timeRule to use.
     
     public ReminderEntity(String classification, String time, String date, Integer timeIntervalIndex, Integer medApptId){
         this.classification = classification;

@@ -67,8 +67,8 @@ public interface DataAccessObject {
     @Query("SELECT * FROM ReminderTable ORDER BY ApptDate, ApptTime LIMIT :numberOfReminders")
     public ReminderEntity[] selectNextReminders(int numberOfReminders);
 
-    @Query("UPDATE ReminderTable SET ApptDate = :date, ApptTime = :time WHERE rowid LIKE :primaryKey")
-    public void updateDateAndTime(int primaryKey, String date, String time);
+    @Query("UPDATE ReminderTable SET ApptDate = :date, ApptTime = :time, TimeInterval = :timeInterval WHERE rowid LIKE :primaryKey")
+    public void updateDateAndTime(int primaryKey, String date, String time, int timeInterval);
 
     @Delete
     public int deleteReminder(ReminderEntity reminder);

@@ -76,8 +76,8 @@ public class DatabaseRepository {  //extends
 
     //update the ReminderEntity with next date and time.
     //Date should be formatted as YYYY-MM-DD, and time should be formatted as HH:MM
-    public void updateReminderDateAndTime(ReminderEntity r, String date, String time){
-        String dateTime = date + " " + time;
+    public void updateReminderDateAndTime(ReminderEntity r, String date, String time, int timeIntervalIndex){
+        String dateTime = date + " " + time + " " + timeIntervalIndex;
         new AsyncReminderUpdateDateTime(dao, r).execute(dateTime);
     }
 
@@ -279,7 +279,7 @@ public class DatabaseRepository {  //extends
         @Override
         protected Void doInBackground(String... params){
             String[] dateTime = params[0].split(" ");
-            dao.updateDateAndTime(r.getPrimaryKey(), dateTime[0], dateTime[1]);
+            dao.updateDateAndTime(r.getPrimaryKey(), dateTime[0], dateTime[1], Integer.parseInt(dateTime[2]));
             return null;
         }
 
