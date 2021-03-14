@@ -108,4 +108,21 @@ public class InputWrapper {
         }
     }
 
+
+    public void clearTable(InputType type) {
+        switch (type) {
+            case Medication:
+                medicationInputHandler.deleteAll();
+                break;
+            case Doctor:
+                //doctorInputHandler.inputRequest(input); TODO
+                break;
+            case Appointment:
+                //appointmentInputHandler.inputRequest(input); TODO
+                break;
+            default:
+                throw new InvalidParameterException("Invalid type");
+        }
+    }
+
 }

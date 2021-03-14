@@ -24,4 +24,6 @@ public abstract class InputHandler {
 
     abstract void acknowledgeNotification(String name);
 
+    abstract void deleteAll();
+
 }

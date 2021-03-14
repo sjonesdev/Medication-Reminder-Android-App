@@ -47,10 +47,13 @@ public class MedicationInputHandler extends InputHandler {
         String tags = info.get("tags"); //comma separated
         int reminderId = 0; //TODO
 
-        boolean recurring = true;
+        boolean recurring = Boolean.parseBoolean(info.get("recurring"));
 
-        mainViewModel.insertMedication(name, dosage, recurring, interval, reminderId, "",
-                warnings, activeIngredient, tags);
+        mainViewModel.insertMedication(name, dosage, recurring, startDate, interval,
+                warnings, activeIngredient, tags); //tell hayley to add endDate
+
+        //String medicationName, String inputDosage, boolean ifRecurring, String firstDate,
+        //String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags
     }
 
     void deleteRequest(String medName) {
@@ -63,5 +66,9 @@ public class MedicationInputHandler extends InputHandler {
 
     void acknowledgeNotification(String name) {
         Date time = new Date();
+    }
+
+    void deleteAll() {
+        mainViewModel.deleteAllMedications();
     }
 }
