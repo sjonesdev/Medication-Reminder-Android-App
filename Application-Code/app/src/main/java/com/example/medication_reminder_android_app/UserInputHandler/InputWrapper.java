@@ -90,7 +90,22 @@ public class InputWrapper {
 
 
     public void processAcknowledgement(InputType type, String name) {
-
+        if(name == null) {
+            throw new InvalidParameterException("Invalid name String");
+        }
+        switch (type) {
+            case Medication:
+                medicationInputHandler.acknowledgeNotification(name);
+                break;
+            case Doctor:
+                //doctorInputHandler.inputRequest(input); TODO
+                break;
+            case Appointment:
+                //appointmentInputHandler.inputRequest(input); TODO
+                break;
+            default:
+                throw new InvalidParameterException("Invalid type");
+        }
     }
 
 }
