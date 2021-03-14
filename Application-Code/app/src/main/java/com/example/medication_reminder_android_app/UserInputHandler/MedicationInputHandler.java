@@ -35,36 +35,33 @@ public class MedicationInputHandler extends InputHandler {
      * @since 3-1-2021
      */
     void inputRequest(Map<String,String> info) {
-        String name = info.get("name");
-        String dosage = info.get("dosage");
+        String name = info.get("name"); //user inputted
+        String dosage = info.get("dosage"); //units included
         String startDate = info.get("startDate"); //YYYY-MM-DD HH:MM
-        String endDate = info.get("endDate");
-        String interval = info.get("interval");
-        //String[] interval = intervalStr.split(","); //in hours
-        //int numIntervals = interval.length;
+        String endDate = info.get("endDate"); //"
+        String interval = info.get("interval"); //comma separated array of hour values
         String warnings = info.get("warnings");
         String activeIngredient = info.get("activeIngredient");
         String generalPurpose = info.get("purpose");
         String userPurpose = info.get("userPurpose");
-        String tagsStr = info.get("tags");
-        //String[] tags = tagsStr.split(",");
+        String tags = info.get("tags"); //comma separated
         int reminderId = 0; //TODO
 
         boolean recurring = true;
 
         mainViewModel.insertMedication(name, dosage, recurring, interval, reminderId, "",
-                warnings, activeIngredient, tagsStr);
+                warnings, activeIngredient, tags);
     }
 
     void deleteRequest(String medName) {
         mainViewModel.deleteMedication(medName);
     }
 
-    void acknowledgeNotification(Date time) {
+    void acknowledgeNotification(String name, Date time) {
 
     }
 
-    void acknowledgeNotification() {
+    void acknowledgeNotification(String name) {
         Date time = new Date();
     }
 }
