@@ -39,6 +39,9 @@ public interface DataAccessObject {
     @Query("UPDATE MedicationTable SET acknowledgements = :a WHERE primarykey LIKE :pk")
     public void updateAcknowledgements(Integer pk, String a);
 
+    @Query("UPDATE MedicationTable SET reminder_id = :reminderPK WHERE primarykey LIKE :medPK")
+    public void addReminderID(Integer medPK, Integer reminderPK);
+
     //Deletions
     @Delete
     public int deleteMedication(MedicationEntity medication);
