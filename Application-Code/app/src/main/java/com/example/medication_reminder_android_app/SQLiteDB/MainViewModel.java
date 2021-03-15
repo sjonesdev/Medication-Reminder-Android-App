@@ -49,20 +49,26 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     //methods to insert rows into tables
-    //TODO Reminder Id handling
     //Maybe have all insertion return the primary keys
     //For timing purposes maybe i have this method creating a reminder row inside of it.
-    public Integer insertMedication(String medicationName, String inputDosage, boolean ifRecurring, String firstDate,
+    public Integer insertMedication(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
                                  String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags){
         Integer recurringBool = ifRecurring? 1 : 0;
-        MedicationEntity medication = new MedicationEntity(medicationName, inputDosage, recurringBool, firstDate,
+        MedicationEntity medication = new MedicationEntity(medicationName, inputDosage, recurringBool, firstDate, endDate,
                 inputTimeRule, 0, "", inputWarnings, inputIngredients, inputTags);
         repository.insertMed(medication);
         return medication.getPrimaryKey();
     }
 
-    public void insertMedAndReminder(){
-        //TODO insert medication and reminder
+    public void insertMedAndReminder(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
+                                     String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags){
+        Integer medPK = insertMedication(medicationName, inputDosage, ifRecurring, firstDate, endDate,
+                inputTimeRule, inputWarnings, inputIngredients, inputTags);
+        String[] sepDate = firstDate.split(" ");
+
+        Integer reminderPK = insertReminder("M", sepDate[1], sepDate[0], 0, medPK);
+        MedicationEntity m = repository.getMedById(medPK);
+        repository.addReminderID(m, reminderPK);
     }
 
     public void updateAcknowledgements(MedicationEntity m, String newAcknowedgementList){
@@ -77,6 +83,10 @@ public class MainViewModel extends AndroidViewModel {
     public void updateAcknowledgements(Integer MedPrimaryKey, String newAcknowledgementList){
         MedicationEntity m = repository.getMedById(MedPrimaryKey);
         repository.updateAcknowledgements(m, newAcknowledgementList);
+    }
+
+    public void updateReminderDateAndTime(ReminderEntity r, String date, String time, int timeIntervalIndex){
+        repository.updateReminderDateAndTime(r, date, time, timeIntervalIndex);
     }
 
     public Integer insertReminder(String classification, String time, String date, Integer timeIntervalIndex, Integer medApptId){

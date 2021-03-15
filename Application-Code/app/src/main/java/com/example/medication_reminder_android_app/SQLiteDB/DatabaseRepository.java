@@ -74,6 +74,8 @@ public class DatabaseRepository {  //extends
         new AsyncUpdateAcknowledgement(dao, m).execute(acknowledgementList);
     }
 
+    public void addReminderID(MedicationEntity m, Integer reminderPK){ new AsyncAddReminderID(dao, m).execute(String.valueOf(reminderPK)); }
+
     //update the ReminderEntity with next date and time.
     //Date should be formatted as YYYY-MM-DD, and time should be formatted as HH:MM
     public void updateReminderDateAndTime(ReminderEntity r, String date, String time, int timeIntervalIndex){
@@ -265,6 +267,22 @@ public class DatabaseRepository {  //extends
             return null;
         }
 
+    }
+
+    private static class AsyncAddReminderID extends AsyncTask<String, Void, Void>{
+        private final DataAccessObject dao;
+        private final MedicationEntity m;
+
+        public AsyncAddReminderID(DataAccessObject d, MedicationEntity medEntity){
+            dao = d;
+            m = medEntity;
+        }
+
+        @Override
+        protected Void doInBackground(String... params){
+            dao.addReminderID(m.getPrimaryKey(), Integer.parseInt(params[0]));
+            return null;
+        }
     }
 
     private static class AsyncReminderUpdateDateTime extends AsyncTask<String, Void, Void>{

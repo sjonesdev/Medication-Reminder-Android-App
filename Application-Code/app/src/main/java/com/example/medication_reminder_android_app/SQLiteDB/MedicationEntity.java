@@ -27,6 +27,9 @@ public class MedicationEntity {
     @ColumnInfo (name = "first_date")
     private String firstDate;
 
+    @ColumnInfo (name = "end_date")
+    private String endDate;
+
     @ColumnInfo (name = "time_rule")
     private String timeRule;
 
@@ -47,12 +50,14 @@ public class MedicationEntity {
 
     //Constructor
     //TODO start date and end date,
-    public MedicationEntity(String medName, String dosage, Integer recurring, String firstDate, String timeRule, Integer reminderID,
-                            String acknowledgements, String warnings, String ingredients, String tags){
+    public MedicationEntity(String medName, String dosage, Integer recurring, String firstDate, String endDate,
+                            String timeRule, Integer reminderID, String acknowledgements, String warnings,
+                            String ingredients, String tags){
         this.medName = medName;
         this.dosage = dosage;
         this.recurring = recurring;
         this.firstDate = firstDate;
+        this.endDate = endDate;
         this.timeRule = timeRule;
         this.reminderID = reminderID;
         this.acknowledgements = acknowledgements;
@@ -79,6 +84,8 @@ public class MedicationEntity {
     }
 
     public String getFirstDate() { return this.firstDate; }
+
+    public String getEndDate() { return this.endDate; }
 
     public String getTimeRule(){
         return this.timeRule;
@@ -122,6 +129,8 @@ public class MedicationEntity {
 
     public void setFirstDate(String firstDate) { this.firstDate = firstDate; }
 
+    public void setEndDate(String endDate) { this.endDate = endDate; }
+
     public void setTimeRule(String recurringRule){
         this.timeRule = recurringRule;
     }
@@ -130,7 +139,6 @@ public class MedicationEntity {
         this.reminderID = reminderId;
     }
 
-    //TODO may need to edit this
     public void setAcknowledgements(String acknowledgement){ this.acknowledgements = acknowledgement; }
 
     public void setWarnings(String inputWarnings){
