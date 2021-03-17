@@ -1,7 +1,15 @@
 package com.example.medication_reminder_android_app.UserInputHandler;
 
-import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
+import android.text.TextUtils;
 
+import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
+import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
+import com.example.medication_reminder_android_app.SQLiteDB.ReminderEntity;
+
+import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
@@ -12,6 +20,9 @@ import java.util.Map;
  * @since 3-1-2021
  */
 public class MedicationInputHandler extends InputHandler {
+
+    private final double HOURS_TO_MILLIS = 60*60*1000;
+    private final int MAX_NUM_ACK = 30;
 
     private MainViewModel mainViewModel;
 
@@ -39,36 +50,129 @@ public class MedicationInputHandler extends InputHandler {
         String dosage = info.get("dosage"); //units included
         String startDate = info.get("startDate"); //YYYY-MM-DD HH:MM
         String endDate = info.get("endDate"); //"
-        String interval = info.get("interval"); //comma separated array of hour values
+        String interval = info.get("interval"); //comma separated list of hour values
         String warnings = info.get("warnings");
         String activeIngredient = info.get("activeIngredient");
         String generalPurpose = info.get("purpose");
         String userPurpose = info.get("userPurpose");
         String tags = info.get("tags"); //comma separated
-        int reminderId = 0; //TODO
-
         boolean recurring = Boolean.parseBoolean(info.get("recurring"));
 
-        mainViewModel.insertMedication(name, dosage, recurring, startDate, interval,
-                warnings, activeIngredient, tags); //tell hayley to add endDate
+        mainViewModel.insertMedication(name, dosage, recurring, startDate, endDate, interval,
+                warnings, activeIngredient, tags);
 
-        //String medicationName, String inputDosage, boolean ifRecurring, String firstDate,
-        //String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags
+        /*String medicationName, String inputDosage, boolean ifRecurring, String startDate, String endDate,
+            String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags*/
     }
 
     void deleteRequest(String medName) {
         mainViewModel.deleteMedication(medName);
     }
 
-    void acknowledgeNotification(String name, Date time) {
 
-    }
+    /**
+     *
+     * @param reminderID
+     * @param med
+     */
+    void acknowledgeNotification(int reminderID, MedicationEntity med, boolean dismissed) {
+        //get current reminder time and intervalIndex, get intervalIndex and increment intervalIndex, add intervalTime to current reminder time
+        ReminderEntity r = null;
+        int intervalIndex = r.getTimeIntervalIndex();
+        String[] interval = med.getTimeRule().split(",");
+        long millisToAdd = (long) (Double.parseDouble(interval[intervalIndex]) * HOURS_TO_MILLIS);
+        String lastReminderDateTime = r.getDate() + " " + r.getTime();
+        String[] dateTime;
+        String date = "";
+        String time = "";
+        try {
+            Date d = DateFormat.getInstance().parse(lastReminderDateTime);
+            d.setTime(d.getTime() + millisToAdd);
+            dateTime = getSQLDateFormatFromDate(d);
+            date = dateTime[0];
+            time = dateTime[1];
+        } catch(java.text.ParseException e) {} //handle exception
+        mainViewModel.updateReminderDateAndTime(r, date, time, intervalIndex+1);
 
-    void acknowledgeNotification(String name) {
-        Date time = new Date();
+
+        //if acknowledged: get current acknowledgementString and split into array or array list, add latest time to the end
+        if(!dismissed) {
+            Date now = new Date();
+            dateTime = getSQLDateFormatFromDate(now);
+            String dateTimeStr = dateTime[0] + " " + dateTime[1];
+            String ackStr = med.getAcknowledgements();
+            String[] ack = ackStr.split(",");
+            ArrayList<String> ackList = new ArrayList<String>(Arrays.asList(ack));
+            if(ackList.size() >= MAX_NUM_ACK) {
+                ackList.remove(0);
+            }
+            ackList.add(ackList.size()-1, dateTimeStr);
+            String newAckStr = TextUtils.join(",", (String[]) ackList.toArray());
+            mainViewModel.updateAcknowledgements(med, newAckStr);
+        }
     }
 
     void deleteAll() {
         mainViewModel.deleteAllMedications();
     }
+
+
+    /**
+     *
+     * @param date A java date object
+     * @return String array of the form {date, time} with date of the format YYYY-MM-DD and time of
+     * the format HH:MM
+     */
+    private String[] getSQLDateFormatFromDate(Date date) {
+        String dStr = date.toString(); // dow mon dd hh:mm:ss zzz yyyy
+        String month = getMonthNumberFromAbbreviation(dStr.substring(4, 7));
+        String d = dStr.substring(24) + "-" + month + "-" + dStr.substring(8, 10);
+        String t = dStr.substring(11, 16);
+        return new String[]{d, t};
+    }
+
+    private String getMonthNumberFromAbbreviation(String month) {
+        switch(month) {
+            case "Jan":
+                month = "01";
+                break;
+            case "Feb":
+                month = "02";
+                break;
+            case "Mar":
+                month = "03";
+                break;
+            case "Apr":
+                month = "04";
+                break;
+            case "May":
+                month = "05";
+                break;
+            case "Jun":
+                month = "06";
+                break;
+            case "Jul":
+                month = "07";
+                break;
+            case "Aug":
+                month = "08";
+                break;
+            case "Sep":
+                month = "09";
+                break;
+            case "Oct":
+                month = "10";
+                break;
+            case "Nov":
+                month = "11";
+                break;
+            case "Dec":
+                month = "12";
+                break;
+            default:
+                break;
+        }
+        return month;
+    }
+
 }

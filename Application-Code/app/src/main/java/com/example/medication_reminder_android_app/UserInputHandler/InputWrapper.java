@@ -1,6 +1,7 @@
 package com.example.medication_reminder_android_app.UserInputHandler;
 
 import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
+import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
 
 import java.security.InvalidParameterException;
 import java.util.Map;
@@ -89,13 +90,19 @@ public class InputWrapper {
     }
 
 
-    public void processAcknowledgement(InputType type, String name) {
-        if(name == null) {
-            throw new InvalidParameterException("Invalid name String");
-        }
+    /**
+     *
+     * @param type The type of the reminder
+     * @param reminderID The corresponding ID for the reminder to be acknowledged
+     * @param dismissed Indicated whether the notification was dismissed or acknowledged; true for
+     *                  dismissed, false for acknowledged
+     */
+    public void processAcknowledgementRequest(InputType type, int reminderID, boolean dismissed) {
         switch (type) {
             case Medication:
-                medicationInputHandler.acknowledgeNotification(name);
+                //get medication
+                MedicationEntity med = null;
+                medicationInputHandler.acknowledgeNotification(reminderID, med, dismissed);
                 break;
             case Doctor:
                 //doctorInputHandler.inputRequest(input); TODO
@@ -109,7 +116,7 @@ public class InputWrapper {
     }
 
 
-    public void clearTable(InputType type) {
+    public void clearTableRequest(InputType type) {
         switch (type) {
             case Medication:
                 medicationInputHandler.deleteAll();

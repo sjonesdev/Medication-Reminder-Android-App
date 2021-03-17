@@ -1,5 +1,7 @@
 package com.example.medication_reminder_android_app.UserInputHandler;
 
+import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -20,9 +22,7 @@ public abstract class InputHandler {
 
     abstract void deleteRequest(String name);
 
-    abstract void acknowledgeNotification(String name, Date time);
-
-    abstract void acknowledgeNotification(String name);
+    abstract void acknowledgeNotification(int reminderID, MedicationEntity med, boolean dismissed);
 
     abstract void deleteAll();
 
