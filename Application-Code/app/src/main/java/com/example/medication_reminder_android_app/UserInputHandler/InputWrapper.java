@@ -24,9 +24,6 @@ public class InputWrapper {
 
     /**
      * Makes a new InputWrapper
-     *
-     * @author Samuel Jones
-     * @since 3-1-2021
      */
     public InputWrapper(MainViewModel mainViewModel) {
         medicationInputHandler = new MedicationInputHandler(mainViewModel);
@@ -40,9 +37,6 @@ public class InputWrapper {
      * @param type The type of input
      * @param input The input map
      * @throws InvalidParameterException If type is invalid or input map is null
-     *
-     * @author Samuel Jones
-     * @since 3-1-2021
      */
     public void processInput(InputType type, Map<String,String> input) throws InvalidParameterException {
         if(input == null) {
@@ -91,7 +85,7 @@ public class InputWrapper {
 
 
     /**
-     *
+     * Processes a request to acknowledge a notification
      * @param type The type of the reminder
      * @param reminderID The corresponding ID for the reminder to be acknowledged
      * @param dismissed Indicated whether the notification was dismissed or acknowledged; true for
@@ -116,6 +110,10 @@ public class InputWrapper {
     }
 
 
+    /**
+     * Requests to clear internal database tables of a specific type
+     * @param type The type of the information to be cleared
+     */
     public void clearTableRequest(InputType type) {
         switch (type) {
             case Medication:
@@ -130,6 +128,15 @@ public class InputWrapper {
             default:
                 throw new InvalidParameterException("Invalid type");
         }
+    }
+
+    /**
+     * Requests to delete everything in the internal database
+     */
+    public void clearTableRequest() {
+        medicationInputHandler.deleteAllRequest();
+        //doctorInputHandler.deleteAllRequest();
+        //appointmentInputHandler.deleteAllRequest();
     }
 
 }
