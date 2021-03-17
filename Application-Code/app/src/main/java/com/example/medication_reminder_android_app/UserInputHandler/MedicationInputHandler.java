@@ -55,9 +55,6 @@ public class MedicationInputHandler extends InputHandler {
 
         mainViewModel.insertMedication(name, dosage, recurring, startDate, endDate, interval,
                 warnings, activeIngredient, tags);
-
-        /*String medicationName, String inputDosage, boolean ifRecurring, String startDate, String endDate,
-            String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags*/
     }
 
 
@@ -89,7 +86,6 @@ public class MedicationInputHandler extends InputHandler {
      */
     @Override
     void acknowledgeNotificationRequest(int reminderID, MedicationEntity med, boolean dismissed) {
-        //get current reminder time and intervalIndex, get intervalIndex and increment intervalIndex, add intervalTime to current reminder time
         ReminderEntity r = null;
         //MedicationEntity med = mainViewModel.getMedById(r.getMedApptId());
         int intervalIndex = r.getTimeIntervalIndex();
@@ -105,11 +101,9 @@ public class MedicationInputHandler extends InputHandler {
             dateTime = getSQLDateFormatFromDate(d);
             date = dateTime[0];
             time = dateTime[1];
-        } catch(java.text.ParseException e) {} //handle exception
+        } catch(java.text.ParseException e) {} //TODO - handle exception
         mainViewModel.updateReminderDateAndTime(r, date, time, intervalIndex+1);
 
-
-        //if acknowledged: get current acknowledgementString and split into array or array list, add latest time to the end
         if(!dismissed) {
             Date now = new Date();
             dateTime = getSQLDateFormatFromDate(now);
