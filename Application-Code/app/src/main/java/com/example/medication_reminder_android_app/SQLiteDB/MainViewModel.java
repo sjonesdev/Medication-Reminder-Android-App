@@ -48,6 +48,14 @@ public class MainViewModel extends AndroidViewModel {
         return retVal;
     }
 
+    public MedicationEntity getMedById(Integer medId){
+        return repository.getMedById(medId);
+    }
+
+    public ReminderEntity getReminderById(Integer reminderId){
+        return repository.getReminderById(reminderId);
+    }
+
     //methods to insert rows into tables
     //Maybe have all insertion return the primary keys
     //For timing purposes maybe i have this method creating a reminder row inside of it.
