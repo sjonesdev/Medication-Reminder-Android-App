@@ -22,8 +22,8 @@ public abstract class InputHandler {
 
     abstract void deleteRequest(String name);
 
-    abstract void acknowledgeNotification(int reminderID, MedicationEntity med, boolean dismissed);
+    abstract void acknowledgeNotificationRequest(int reminderID, MedicationEntity med, boolean dismissed);
 
-    abstract void deleteAll();
+    abstract void deleteAllRequest();
 
 }

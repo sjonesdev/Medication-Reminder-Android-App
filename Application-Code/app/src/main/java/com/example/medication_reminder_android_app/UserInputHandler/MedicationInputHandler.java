@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- *
+ * This class handles requests involving medications in the internal database
  *
  * @author Samuel Jones
  * @since 3-1-2021
@@ -27,10 +27,7 @@ public class MedicationInputHandler extends InputHandler {
     private MainViewModel mainViewModel;
 
     /**
-     *
-     *
-     * @author Samuel Jones
-     * @since 3-1-2021
+     * Creates a MedicationInputHandler
      */
     public MedicationInputHandler(MainViewModel mainViewModel) {
         super();
@@ -41,9 +38,6 @@ public class MedicationInputHandler extends InputHandler {
     /**
      * Reads data from an input map and sends it to be written to the internal database
      * @param info The map to read from
-     *
-     * @author Samuel Jones
-     * @since 3-1-2021
      */
     void inputRequest(Map<String,String> info) {
         String name = info.get("name"); //user inputted
@@ -65,19 +59,35 @@ public class MedicationInputHandler extends InputHandler {
             String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags*/
     }
 
+
+    /**
+     * Requests the deletion of a medication and associated reminder from the internal database.
+     * @param medName The name of the medication to be deleted
+     */
     void deleteRequest(String medName) {
         mainViewModel.deleteMedication(medName);
     }
 
 
     /**
-     *
-     * @param reminderID
-     * @param med
+     * Requests to delete all medications and associated reminders from internal database
      */
-    void acknowledgeNotification(int reminderID, MedicationEntity med, boolean dismissed) {
+    void deleteAllRequest() {
+        mainViewModel.deleteAllMedications();
+    }
+
+
+    /**
+     * Acknowledges a notification, updating the table to reflect when the next notification should
+     * happen, and adding a timestamp to the medication if the notification was acknowledged
+     * (medication was taken)
+     * @param reminderID ID of the reminder to be updated
+     * @param dismissed True if notification was dismissed, false if acknowledged
+     */
+    void acknowledgeNotificationRequest(int reminderID, MedicationEntity med, boolean dismissed) {
         //get current reminder time and intervalIndex, get intervalIndex and increment intervalIndex, add intervalTime to current reminder time
         ReminderEntity r = null;
+        //MedicationEntity med = mainViewModel.getMedById(r.getMedApptId());
         int intervalIndex = r.getTimeIntervalIndex();
         String[] interval = med.getTimeRule().split(",");
         long millisToAdd = (long) (Double.parseDouble(interval[intervalIndex]) * HOURS_TO_MILLIS);
@@ -112,13 +122,9 @@ public class MedicationInputHandler extends InputHandler {
         }
     }
 
-    void deleteAll() {
-        mainViewModel.deleteAllMedications();
-    }
-
 
     /**
-     *
+     * Gets a date in a SQL-like format from a Java date object
      * @param date A java date object
      * @return String array of the form {date, time} with date of the format YYYY-MM-DD and time of
      * the format HH:MM
@@ -131,6 +137,13 @@ public class MedicationInputHandler extends InputHandler {
         return new String[]{d, t};
     }
 
+
+    /**
+     * Gets the 2 digit representation of a month from a 3 character capitalized string of the
+     * month's abbreviation (e.g., Jan, Feb, etc)
+     * @param month The month abbreviation
+     * @return The digit representation of the month
+     */
     private String getMonthNumberFromAbbreviation(String month) {
         switch(month) {
             case "Jan":

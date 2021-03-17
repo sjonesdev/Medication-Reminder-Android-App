@@ -102,7 +102,7 @@ public class InputWrapper {
             case Medication:
                 //get medication
                 MedicationEntity med = null;
-                medicationInputHandler.acknowledgeNotification(reminderID, med, dismissed);
+                medicationInputHandler.acknowledgeNotificationRequest(reminderID, med, dismissed);
                 break;
             case Doctor:
                 //doctorInputHandler.inputRequest(input); TODO
@@ -119,7 +119,7 @@ public class InputWrapper {
     public void clearTableRequest(InputType type) {
         switch (type) {
             case Medication:
-                medicationInputHandler.deleteAll();
+                medicationInputHandler.deleteAllRequest();
                 break;
             case Doctor:
                 //doctorInputHandler.inputRequest(input); TODO
