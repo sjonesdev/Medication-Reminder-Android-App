@@ -36,6 +36,10 @@ com/example/medication_reminder_android_app/SQLiteDB/ReminderEntity.java
  com.example.medication_reminder_android_app.SQLiteDB.ReminderEntity
 com/example/medication_reminder_android_app/NotificationRelay/Notifications.java
  com.example.medication_reminder_android_app.NotificationRelay.Notifications
+com/example/medication_reminder_android_app/UserInputHandler/InputWrapper.java
+ com.example.medication_reminder_android_app.UserInputHandler.InputWrapper
+ com.example.medication_reminder_android_app.UserInputHandler.InputWrapper$1
+ com.example.medication_reminder_android_app.UserInputHandler.InputWrapper$InputType
 com/example/medication_reminder_android_app/SQLiteDB/AppointmentEntity.java
  com.example.medication_reminder_android_app.SQLiteDB.AppointmentEntity
 com/example/medication_reminder_android_app/SQLiteDB/DoctorEntity.java
@@ -48,6 +52,7 @@ com/example/medication_reminder_android_app/UserInterface/AuthRequestHandler.jav
  com.example.medication_reminder_android_app.UserInterface.AuthRequestHandler
 com/example/medication_reminder_android_app/SQLiteDB/DatabaseRepository.java
  com.example.medication_reminder_android_app.SQLiteDB.DatabaseRepository
+ com.example.medication_reminder_android_app.SQLiteDB.DatabaseRepository$AsyncAddReminderID
  com.example.medication_reminder_android_app.SQLiteDB.DatabaseRepository$AsyncDeleteAllApptReminders
  com.example.medication_reminder_android_app.SQLiteDB.DatabaseRepository$AsyncDeleteAllMedReminders
  com.example.medication_reminder_android_app.SQLiteDB.DatabaseRepository$AsyncDeleteAllMeds

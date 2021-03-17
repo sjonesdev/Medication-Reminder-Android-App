@@ -4,12 +4,16 @@ package com.example.medication_reminder_android_app.UserInputHandler;
 //Might need ot add an interface for adding info to Reminder table
 
 
+import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
+import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
+
 import java.util.Date;
 import java.util.Map;
 
 public class AppointmentInputHandler extends InputHandler {
 
-    CalenderEventCreator calenderEventCreator;
+    private MainViewModel mainViewModel;
+    private CalenderEventCreator calenderEventCreator;
 
     /**
      *
@@ -19,6 +23,7 @@ public class AppointmentInputHandler extends InputHandler {
      */
     public AppointmentInputHandler() {
         super();
+        this.mainViewModel = mainViewModel;
         calenderEventCreator = new CalenderEventCreator();
     }
 
@@ -30,6 +35,7 @@ public class AppointmentInputHandler extends InputHandler {
      * @author Samuel Jones
      * @since 3-1-2021
      */
+    @Override
     void inputRequest(Map<String,String> info) {
         String locationName = info.get("locationName");
         String locationAddress = info.get("address");
@@ -49,7 +55,22 @@ public class AppointmentInputHandler extends InputHandler {
                     apptPurpose, doctors, date, time, duration); // name, location, description, people involved, date, time
         }
 
-        sendInput();
+        //mainViewModel.insertAppointment();
+    }
+
+    @Override
+    void deleteRequest(String name) {
+
+    }
+
+    @Override
+    void acknowledgeNotificationRequest(int reminderID, MedicationEntity med, boolean dismissed) {
+
+    }
+
+    @Override
+    void deleteAllRequest() {
+
     }
 
 }

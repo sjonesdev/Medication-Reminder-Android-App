@@ -39,6 +39,7 @@ public class MedicationInputHandler extends InputHandler {
      * Reads data from an input map and sends it to be written to the internal database
      * @param info The map to read from
      */
+    @Override
     void inputRequest(Map<String,String> info) {
         String name = info.get("name"); //user inputted
         String dosage = info.get("dosage"); //units included
@@ -64,6 +65,7 @@ public class MedicationInputHandler extends InputHandler {
      * Requests the deletion of a medication and associated reminder from the internal database.
      * @param medName The name of the medication to be deleted
      */
+    @Override
     void deleteRequest(String medName) {
         mainViewModel.deleteMedication(medName);
     }
@@ -72,6 +74,7 @@ public class MedicationInputHandler extends InputHandler {
     /**
      * Requests to delete all medications and associated reminders from internal database
      */
+    @Override
     void deleteAllRequest() {
         mainViewModel.deleteAllMedications();
     }
@@ -84,6 +87,7 @@ public class MedicationInputHandler extends InputHandler {
      * @param reminderID ID of the reminder to be updated
      * @param dismissed True if notification was dismissed, false if acknowledged
      */
+    @Override
     void acknowledgeNotificationRequest(int reminderID, MedicationEntity med, boolean dismissed) {
         //get current reminder time and intervalIndex, get intervalIndex and increment intervalIndex, add intervalTime to current reminder time
         ReminderEntity r = null;
