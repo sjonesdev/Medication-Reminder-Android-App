@@ -94,9 +94,7 @@ public class InputWrapper {
     public void processAcknowledgementRequest(InputType type, int reminderID, boolean dismissed) {
         switch (type) {
             case Medication:
-                //get medication
-                MedicationEntity med = null;
-                medicationInputHandler.acknowledgeNotificationRequest(reminderID, med, dismissed);
+                medicationInputHandler.acknowledgeNotificationRequest(reminderID, dismissed);
                 break;
             case Doctor:
                 //doctorInputHandler.inputRequest(input); TODO

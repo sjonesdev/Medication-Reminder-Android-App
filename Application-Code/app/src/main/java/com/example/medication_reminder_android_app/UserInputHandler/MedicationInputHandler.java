@@ -85,9 +85,9 @@ public class MedicationInputHandler extends InputHandler {
      * @param dismissed True if notification was dismissed, false if acknowledged
      */
     @Override
-    void acknowledgeNotificationRequest(int reminderID, MedicationEntity med, boolean dismissed) {
-        ReminderEntity r = null;
-        //MedicationEntity med = mainViewModel.getMedById(r.getMedApptId());
+    void acknowledgeNotificationRequest(int reminderID, boolean dismissed) {
+        ReminderEntity r = mainViewModel.getReminderById(reminderID);
+        MedicationEntity med = mainViewModel.getMedById(r.getMedApptId());
         int intervalIndex = r.getTimeIntervalIndex();
         String[] interval = med.getTimeRule().split(",");
         long millisToAdd = (long) (Double.parseDouble(interval[intervalIndex]) * HOURS_TO_MILLIS);
