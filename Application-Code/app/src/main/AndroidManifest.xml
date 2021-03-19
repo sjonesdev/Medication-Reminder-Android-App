@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MedicationReminderAndroidApp">
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.medication_reminder_android_app.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar">
             <intent-filter>
