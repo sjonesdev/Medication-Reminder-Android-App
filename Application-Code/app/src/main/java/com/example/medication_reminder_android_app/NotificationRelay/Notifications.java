@@ -6,13 +6,6 @@ This class handles formatting and sending notifications to the user
 This handles external notifications
  */
 
-
-/*notes:
-    -just doing medications; don't include any implementation code for appointment notifications
-
- */
-
-import androidx.lifecycle.MutableLiveData;
 import com.example.medication_reminder_android_app.SQLiteDB.*;
 
 public class Notifications {
@@ -43,7 +36,7 @@ public class Notifications {
         String[] infoArray = new String[2];
 
         //gets the reminder entity object from livedata type
-        ReminderEntity[] reminderArray = db.getReminders(1).getValue();
+        ReminderEntity reminderArray[] = db.getReminders(1).getValue();
         //we just got one reminder, grab it
         ReminderEntity reminder = reminderArray[0];
 
@@ -68,8 +61,54 @@ public class Notifications {
         return infoArray;
     }
 
-    //need to handle timing ourselves? This code may go in sendNotification
-    //need to get current time somehow and check it against next reminder time
+
+    protected int[] getTimeAsInt(){
+
+        //need to get time from sqlite db (stored as string) and parse each one to integer;
+
+        //takes the top reminder from the db
+        ReminderEntity[] reminderArray = db.getReminders(1).getValue();
+        ReminderEntity reminder = reminderArray[0];
+
+        String timeString = reminder.getTime();
+
+        //splice the time by colons
+        String timeStrings[] = timeString.split(":");
+        //parse each result in the array to an integer
+        int hour = Integer.parseInt(timeStrings[0]);
+        int minute = Integer.parseInt(timeStrings[1]);
+
+        int timeAsIntegers[] = {hour, minute};
+
+        return timeAsIntegers;
+
+    }
+
+
+    protected int[] getDateAsInt(){
+
+        //need to get date from sqlite db (stored as string) and parse each num to integer;
+
+        //takes the top reminder from the db
+        ReminderEntity[] reminderArray = db.getReminders(1).getValue();
+        ReminderEntity reminder = reminderArray[0];
+
+        String dateString = reminder.getDate();
+
+        //splice the date by dashes
+        String dateStrings[] = dateString.split("-");
+        //parse each result in the array to an integer
+        int month = Integer.parseInt(dateStrings[0]);
+        int day = Integer.parseInt(dateStrings[1]);
+        int year = Integer.parseInt(dateStrings[2]);
+
+        int dateAsIntegers[] = {month, day, year};
+
+        return dateAsIntegers;
+
+
+
+    }
 
 
 }

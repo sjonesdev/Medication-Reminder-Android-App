@@ -17,7 +17,7 @@ notes:
    Last Modified by: Aliza Siddiqui 03/06/2021
 */
 
-public class Notifications {
+public class NotificationsTemp {
      //member variables
     private char typeNotif;
     private String doctorName;
@@ -31,7 +31,7 @@ public class Notifications {
  
     private DatabaseRepository db;
 
-    public Notifications(DatabaseRepository repo){
+    public NotificationsTemp(DatabaseRepository repo){
         db = repo;
 
     }
