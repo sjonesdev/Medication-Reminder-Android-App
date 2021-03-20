@@ -90,18 +90,20 @@ public class InputWrapper {
      * @param reminderID The corresponding ID for the reminder to be acknowledged
      * @param dismissed Indicated whether the notification was dismissed or acknowledged; true for
      *                  dismissed, false for acknowledged
+     * @return A date & time string of the format "YYYY-MM-DD HH:MM" of the next date and time for
+     *         the reminder being acknowledged
      */
-    public void processAcknowledgementRequest(InputType type, int reminderID, boolean dismissed) {
+    public String processAcknowledgementRequest(InputType type, int reminderID, boolean dismissed) {
         switch (type) {
             case Medication:
-                medicationInputHandler.acknowledgeNotificationRequest(reminderID, dismissed);
-                break;
+                return medicationInputHandler.acknowledgeNotificationRequest(reminderID, dismissed);
             case Appointment:
-                //appointmentInputHandler.inputRequest(input); TODO
+                //return appointmentInputHandler.inputRequest(input); TODO
                 break;
             default:
                 throw new InvalidParameterException("Invalid type");
         }
+        return null;
     }
 
 

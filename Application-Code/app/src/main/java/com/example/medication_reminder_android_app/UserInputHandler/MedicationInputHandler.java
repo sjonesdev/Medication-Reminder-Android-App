@@ -19,7 +19,7 @@ import java.util.Map;
  * @author Samuel Jones
  * @since 3-1-2021
  */
-public class MedicationInputHandler extends InputHandler {
+class MedicationInputHandler extends InputHandler {
 
     private final double HOURS_TO_MILLIS = 60*60*1000;
     private final int MAX_NUM_ACK = 30;
@@ -83,9 +83,10 @@ public class MedicationInputHandler extends InputHandler {
      * (medication was taken)
      * @param reminderID ID of the reminder to be updated
      * @param dismissed True if notification was dismissed, false if acknowledged
+     * @return A date & time string of the format YYYY-MM-DD HH:MM
      */
     @Override
-    public void acknowledgeNotificationRequest(int reminderID, boolean dismissed) {
+    String acknowledgeNotificationRequest(int reminderID, boolean dismissed) {
         ReminderEntity r = mainViewModel.getReminderById(reminderID);
         MedicationEntity med = mainViewModel.getMedById(r.getMedApptId());
         int intervalIndex = r.getTimeIntervalIndex();
@@ -118,6 +119,8 @@ public class MedicationInputHandler extends InputHandler {
             String newAckStr = TextUtils.join(",", (String[]) ackList.toArray());
             mainViewModel.updateAcknowledgements(med, newAckStr);
         }
+
+        return date + " " + time; //YYYY-MM-DD HH:MM
     }
 
 

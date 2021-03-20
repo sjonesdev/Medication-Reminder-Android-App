@@ -22,7 +22,7 @@ public abstract class InputHandler {
 
     abstract void deleteRequest(String name);
 
-    abstract void acknowledgeNotificationRequest(int reminderID, boolean dismissed);
+    abstract String acknowledgeNotificationRequest(int reminderID, boolean dismissed);
 
     abstract void deleteAllRequest();
 
