@@ -9,10 +9,11 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 /**
  * @author Hayley Roberts
- * @lastModified 3/6/2021 by Karley Waguespack
+ * @lastModified 3/5/2021 by Hayley Roberts
  */
 
 @Dao
@@ -32,10 +33,16 @@ public interface DataAccessObject {
     @Query("SELECT * FROM MedicationTable WHERE med_name LIKE :name")
     public MedicationEntity getMedicationByName(String name);
 
-    //get a medication by id
-    @Query("SELECT * FROM MedicationTable WHERE primaryKey LIKE :medId")
-    public MedicationEntity getMedicationById(Integer medId);
+    @Query("SELECT * FROM MedicationTable WHERE primaryKey LIKE :pk")
+    public MedicationEntity getMedicationById(Integer pk);
 
+    @Query("UPDATE MedicationTable SET acknowledgements = :a WHERE primarykey LIKE :pk")
+    public void updateAcknowledgements(Integer pk, String a);
+
+    @Query("UPDATE MedicationTable SET reminder_id = :reminderPK WHERE primarykey LIKE :medPK")
+    public void addReminderID(Integer medPK, Integer reminderPK);
+
+    //Deletions
     @Delete
     public int deleteMedication(MedicationEntity medication);
 
@@ -63,8 +70,17 @@ public interface DataAccessObject {
     @Query("SELECT * FROM ReminderTable ORDER BY ApptDate, ApptTime LIMIT :numberOfReminders")
     public ReminderEntity[] selectNextReminders(int numberOfReminders);
 
+    @Query("UPDATE ReminderTable SET ApptDate = :date, ApptTime = :time, TimeInterval = :timeInterval WHERE rowid LIKE :primaryKey")
+    public void updateDateAndTime(int primaryKey, String date, String time, int timeInterval);
+
     @Delete
     public int deleteReminder(ReminderEntity reminder);
+
+    @Query("DELETE FROM ReminderTable WHERE Classification like 'M'")
+    public int deleteAllMedicationReminders();
+
+    @Query("DELETE FROM ReminderTable WHERE Classification like 'A'")
+    public int deleteAllAppointmentReminders();
 
     @Query("DELETE FROM ReminderTable")
     public void clearAllReminders();
