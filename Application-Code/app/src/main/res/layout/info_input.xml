@@ -108,7 +108,7 @@
         app:layout_constraintTop_toBottomOf="@+id/pick_time_button" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/pick_end_day_button"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -117,5 +117,27 @@
         android:text="@string/pick_end_day"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pick_time_button" />
+
+    <EditText
+        android:id="@+id/interval_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:importantForAutofill="no"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/interval_label" />
+
+    <TextView
+        android:id="@+id/interval_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/interval"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pick_day_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

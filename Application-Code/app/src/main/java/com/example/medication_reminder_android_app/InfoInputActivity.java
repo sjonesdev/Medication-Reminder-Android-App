@@ -21,6 +21,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class InfoInputActivity extends AppCompatActivity {
 
+    private String startDateString;
+    private String endDateString;
+    private Boolean isStart = true;
+
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm");
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +35,7 @@ public class InfoInputActivity extends AppCompatActivity {
         final Calendar cal = Calendar.getInstance();
         EditText name = (EditText) findViewById(R.id.name_editText);
         EditText dosage = (EditText) findViewById(R.id.dosage_editText);
+        EditText interval = (EditText)  findViewById(R.id.interval_editText);
 
         TimePickerDialog.OnTimeSetListener setTimeVariables = new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -46,6 +53,12 @@ public class InfoInputActivity extends AppCompatActivity {
                 cal.set(Calendar.YEAR, year);
                 cal.set(Calendar.MONTH, monthOfYear);
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                if(isStart){
+                    startDateString = dateFormat.format(cal.getTime());
+                }else{
+                    endDateString = dateFormat.format(cal.getTime());
+                }
             }
         };
 
@@ -69,10 +82,20 @@ public class InfoInputActivity extends AppCompatActivity {
             }
         });
 
-        //Pick day button listener
+        //Pick start day button listener
         findViewById(R.id.pick_day_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isStart = true;
+                dpg.show();
+            }
+        });
+
+        //Pick end day button listener
+        findViewById(R.id.pick_end_day_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isStart = false;
                 dpg.show();
             }
         });
@@ -84,8 +107,8 @@ public class InfoInputActivity extends AppCompatActivity {
 
                 name.getText().clear();
                 dosage.getText().clear();
+                interval.getText().clear();
 
-                //empty text boxes before finishing
                 finish();
             }
         });
@@ -99,15 +122,21 @@ public class InfoInputActivity extends AppCompatActivity {
                 Map<String, String> map = new HashMap<>();
                 map.put("name", name.getText().toString());
                 map.put("dosage", dosage.getText().toString());
-
-                Date startDate = cal.getTime();
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm");
-                String startDateString = dateFormat.format(startDate);
                 map.put("startDate", startDateString);
+                map.put("endDate", endDateString);
+                map.put("interval", interval.getText().toString());
+
+                //recurring?
+
+
+                //call Sam's input method
+                //MedicationInputHandler.inputRequest(map)
+                //call Karley's input method
+
 
                 name.getText().clear();
                 dosage.getText().clear();
-
+                interval.getText().clear();
                 finish();
             }
         });
