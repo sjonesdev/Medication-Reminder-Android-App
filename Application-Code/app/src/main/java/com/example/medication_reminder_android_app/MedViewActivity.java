@@ -17,5 +17,22 @@ public class MedViewActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        findViewById(R.id.deleteMedButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+
+
+            }
+        });
+
+
     }
-}
+
+
+
+
+
+
+
+    }
