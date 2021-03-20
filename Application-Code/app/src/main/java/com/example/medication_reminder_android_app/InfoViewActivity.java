@@ -5,12 +5,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class InfoViewActivity extends Activity {
+
+    String s1[];
+    RecyclerView infoRecycler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info_view);
+
+        s1 = getResources().getStringArray(R.array.debug_one); //This will likely be replaced with getting the info using Haley's methods
+        infoRecycler = findViewById(R.id.info_recycler);
+
+        InfoRecyclerAdapter infoadapter = new InfoRecyclerAdapter(this, s1);
+        infoRecycler.setAdapter(infoadapter);
+        infoRecycler.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override

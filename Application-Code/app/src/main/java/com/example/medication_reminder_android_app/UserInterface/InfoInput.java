@@ -4,7 +4,7 @@ package com.example.medication_reminder_android_app.UserInterface;
 
 public class InfoInput {
 
-    @XmlRootElement
+    //@XmlRootElement
     public class Medication {
         private String name;
         private String dosage;
