@@ -1,12 +1,49 @@
 <resources>
+    <!-- General use strings-->
     <string name="app_name">Medication-Reminder-Android-App</string>
     <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
+    <!-- Obsolete strings from fragments that i'm too scared to get rid of -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!-- content_main strings -->
+    <string name="view_my_info">View My Info</string>
+    <string name="notifications">Notifications</string>
+    <string name="settings">Settings</string>
+
+    <!-- info_view strings -->
+    <string name="new_med_button">Add</string>
+    <string name="back">Back</string>
+
+    <!-- info_input strings -->
+    <string name="add_new_med">Add New Medication</string>
+    <string name="name">Name</string>
+    <string name="hint"> </string>
+    <string name="dosage">Dosage</string>
+    <string name="time">Time</string>
+    <string name="days">Days</string>
+    <string name="recurring">Recurring</string>
+    <string name="discard">Discard</string>
+    <string name="save">Save</string>
+    <string name="pick_time">Pick a Time</string>
+    <string name="pick_start_day">Start Date</string>
+    <string name="pick_end_day">End Date</string>
+    <string name="interval">Interval</string>
+
+    <!-- dont worry about this -->
+    <string-array name="debug_one">
+        <item>Thing 1</item>
+        <item>Thing 2</item>
+        <item>Thing 3</item>
+
+    </string-array>
+
+    <string name="deleteAll">Delete Everything!</string>
+
+
 </resources>

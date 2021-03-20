@@ -1,40 +1,65 @@
 package com.example.medication_reminder_android_app;
 
-/*
-This class is the equivalent to the main class in Java.
-This is the starting point of the code.
-
-https://developer.android.com/guide/components/activities/activity-lifecycle#java
- */
-
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
-public class MainActivity {
+import androidx.appcompat.app.AppCompatActivity;
 
-    public void onCreate(Bundle savedInstanceState){
-        //TODO
+public class MainActivity extends AppCompatActivity {
 
-        //setContentView(UI)
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        findViewById(R.id.viewInfoButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, InfoViewActivity.class));
+            }
+        });
+
+        findViewById(R.id.viewNotifsButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, NotificationActivity.class));
+            }
+        });
+
+        findViewById(R.id.viewSettingsButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+            }
+        });
     }
 
-    public void onStart(){
-        //TODO
+    @Override
+    public void onStart() {
+
+        super.onStart();
     }
 
-    public void onResume(){
+    @Override
+    public void onResume() {
         //TODO
+        super.onResume();
     }
 
-    public void onPause(){
+    @Override
+    public void onPause() {
         //TODO
+        super.onPause();
     }
 
-    public void onStop(){
+    @Override
+    public void onStop() {
         //TODO
+        super.onStop();
     }
 
-    public void onDestroy(){
+    @Override
+    public void onDestroy() {
         //TODO
+        super.onDestroy();
     }
-
 }
