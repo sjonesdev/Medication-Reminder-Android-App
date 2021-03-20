@@ -38,9 +38,10 @@ class MedicationInputHandler extends InputHandler {
     /**
      * Reads data from an input map and sends it to be written to the internal database
      * @param info The map to read from
+     * @return The reminder ID associated with the medication inserted
      */
     @Override
-    void inputRequest(Map<String,String> info) {
+    int inputRequest(Map<String,String> info) {
         String name = info.get("name"); //user inputted
         String dosage = info.get("dosage"); //units included
         String startDate = info.get("startDate"); //YYYY-MM-DD HH:MM
@@ -55,6 +56,7 @@ class MedicationInputHandler extends InputHandler {
 
         mainViewModel.insertMedAndReminder(name, dosage, recurring, startDate, endDate, interval,
                 warnings, activeIngredient, tags);
+        return 0; //fix
     }
 
 

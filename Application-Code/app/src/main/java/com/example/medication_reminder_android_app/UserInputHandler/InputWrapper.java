@@ -37,15 +37,15 @@ public class InputWrapper {
      * @param type The type of input
      * @param input The input map
      * @throws InvalidParameterException If type is invalid or input map is null
+     * @return The reminder ID of the reminder entity associated with the given input
      */
-    public void processInput(InputType type, Map<String,String> input) throws InvalidParameterException {
+    public int processInput(InputType type, Map<String,String> input) throws InvalidParameterException {
         if(input == null) {
             throw new InvalidParameterException("Invalid input map");
         }
         switch (type) {
             case Medication:
-                medicationInputHandler.inputRequest(input);
-                break;
+                return medicationInputHandler.inputRequest(input);
             case Doctor:
                 //doctorInputHandler.inputRequest(input); TODO
                 break;
@@ -55,6 +55,7 @@ public class InputWrapper {
             default:
                 throw new InvalidParameterException("Invalid input type");
         }
+        return -1;
     }
 
 
