@@ -54,9 +54,8 @@ class MedicationInputHandler extends InputHandler {
         String tags = info.get("tags"); //comma separated
         boolean recurring = Boolean.parseBoolean(info.get("recurring"));
 
-        mainViewModel.insertMedAndReminder(name, dosage, recurring, startDate, endDate, interval,
+        return mainViewModel.insertMedAndReminder(name, dosage, recurring, startDate, endDate, interval,
                 warnings, activeIngredient, tags);
-        return 0; //fix
     }
 
 
