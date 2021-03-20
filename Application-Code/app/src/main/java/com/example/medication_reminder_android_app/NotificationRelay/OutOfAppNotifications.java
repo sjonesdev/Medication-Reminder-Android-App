@@ -4,6 +4,7 @@ package com.example.medication_reminder_android_app.NotificationRelay;
 //This handles out of app notifications
 
 import com.example.medication_reminder_android_app.SQLiteDB.*;
+import com.example.medication_reminder_android_app.NotificationRelay.*;
 
 public class OutOfAppNotifications extends Notifications{
 
