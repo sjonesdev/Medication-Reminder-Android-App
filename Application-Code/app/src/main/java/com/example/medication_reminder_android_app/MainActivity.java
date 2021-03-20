@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity{
 
     private final static String default_notification_channel_id = "default" ;
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
-    final Calendar myCalendar = Calendar.getInstance () ;
     private DatabaseRepository db;
     NotificationPublisher publisher = new NotificationPublisher();
 
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity{
         //store immediately in the info array.
         infoArray[0] = reminderType;
 
-        if(reminderType.equals("MED")){
+        if(reminderType.equals("M")){
             //retrieve the medication object from the reminder
             MedicationEntity med = db.getMedById(reminder.getMedApptId());
             //get the med name
@@ -217,11 +216,9 @@ public class MainActivity extends AppCompatActivity{
 
 
     //TODO: we need call this somewhere; need to figure out where
-    private void ScheduleNotification() {
+    private void ScheduleNotification(Calendar myCalendar) {
             String myFormat = "dd/MM/yy" ; //In which you need put here
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat , Locale. getDefault ());
-
-            //this is the chosenTime from the user (TODO: need to get specified time from user)
             long chosenTime = myCalendar.getTimeInMillis();
             long currentTime = System.currentTimeMillis();
             long delay = chosenTime - currentTime;
