@@ -5,10 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class InfoViewActivity extends Activity {
+public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerAdapter.OnItemListener{
 
     String s1[];
     RecyclerView infoRecycler;
@@ -21,7 +22,7 @@ public class InfoViewActivity extends Activity {
         s1 = getResources().getStringArray(R.array.debug_one); //This will likely be replaced with getting the info using Haley's methods
         infoRecycler = findViewById(R.id.info_recycler);
 
-        InfoRecyclerAdapter infoadapter = new InfoRecyclerAdapter(this, s1);
+        InfoRecyclerAdapter infoadapter = new InfoRecyclerAdapter(this, s1, this);
         infoRecycler.setAdapter(infoadapter);
         infoRecycler.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -66,5 +67,11 @@ public class InfoViewActivity extends Activity {
     public void onDestroy() {
         //TODO
         super.onDestroy();
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Intent intent = new Intent(this, MedViewActivity.class);
+        startActivity(intent);
     }
 }

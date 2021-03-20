@@ -6,10 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class NotificationActivity extends Activity {
+public class NotificationActivity extends AppCompatActivity {
 
     String[] notifTitles;
     String[] contents;

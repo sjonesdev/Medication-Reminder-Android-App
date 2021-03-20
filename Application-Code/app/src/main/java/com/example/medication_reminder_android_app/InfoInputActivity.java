@@ -2,7 +2,13 @@ package com.example.medication_reminder_android_app;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -11,7 +17,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
-public class InfoInputActivity extends Activity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class InfoInputActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,8 +95,19 @@ public class InfoInputActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //call Sam's input method
+
+                Map<String, String> map = new HashMap<>();
+                map.put("name", name.getText().toString());
+                map.put("dosage", dosage.getText().toString());
+
+                Date startDate = cal.getTime();
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm");
+                String startDateString = dateFormat.format(startDate);
+                map.put("startDate", startDateString);
+
                 name.getText().clear();
                 dosage.getText().clear();
+
                 finish();
             }
         });

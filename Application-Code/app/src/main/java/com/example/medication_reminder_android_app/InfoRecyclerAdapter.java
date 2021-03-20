@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapter.InfoViewHolder> {
 
-    String[] mednames;
-    Context context;
+    private String[] mednames;
+    private Context context;
+    private OnItemListener medItemListener;
 
-    public InfoRecyclerAdapter(Context cont, String[] names){
+    public InfoRecyclerAdapter(Context cont, String[] names, OnItemListener list){
         context = cont;
         mednames = names;
+        medItemListener = list;
     }
 
     @NonNull
@@ -24,7 +26,7 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
     public InfoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.med_row, parent, false);
-        return new InfoViewHolder(view);
+        return new InfoViewHolder(view, medItemListener);
     }
 
     @Override
@@ -37,13 +39,28 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
         return mednames.length;
     }
 
-    public class InfoViewHolder extends RecyclerView.ViewHolder{
+    public class InfoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView medText;
+        OnItemListener onitemlistener;
 
-        public InfoViewHolder(@NonNull View itemView) {
+        public InfoViewHolder(@NonNull View itemView, OnItemListener listener) {
             super(itemView);
             medText = itemView.findViewById(R.id.med_name);
+            onitemlistener = listener;
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            onitemlistener.onItemClick(getAdapterPosition());
         }
     }
+
+    public interface OnItemListener {
+        void onItemClick(int position);
+    }
+
+
 }

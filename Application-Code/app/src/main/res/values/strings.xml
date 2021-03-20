@@ -31,7 +31,8 @@
     <string name="discard">Discard</string>
     <string name="save">Save</string>
     <string name="pick_time">Pick a Time</string>
-    <string name="pick_day">Pick a Day</string>
+    <string name="pick_start_day">Start Date</string>
+    <string name="pick_end_day">End Date</string>
 
     <!-- dont worry about this -->
     <string-array name="debug_one">
