@@ -1,4 +1,5 @@
 //commented everything out because it was causing errors in the build
+//most of this is duplicate code and we may be able to delete soon
 
 package com.example.medication_reminder_android_app.NotificationRelay;
 import androidx.lifecycle.MutableLiveData;

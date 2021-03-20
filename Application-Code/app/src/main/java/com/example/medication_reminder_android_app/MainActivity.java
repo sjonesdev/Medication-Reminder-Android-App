@@ -43,9 +43,11 @@ public class MainActivity extends AppCompatActivity{
     private String notificationName; //This is if the notification does not fit the med or doctor appointment category
                                       // i.e. MRI, Blood donation, etc.
 
-    public static final String ANDROID_CHANNEL_ID = "com.example.medication_reminder_android_app.NotificationRelay";
-    public static final String ANDROID_CHANNEL_NAME = "MEDICATION CHANNEL";
+    //public static final String ANDROID_CHANNEL_ID = "com.example.medication_reminder_android_app.NotificationRelay";
+    //public static final String ANDROID_CHANNEL_NAME = "MEDICATION CHANNEL";
+
     private final static String default_notification_channel_id = "default" ;
+    public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     final Calendar myCalendar = Calendar.getInstance () ;
     private DatabaseRepository db;
     NotificationPublisher publisher = new NotificationPublisher();
@@ -158,18 +160,18 @@ public class MainActivity extends AppCompatActivity{
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
 
         //put some extra data in it: the notification's ID and the notification itself (built with notificationCompat)
-        notificationIntent.putExtra(publisher.createNotificationID() , 1 ) ;
-        notificationIntent.putExtra(publisher.getNotificationName() , notification) ;
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1 ) ;
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification) ;
 
         //create a new pendingIntent to pass onto alarm manager; alarm manager will be able to use the data to send the notif
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT );
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //create a new alarm manager object
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
 
         //send the notification using the specified delay; delay must be ms from now
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP , delay , pendingIntent) ;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, delay, pendingIntent) ;
     }
 
 
@@ -199,8 +201,8 @@ public class MainActivity extends AppCompatActivity{
                         .setContentText("Please take " + this.medicationName + " now!")
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                        .setAutoCancel( true )
-                        .setChannelId(ANDROID_CHANNEL_ID);
+                        .setAutoCancel(true)
+                        .setChannelId(NOTIFICATION_CHANNEL_ID);
                 break;
             case 'A': //Doctor Appointment Notification
                 builder = new NotificationCompat.Builder(this, default_notification_channel_id)
@@ -209,7 +211,7 @@ public class MainActivity extends AppCompatActivity{
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                         .setAutoCancel( true )
-                        .setChannelId(ANDROID_CHANNEL_ID);
+                        .setChannelId(NOTIFICATION_CHANNEL_ID);
                 break;
             case 'E': //Miscellaneous health appointments
                 builder = new NotificationCompat.Builder(this, default_notification_channel_id)
@@ -218,66 +220,20 @@ public class MainActivity extends AppCompatActivity{
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                         .setAutoCancel( true )
-                        .setChannelId(ANDROID_CHANNEL_ID);
+                        .setChannelId(NOTIFICATION_CHANNEL_ID);
 
         }
         return builder.build();
-    }
-
-    //when the user has finished selecting a date, set the the calendar variables to that date
-    DatePickerDialog.OnDateSetListener setDateVariables = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet (DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            myCalendar.set(Calendar.YEAR, year) ;
-            myCalendar.set(Calendar.MONTH, monthOfYear) ;
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth) ;
-        }
-    };
-
-    TimePickerDialog.OnTimeSetListener setTimeVariables = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker view, int hour, int minute) {
-            myCalendar.set(Calendar.HOUR, hour) ;
-            myCalendar.set(Calendar.MINUTE, minute);
-            myCalendar.set(Calendar.SECOND, 0);
-            myCalendar.set(Calendar.MILLISECOND, 0);
-            updateLabel();
-        }
-    };
-
-    //create a datepicker dialog; use the setCalendarVariables listener; set the current date
-    //to the current year, month, and day.
-    public void setDate (View view) {
-        new DatePickerDialog(MainActivity.this, setDateVariables,
-                myCalendar.get(Calendar.YEAR ),
-                myCalendar.get(Calendar.MONTH ),
-                myCalendar.get(Calendar.DAY_OF_MONTH )
-        ).show();
-    }
-
-    //do the same for the timepicker
-    public void setTime(View view){
-
-        new TimePickerDialog(MainActivity.this, setTimeVariables,
-                myCalendar.get(Calendar.HOUR),
-                myCalendar.get(Calendar.MINUTE),
-                true
-
-        ).show();
-
     }
 
     private void updateLabel() {
         String myFormat = "dd/MM/yy" ; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat , Locale. getDefault ());
 
-        //this is the chosenTime from the user (TODO: need to get specified time from user)
         long chosenTime = myCalendar.getTimeInMillis();
         long currentTime = System.currentTimeMillis();
         long delay = chosenTime - currentTime;
-        System.out.println(delay);
-        //String date = sdf.format(chosenTime);
-        scheduleNotification(buildNotification(), delay);
+        scheduleNotification(buildNotification(), System.currentTimeMillis() + delay);
     }
 
 
