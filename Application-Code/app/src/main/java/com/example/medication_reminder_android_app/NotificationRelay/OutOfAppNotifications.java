@@ -5,11 +5,10 @@ package com.example.medication_reminder_android_app.NotificationRelay;
 
 import com.example.medication_reminder_android_app.SQLiteDB.DatabaseRepository;
 
-public class OutOfAppNotificationsTemp extends NotificationsTemp {
+public class OutOfAppNotifications extends Notifications{
 
-    public OutOfAppNotificationsTemp(DatabaseRepository repo){
-        super.Notifications(repo);
-    }
-
+      public OutOfAppNotifications(DatabaseRepository repo){
+          super(repo);
+      }
 
 }
