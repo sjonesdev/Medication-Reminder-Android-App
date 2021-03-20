@@ -96,9 +96,6 @@ public class InputWrapper {
             case Medication:
                 medicationInputHandler.acknowledgeNotificationRequest(reminderID, dismissed);
                 break;
-            case Doctor:
-                //doctorInputHandler.inputRequest(input); TODO
-                break;
             case Appointment:
                 //appointmentInputHandler.inputRequest(input); TODO
                 break;

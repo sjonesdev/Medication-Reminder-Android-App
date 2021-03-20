@@ -64,7 +64,7 @@ public class AppointmentInputHandler extends InputHandler {
     }
 
     @Override
-    void acknowledgeNotificationRequest(int reminderID, MedicationEntity med, boolean dismissed) {
+    void acknowledgeNotificationRequest(int reminderID, boolean dismissed) {
 
     }
 
