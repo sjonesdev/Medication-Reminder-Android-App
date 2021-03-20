@@ -28,6 +28,8 @@ import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
 import com.example.medication_reminder_android_app.SQLiteDB.ReminderEntity;
 
 public class MainActivity extends AppCompatActivity{
+
+
     //member variables
     private char typeNotif;
     private String doctorName;
@@ -209,6 +211,7 @@ public class MainActivity extends AppCompatActivity{
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                         .setAutoCancel( true )
                         .setChannelId(NOTIFICATION_CHANNEL_ID);
+
 
         }
         return builder.build();
