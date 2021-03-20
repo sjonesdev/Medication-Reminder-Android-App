@@ -32,8 +32,6 @@ public final class DataAccessObject_Impl implements DataAccessObject {
 
   private final SharedSQLiteStatement __preparedStmtOfUpdateAcknowledgements;
 
-  private final SharedSQLiteStatement __preparedStmtOfAddReminderID;
-
   private final SharedSQLiteStatement __preparedStmtOfClearAllMedications;
 
   private final SharedSQLiteStatement __preparedStmtOfUpdateDateAndTime;
@@ -49,7 +47,7 @@ public final class DataAccessObject_Impl implements DataAccessObject {
     this.__insertionAdapterOfMedicationEntity = new EntityInsertionAdapter<MedicationEntity>(__db) {
       @Override
       public String createQuery() {
-        return "INSERT OR REPLACE INTO `MedicationTable` (`primaryKey`,`med_name`,`dosage`,`recurring`,`first_date`,`end_date`,`time_rule`,`reminder_id`,`acknowledgements`,`warnings`,`ingredients`,`tags`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `MedicationTable` (`primaryKey`,`med_name`,`dosage`,`recurring`,`first_date`,`time_rule`,`reminder_id`,`acknowledgements`,`warnings`,`ingredients`,`tags`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -79,40 +77,35 @@ public final class DataAccessObject_Impl implements DataAccessObject {
         } else {
           stmt.bindString(5, value.getFirstDate());
         }
-        if (value.getEndDate() == null) {
+        if (value.getTimeRule() == null) {
           stmt.bindNull(6);
         } else {
-          stmt.bindString(6, value.getEndDate());
-        }
-        if (value.getTimeRule() == null) {
-          stmt.bindNull(7);
-        } else {
-          stmt.bindString(7, value.getTimeRule());
+          stmt.bindString(6, value.getTimeRule());
         }
         if (value.getReminderID() == null) {
-          stmt.bindNull(8);
+          stmt.bindNull(7);
         } else {
-          stmt.bindLong(8, value.getReminderID());
+          stmt.bindLong(7, value.getReminderID());
         }
         if (value.getAcknowledgements() == null) {
-          stmt.bindNull(9);
+          stmt.bindNull(8);
         } else {
-          stmt.bindString(9, value.getAcknowledgements());
+          stmt.bindString(8, value.getAcknowledgements());
         }
         if (value.getWarnings() == null) {
-          stmt.bindNull(10);
+          stmt.bindNull(9);
         } else {
-          stmt.bindString(10, value.getWarnings());
+          stmt.bindString(9, value.getWarnings());
         }
         if (value.getIngredients() == null) {
-          stmt.bindNull(11);
+          stmt.bindNull(10);
         } else {
-          stmt.bindString(11, value.getIngredients());
+          stmt.bindString(10, value.getIngredients());
         }
         if (value.getTags() == null) {
-          stmt.bindNull(12);
+          stmt.bindNull(11);
         } else {
-          stmt.bindString(12, value.getTags());
+          stmt.bindString(11, value.getTags());
         }
       }
     };
@@ -253,13 +246,6 @@ public final class DataAccessObject_Impl implements DataAccessObject {
         return _query;
       }
     };
-    this.__preparedStmtOfAddReminderID = new SharedSQLiteStatement(__db) {
-      @Override
-      public String createQuery() {
-        final String _query = "UPDATE MedicationTable SET reminder_id = ? WHERE primarykey LIKE ?";
-        return _query;
-      }
-    };
     this.__preparedStmtOfClearAllMedications = new SharedSQLiteStatement(__db) {
       @Override
       public String createQuery() {
@@ -270,7 +256,7 @@ public final class DataAccessObject_Impl implements DataAccessObject {
     this.__preparedStmtOfUpdateDateAndTime = new SharedSQLiteStatement(__db) {
       @Override
       public String createQuery() {
-        final String _query = "UPDATE ReminderTable SET ApptDate = ?, ApptTime = ?, TimeInterval = ? WHERE rowid LIKE ?";
+        final String _query = "UPDATE ReminderTable SET ApptDate = ?, ApptTime = ? WHERE rowid LIKE ?";
         return _query;
       }
     };
@@ -405,32 +391,6 @@ public final class DataAccessObject_Impl implements DataAccessObject {
   }
 
   @Override
-  public void addReminderID(final Integer medPK, final Integer reminderPK) {
-    __db.assertNotSuspendingTransaction();
-    final SupportSQLiteStatement _stmt = __preparedStmtOfAddReminderID.acquire();
-    int _argIndex = 1;
-    if (reminderPK == null) {
-      _stmt.bindNull(_argIndex);
-    } else {
-      _stmt.bindLong(_argIndex, reminderPK);
-    }
-    _argIndex = 2;
-    if (medPK == null) {
-      _stmt.bindNull(_argIndex);
-    } else {
-      _stmt.bindLong(_argIndex, medPK);
-    }
-    __db.beginTransaction();
-    try {
-      _stmt.executeUpdateDelete();
-      __db.setTransactionSuccessful();
-    } finally {
-      __db.endTransaction();
-      __preparedStmtOfAddReminderID.release(_stmt);
-    }
-  }
-
-  @Override
   public void clearAllMedications() {
     __db.assertNotSuspendingTransaction();
     final SupportSQLiteStatement _stmt = __preparedStmtOfClearAllMedications.acquire();
@@ -445,8 +405,7 @@ public final class DataAccessObject_Impl implements DataAccessObject {
   }
 
   @Override
-  public void updateDateAndTime(final int primaryKey, final String date, final String time,
-      final int timeInterval) {
+  public void updateDateAndTime(final int primaryKey, final String date, final String time) {
     __db.assertNotSuspendingTransaction();
     final SupportSQLiteStatement _stmt = __preparedStmtOfUpdateDateAndTime.acquire();
     int _argIndex = 1;
@@ -462,8 +421,6 @@ public final class DataAccessObject_Impl implements DataAccessObject {
       _stmt.bindString(_argIndex, time);
     }
     _argIndex = 3;
-    _stmt.bindLong(_argIndex, timeInterval);
-    _argIndex = 4;
     _stmt.bindLong(_argIndex, primaryKey);
     __db.beginTransaction();
     try {
@@ -537,7 +494,6 @@ public final class DataAccessObject_Impl implements DataAccessObject {
       final int _cursorIndexOfDosage = CursorUtil.getColumnIndexOrThrow(_cursor, "dosage");
       final int _cursorIndexOfRecurring = CursorUtil.getColumnIndexOrThrow(_cursor, "recurring");
       final int _cursorIndexOfFirstDate = CursorUtil.getColumnIndexOrThrow(_cursor, "first_date");
-      final int _cursorIndexOfEndDate = CursorUtil.getColumnIndexOrThrow(_cursor, "end_date");
       final int _cursorIndexOfTimeRule = CursorUtil.getColumnIndexOrThrow(_cursor, "time_rule");
       final int _cursorIndexOfReminderID = CursorUtil.getColumnIndexOrThrow(_cursor, "reminder_id");
       final int _cursorIndexOfAcknowledgements = CursorUtil.getColumnIndexOrThrow(_cursor, "acknowledgements");
@@ -560,8 +516,6 @@ public final class DataAccessObject_Impl implements DataAccessObject {
         }
         final String _tmpFirstDate;
         _tmpFirstDate = _cursor.getString(_cursorIndexOfFirstDate);
-        final String _tmpEndDate;
-        _tmpEndDate = _cursor.getString(_cursorIndexOfEndDate);
         final String _tmpTimeRule;
         _tmpTimeRule = _cursor.getString(_cursorIndexOfTimeRule);
         final Integer _tmpReminderID;
@@ -578,7 +532,7 @@ public final class DataAccessObject_Impl implements DataAccessObject {
         _tmpIngredients = _cursor.getString(_cursorIndexOfIngredients);
         final String _tmpTags;
         _tmpTags = _cursor.getString(_cursorIndexOfTags);
-        _item = new MedicationEntity(_tmpMedName,_tmpDosage,_tmpRecurring,_tmpFirstDate,_tmpEndDate,_tmpTimeRule,_tmpReminderID,_tmpAcknowledgements,_tmpWarnings,_tmpIngredients,_tmpTags);
+        _item = new MedicationEntity(_tmpMedName,_tmpDosage,_tmpRecurring,_tmpFirstDate,_tmpTimeRule,_tmpReminderID,_tmpAcknowledgements,_tmpWarnings,_tmpIngredients,_tmpTags);
         final Integer _tmpPrimaryKey;
         if (_cursor.isNull(_cursorIndexOfPrimaryKey)) {
           _tmpPrimaryKey = null;
@@ -614,7 +568,6 @@ public final class DataAccessObject_Impl implements DataAccessObject {
       final int _cursorIndexOfDosage = CursorUtil.getColumnIndexOrThrow(_cursor, "dosage");
       final int _cursorIndexOfRecurring = CursorUtil.getColumnIndexOrThrow(_cursor, "recurring");
       final int _cursorIndexOfFirstDate = CursorUtil.getColumnIndexOrThrow(_cursor, "first_date");
-      final int _cursorIndexOfEndDate = CursorUtil.getColumnIndexOrThrow(_cursor, "end_date");
       final int _cursorIndexOfTimeRule = CursorUtil.getColumnIndexOrThrow(_cursor, "time_rule");
       final int _cursorIndexOfReminderID = CursorUtil.getColumnIndexOrThrow(_cursor, "reminder_id");
       final int _cursorIndexOfAcknowledgements = CursorUtil.getColumnIndexOrThrow(_cursor, "acknowledgements");
@@ -635,8 +588,6 @@ public final class DataAccessObject_Impl implements DataAccessObject {
         }
         final String _tmpFirstDate;
         _tmpFirstDate = _cursor.getString(_cursorIndexOfFirstDate);
-        final String _tmpEndDate;
-        _tmpEndDate = _cursor.getString(_cursorIndexOfEndDate);
         final String _tmpTimeRule;
         _tmpTimeRule = _cursor.getString(_cursorIndexOfTimeRule);
         final Integer _tmpReminderID;
@@ -653,7 +604,7 @@ public final class DataAccessObject_Impl implements DataAccessObject {
         _tmpIngredients = _cursor.getString(_cursorIndexOfIngredients);
         final String _tmpTags;
         _tmpTags = _cursor.getString(_cursorIndexOfTags);
-        _result = new MedicationEntity(_tmpMedName,_tmpDosage,_tmpRecurring,_tmpFirstDate,_tmpEndDate,_tmpTimeRule,_tmpReminderID,_tmpAcknowledgements,_tmpWarnings,_tmpIngredients,_tmpTags);
+        _result = new MedicationEntity(_tmpMedName,_tmpDosage,_tmpRecurring,_tmpFirstDate,_tmpTimeRule,_tmpReminderID,_tmpAcknowledgements,_tmpWarnings,_tmpIngredients,_tmpTags);
         final Integer _tmpPrimaryKey;
         if (_cursor.isNull(_cursorIndexOfPrimaryKey)) {
           _tmpPrimaryKey = null;
@@ -689,7 +640,6 @@ public final class DataAccessObject_Impl implements DataAccessObject {
       final int _cursorIndexOfDosage = CursorUtil.getColumnIndexOrThrow(_cursor, "dosage");
       final int _cursorIndexOfRecurring = CursorUtil.getColumnIndexOrThrow(_cursor, "recurring");
       final int _cursorIndexOfFirstDate = CursorUtil.getColumnIndexOrThrow(_cursor, "first_date");
-      final int _cursorIndexOfEndDate = CursorUtil.getColumnIndexOrThrow(_cursor, "end_date");
       final int _cursorIndexOfTimeRule = CursorUtil.getColumnIndexOrThrow(_cursor, "time_rule");
       final int _cursorIndexOfReminderID = CursorUtil.getColumnIndexOrThrow(_cursor, "reminder_id");
       final int _cursorIndexOfAcknowledgements = CursorUtil.getColumnIndexOrThrow(_cursor, "acknowledgements");
@@ -710,8 +660,6 @@ public final class DataAccessObject_Impl implements DataAccessObject {
         }
         final String _tmpFirstDate;
         _tmpFirstDate = _cursor.getString(_cursorIndexOfFirstDate);
-        final String _tmpEndDate;
-        _tmpEndDate = _cursor.getString(_cursorIndexOfEndDate);
         final String _tmpTimeRule;
         _tmpTimeRule = _cursor.getString(_cursorIndexOfTimeRule);
         final Integer _tmpReminderID;
@@ -728,7 +676,7 @@ public final class DataAccessObject_Impl implements DataAccessObject {
         _tmpIngredients = _cursor.getString(_cursorIndexOfIngredients);
         final String _tmpTags;
         _tmpTags = _cursor.getString(_cursorIndexOfTags);
-        _result = new MedicationEntity(_tmpMedName,_tmpDosage,_tmpRecurring,_tmpFirstDate,_tmpEndDate,_tmpTimeRule,_tmpReminderID,_tmpAcknowledgements,_tmpWarnings,_tmpIngredients,_tmpTags);
+        _result = new MedicationEntity(_tmpMedName,_tmpDosage,_tmpRecurring,_tmpFirstDate,_tmpTimeRule,_tmpReminderID,_tmpAcknowledgements,_tmpWarnings,_tmpIngredients,_tmpTags);
         final Integer _tmpPrimaryKey;
         if (_cursor.isNull(_cursorIndexOfPrimaryKey)) {
           _tmpPrimaryKey = null;

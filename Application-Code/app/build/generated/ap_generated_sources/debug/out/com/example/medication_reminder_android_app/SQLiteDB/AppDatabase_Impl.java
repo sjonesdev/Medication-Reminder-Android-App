@@ -30,12 +30,12 @@ public final class AppDatabase_Impl extends AppDatabase {
     final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(1) {
       @Override
       public void createAllTables(SupportSQLiteDatabase _db) {
-        _db.execSQL("CREATE TABLE IF NOT EXISTS `MedicationTable` (`primaryKey` INTEGER PRIMARY KEY AUTOINCREMENT, `med_name` TEXT, `dosage` TEXT, `recurring` INTEGER, `first_date` TEXT, `end_date` TEXT, `time_rule` TEXT, `reminder_id` INTEGER, `acknowledgements` TEXT, `warnings` TEXT, `ingredients` TEXT, `tags` TEXT)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `MedicationTable` (`primaryKey` INTEGER PRIMARY KEY AUTOINCREMENT, `med_name` TEXT, `dosage` TEXT, `recurring` INTEGER, `first_date` TEXT, `time_rule` TEXT, `reminder_id` INTEGER, `acknowledgements` TEXT, `warnings` TEXT, `ingredients` TEXT, `tags` TEXT)");
         _db.execSQL("CREATE TABLE IF NOT EXISTS `DoctorTable` (`primaryKey` INTEGER PRIMARY KEY AUTOINCREMENT, `doctor_name` TEXT, `phone` TEXT, `office_location` TEXT, `notes` TEXT, `tags` TEXT, `hours` TEXT, `hospital_name` TEXT, `appointment_id` INTEGER)");
         _db.execSQL("CREATE TABLE IF NOT EXISTS `AppointmentTable` (`primaryKey` INTEGER, `Appointment Location` TEXT, `Tags` TEXT, `Notes` TEXT, `TypeOfAppt` TEXT, `RemindTableID` INTEGER, `DoctorTableID` INTEGER, PRIMARY KEY(`primaryKey`))");
         _db.execSQL("CREATE TABLE IF NOT EXISTS `ReminderTable` (`primaryKey` INTEGER PRIMARY KEY AUTOINCREMENT, `Classification` TEXT, `ApptTime` TEXT, `ApptDate` TEXT, `MedApptID` INTEGER, `TimeInterval` INTEGER)");
         _db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '789ec97e52ecb33579093dbda25c7678')");
+        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e78330e8ed69cdf36559ca40faac6af6')");
       }
 
       @Override
@@ -82,13 +82,12 @@ public final class AppDatabase_Impl extends AppDatabase {
 
       @Override
       protected RoomOpenHelper.ValidationResult onValidateSchema(SupportSQLiteDatabase _db) {
-        final HashMap<String, TableInfo.Column> _columnsMedicationTable = new HashMap<String, TableInfo.Column>(12);
+        final HashMap<String, TableInfo.Column> _columnsMedicationTable = new HashMap<String, TableInfo.Column>(11);
         _columnsMedicationTable.put("primaryKey", new TableInfo.Column("primaryKey", "INTEGER", false, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("med_name", new TableInfo.Column("med_name", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("dosage", new TableInfo.Column("dosage", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("recurring", new TableInfo.Column("recurring", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("first_date", new TableInfo.Column("first_date", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsMedicationTable.put("end_date", new TableInfo.Column("end_date", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("time_rule", new TableInfo.Column("time_rule", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("reminder_id", new TableInfo.Column("reminder_id", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsMedicationTable.put("acknowledgements", new TableInfo.Column("acknowledgements", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
@@ -158,7 +157,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "789ec97e52ecb33579093dbda25c7678", "fc1006d49e692a4dce0d0a6effabceee");
+    }, "e78330e8ed69cdf36559ca40faac6af6", "1c4776b2aceb2877adeeb8b66c7660d3");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(configuration.context)
         .name(configuration.name)
         .callback(_openCallback)

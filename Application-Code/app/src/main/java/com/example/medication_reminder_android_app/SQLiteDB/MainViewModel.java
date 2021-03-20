@@ -68,7 +68,7 @@ public class MainViewModel extends AndroidViewModel {
         return medication.getPrimaryKey();
     }
 
-    public void insertMedAndReminder(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
+    public Integer insertMedAndReminder(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
                                      String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags){
         Integer medPK = insertMedication(medicationName, inputDosage, ifRecurring, firstDate, endDate,
                 inputTimeRule, inputWarnings, inputIngredients, inputTags);
@@ -77,6 +77,7 @@ public class MainViewModel extends AndroidViewModel {
         Integer reminderPK = insertReminder("M", sepDate[1], sepDate[0], 0, medPK);
         MedicationEntity m = repository.getMedById(medPK);
         repository.addReminderID(m, reminderPK);
+        return reminderPK;
     }
 
     public void updateAcknowledgements(MedicationEntity m, String newAcknowedgementList){

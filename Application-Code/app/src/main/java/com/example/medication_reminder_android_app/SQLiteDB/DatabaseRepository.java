@@ -62,6 +62,11 @@ public class DatabaseRepository {  //extends
         return singleReminder;
     }
 
+    public ReminderEntity getReminderByMedName(String medName){
+        int reminderId = getMedByName(medName).getReminderID();
+        return getReminderById(reminderId);
+    }
+
     public void insertMed(MedicationEntity m){
         new AsyncInsertMedication(dao).execute(m);
     }
