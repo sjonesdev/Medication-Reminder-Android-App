@@ -12,12 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapter.InfoViewHolder> {
 
     private String[] mednames;
+    private String[] meddosages;
     private Context context;
     private OnItemListener medItemListener;
 
-    public InfoRecyclerAdapter(Context cont, String[] names, OnItemListener list){
+    public InfoRecyclerAdapter(Context cont, String[] names, String[] dosages, OnItemListener list){
         context = cont;
         mednames = names;
+        meddosages = dosages;
         medItemListener = list;
     }
 
@@ -32,6 +34,7 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull InfoViewHolder holder, int position) {
         holder.medText.setText(mednames[position]);
+        holder.dosageText.setText(meddosages[position]);
     }
 
     @Override
@@ -42,11 +45,13 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
     public class InfoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView medText;
+        TextView dosageText;
         OnItemListener onitemlistener;
 
         public InfoViewHolder(@NonNull View itemView, OnItemListener listener) {
             super(itemView);
             medText = itemView.findViewById(R.id.med_name);
+            dosageText = itemView.findViewById(R.id.med_dosage);
             onitemlistener = listener;
 
             itemView.setOnClickListener(this);

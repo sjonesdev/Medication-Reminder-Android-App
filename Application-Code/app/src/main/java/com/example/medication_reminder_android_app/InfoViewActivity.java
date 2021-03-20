@@ -11,7 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerAdapter.OnItemListener{
 
-    String s1[];
+    String names[];
+    String dosages[];
     RecyclerView infoRecycler;
 
     @Override
@@ -19,10 +20,11 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info_view);
 
-        s1 = getResources().getStringArray(R.array.debug_one); //This will likely be replaced with getting the info using Haley's methods
+        names = getResources().getStringArray(R.array.debug_one);
+        dosages = getResources().getStringArray(R.array.debug_one);//This will likely be replaced with getting the info using Haley's methods
         infoRecycler = findViewById(R.id.info_recycler);
 
-        InfoRecyclerAdapter infoadapter = new InfoRecyclerAdapter(this, s1, this);
+        InfoRecyclerAdapter infoadapter = new InfoRecyclerAdapter(this, names, dosages, this);
         infoRecycler.setAdapter(infoadapter);
         infoRecycler.setLayoutManager(new LinearLayoutManager(this));
     }

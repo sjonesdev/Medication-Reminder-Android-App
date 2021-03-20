@@ -5,12 +5,6 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <!-- Obsolete strings from fragments that i'm too scared to get rid of -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-
     <!-- content_main strings -->
     <string name="view_my_info">View My Info</string>
     <string name="notifications">Notifications</string>
@@ -34,6 +28,9 @@
     <string name="pick_start_day">Start Date</string>
     <string name="pick_end_day">End Date</string>
     <string name="interval">Interval</string>
+
+    <!-- individual item -->
+    <string name="delete_med">Delete Medication</string>
 
     <!-- dont worry about this -->
     <string-array name="debug_one">
