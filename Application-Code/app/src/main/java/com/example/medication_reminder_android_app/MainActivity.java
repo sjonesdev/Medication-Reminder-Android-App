@@ -215,15 +215,17 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
+    //TODO: create methods for parsing reminder times; create calendar object
+    //Move all of the methods into out of app notifications
+
+
     //TODO: we need call this somewhere; need to figure out where
-    private void ScheduleNotification(Calendar myCalendar) {
-            String myFormat = "dd/MM/yy" ; //In which you need put here
-            SimpleDateFormat sdf = new SimpleDateFormat(myFormat , Locale. getDefault ());
+    private void scheduleNotification(Calendar myCalendar) {
             long chosenTime = myCalendar.getTimeInMillis();
             long currentTime = System.currentTimeMillis();
             long delay = chosenTime - currentTime;
             startNotificationService(buildNotification(), System.currentTimeMillis() + delay);
-        }
+    }
 
 
 }
