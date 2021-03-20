@@ -1,3 +1,5 @@
+//commented everything out because it was causing errors in the build
+
 package com.example.medication_reminder_android_app.NotificationRelay;
 import androidx.lifecycle.MutableLiveData;
 import com.example.medication_reminder_android_app.SQLiteDB.*;
@@ -18,7 +20,9 @@ notes:
 */
 
 public class NotificationsTemp {
-     //member variables
+
+    /*
+    //member variables
     private char typeNotif;
     private String doctorName;
     private String medicationName;
@@ -28,7 +32,9 @@ public class NotificationsTemp {
     private NotificationManager mManager;
     public static final String ANDROID_CHANNEL_ID = "com.example.medication_reminder_android_app.NotificationRelay";
     public static final String ANDROID_CHANNEL_NAME = "MEDICATION CHANNEL";
- 
+    */
+
+
     private DatabaseRepository db;
 
     public NotificationsTemp(DatabaseRepository repo){
@@ -51,6 +57,8 @@ public class NotificationsTemp {
                 Doctor Appointment = "APPT"
                 Extraneous Appointment = "EAPPT"
      */
+
+    /*
     protected String[] getData() {
 
         //string info array to be returned
@@ -81,12 +89,15 @@ public class NotificationsTemp {
 
         return infoArray;
     }
+    */
 
    /*
    @author: Aliza Siddiqui
    Last Modified: 03/06/2021
    Sets appropriate member variables based on the type of Reminder
    */
+
+    /*
     public void setData(String[] infoArray){
         this.typeNotif = infoArray[1].charAt(0);
         switch (typeNotif){
@@ -103,6 +114,8 @@ public class NotificationsTemp {
          }
     }
 
+     */
+
     /*
     @author: Aliza Siddiqui
     Last Modified: 03/06/2021
@@ -115,6 +128,8 @@ public class NotificationsTemp {
       - TODO: Action when user clicks on notification and not on an action button (will lead to the notification 
                in the app with all the extra info about it i.e. dosage, ingredients, etc.)
     */
+
+    /*
     private NotificationCompt.Builder buildNotification(){
         //Gets the information by calling the methods
         String ChannelID = createNotificationChannel() //Creates the channel for the notification
@@ -144,11 +159,15 @@ public class NotificationsTemp {
         }
         return builder;
     }
+
+     */
     
     /* 
     @author: Aliza Siddiqui
     Last Modified: 03/06/2021
     Creates the notification channel for medications to be displayed in */
+
+    /*
     private String createNotificationChannel() {
         // create android channel
         NotificationChannel androidChannel = new NotificationChannel(ANDROID_CHANNEL_ID,
@@ -170,17 +189,26 @@ public class NotificationsTemp {
 
         }
 
+     */
+
+    /*
     @class Method
+
+     */
     /*
     @author: Aliza Siddiqui
     Last Modified: 03/06/2021
     This method is for generating a unique ID for a specific notification based on the timestamp year/month/day 
       hours:minutes: seconds */
+
+    /*
     private int createNotificationID(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");  //yyyy/MM/dd HH:mm:ss
         LocalDateTime now = LocalDateTime.now();  
         return Integer.parseInt(dtf.format(now));
     }
+
+     */
      
     /*
     @author: Aliza Siddiqui
@@ -188,6 +216,8 @@ public class NotificationsTemp {
     This method will send/show the notification in the status bar for the android device
       TODO: how to connect this to the UI? Is it necessary?
     */
+
+    /*
     public void sendNotification(String notif){
         //TODO
         //send notification to external.... user
@@ -199,10 +229,13 @@ public class NotificationsTemp {
         notificationManager.notify(notificationId, this.buildNotification.build());
     }
 
+     */
+
 
     //need to handle timing ourselves? This code may go in sendNotification
     //need to get current time somehow and check it against next reminder time
 
 
 }
+
 
