@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 /**
  * @author Hayley Roberts
- * @lastModified 3/5/2021 by Hayley Roberts
+ * @lastModified 3/22/2021 by Hayley Roberts
  */
 
 
@@ -52,18 +52,18 @@ public class DatabaseRepository {  //extends
         return singleMed;
     }
 
-    public MedicationEntity getMedById(int entityId){
+    public MedicationEntity getMedById(long entityId){
         new AsyncGetMedById(dao, this).execute(entityId);
         return singleMed;
     }
 
-    public ReminderEntity getReminderById(int entityId){
+    public ReminderEntity getReminderById(long entityId){
         new AsyncGetReminderById(dao, this).execute(String.valueOf(entityId));
         return singleReminder;
     }
 
     public ReminderEntity getReminderByMedName(String medName){
-        int reminderId = getMedByName(medName).getReminderID();
+        long reminderId = getMedByName(medName).getReminderID();
         return getReminderById(reminderId);
     }
 
@@ -79,7 +79,7 @@ public class DatabaseRepository {  //extends
         new AsyncUpdateAcknowledgement(dao, m).execute(acknowledgementList);
     }
 
-    public void addReminderID(MedicationEntity m, Integer reminderPK){ new AsyncAddReminderID(dao, m).execute(String.valueOf(reminderPK)); }
+    public void addReminderID(MedicationEntity m, long reminderPK){ new AsyncAddReminderID(dao, m).execute(reminderPK); }
 
     //update the ReminderEntity with next date and time.
     //Date should be formatted as YYYY-MM-DD, and time should be formatted as HH:MM
@@ -166,7 +166,7 @@ public class DatabaseRepository {  //extends
         }
     }
 
-    private static class AsyncGetMedById extends AsyncTask<Integer, Void, MedicationEntity>{
+    private static class AsyncGetMedById extends AsyncTask<Long, Void, MedicationEntity>{
         private final DataAccessObject dao;
         private final DatabaseRepository delegate;
 
@@ -176,7 +176,7 @@ public class DatabaseRepository {  //extends
         }
 
         @Override
-        protected MedicationEntity doInBackground(Integer... params){
+        protected MedicationEntity doInBackground(Long... params){
             return dao.getMedicationById(params[0]);
         }
 
@@ -197,7 +197,7 @@ public class DatabaseRepository {  //extends
 
         @Override
         protected ReminderEntity doInBackground(String... params){
-            return dao.getReminder(Integer.getInteger(params[0]));
+            return dao.getReminder(Long.getLong(params[0]));
         }
 
         @Override
@@ -237,7 +237,8 @@ public class DatabaseRepository {  //extends
 
         @Override
         protected Void doInBackground(MedicationEntity... meds){
-            dao.insertMedication(meds[0]);
+            long pk = dao.insertMedication(meds[0]);
+            meds[0].setPrimaryKey(pk);
             return null;
         }
 
@@ -252,7 +253,8 @@ public class DatabaseRepository {  //extends
 
         @Override
         protected Void doInBackground(ReminderEntity... reminders){
-            dao.insertReminder(reminders[0]);
+            long pk = dao.insertReminder(reminders[0]);
+            reminders[0].setPrimaryKey(pk);
             return null;
         }
     }
@@ -274,7 +276,7 @@ public class DatabaseRepository {  //extends
 
     }
 
-    private static class AsyncAddReminderID extends AsyncTask<String, Void, Void>{
+    private static class AsyncAddReminderID extends AsyncTask<Long, Void, Void>{
         private final DataAccessObject dao;
         private final MedicationEntity m;
 
@@ -284,8 +286,8 @@ public class DatabaseRepository {  //extends
         }
 
         @Override
-        protected Void doInBackground(String... params){
-            dao.addReminderID(m.getPrimaryKey(), Integer.parseInt(params[0]));
+        protected Void doInBackground(Long... params){
+            dao.addReminderID(m.getPrimaryKey(), params[0]);
             return null;
         }
     }

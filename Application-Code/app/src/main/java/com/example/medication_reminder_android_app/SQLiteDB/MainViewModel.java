@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 
 /**
  * @author Hayley Roberts
- * @lastModified 3/5/2021 by Hayley Roberts
+ * @lastModified 3/22/2021 by Hayley Roberts
  */
 
 public class MainViewModel extends AndroidViewModel {
@@ -16,7 +16,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public MainViewModel(Application application){
         super(application);
-        repository = new DatabaseRepository(application);
+        repository = new DatabaseRepository(application);   
         meds = repository.filterMedications(new String[] {""});
         reminders = repository.getReminders(5);
     }
@@ -48,18 +48,18 @@ public class MainViewModel extends AndroidViewModel {
         return retVal;
     }
 
-    public MedicationEntity getMedById(Integer medId){
+    public MedicationEntity getMedById(long medId){
         return repository.getMedById(medId);
     }
 
-    public ReminderEntity getReminderById(Integer reminderId){
+    public ReminderEntity getReminderById(long reminderId){
         return repository.getReminderById(reminderId);
     }
 
     //methods to insert rows into tables
     //Maybe have all insertion return the primary keys
     //For timing purposes maybe i have this method creating a reminder row inside of it.
-    public Integer insertMedication(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
+    public long insertMedication(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
                                  String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags){
         Integer recurringBool = ifRecurring? 1 : 0;
         MedicationEntity medication = new MedicationEntity(medicationName, inputDosage, recurringBool, firstDate, endDate,
@@ -68,13 +68,13 @@ public class MainViewModel extends AndroidViewModel {
         return medication.getPrimaryKey();
     }
 
-    public Integer insertMedAndReminder(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
+    public long insertMedAndReminder(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
                                      String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags){
-        Integer medPK = insertMedication(medicationName, inputDosage, ifRecurring, firstDate, endDate,
+        long medPK = insertMedication(medicationName, inputDosage, ifRecurring, firstDate, endDate,
                 inputTimeRule, inputWarnings, inputIngredients, inputTags);
         String[] sepDate = firstDate.split(" ");
 
-        Integer reminderPK = insertReminder("M", sepDate[1], sepDate[0], 0, medPK);
+        long reminderPK = insertReminder("M", sepDate[1], sepDate[0], 0, medPK);
         MedicationEntity m = repository.getMedById(medPK);
         repository.addReminderID(m, reminderPK);
         return reminderPK;
@@ -89,7 +89,7 @@ public class MainViewModel extends AndroidViewModel {
         repository.updateAcknowledgements(m, newAcknowledgementList);
     }
 
-    public void updateAcknowledgements(Integer MedPrimaryKey, String newAcknowledgementList){
+    public void updateAcknowledgements(long MedPrimaryKey, String newAcknowledgementList){
         MedicationEntity m = repository.getMedById(MedPrimaryKey);
         repository.updateAcknowledgements(m, newAcknowledgementList);
     }
@@ -98,7 +98,7 @@ public class MainViewModel extends AndroidViewModel {
         repository.updateReminderDateAndTime(r, date, time, timeIntervalIndex);
     }
 
-    public Integer insertReminder(String classification, String time, String date, Integer timeIntervalIndex, Integer medApptId){
+    public long insertReminder(String classification, String time, String date, Integer timeIntervalIndex, long medApptId){
         ReminderEntity reminder = new ReminderEntity(classification, time, date, timeIntervalIndex, medApptId);
         repository.insertReminder(reminder);
         return reminder.getPrimaryKey();
@@ -126,7 +126,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void deleteMedication(String medName){
         MedicationEntity m = repository.getMedByName(medName);
-        Integer medRid = m.getReminderID();
+        long medRid = m.getReminderID();
         repository.deleteReminder(repository.getReminderById(medRid));
         repository.deleteMed(m);
     }

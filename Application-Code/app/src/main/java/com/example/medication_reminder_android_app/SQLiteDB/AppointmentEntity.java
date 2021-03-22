@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "AppointmentTable")
 public class AppointmentEntity{
     @PrimaryKey
-    public Integer primaryKey;
+    public long primaryKey;
 
     @ColumnInfo(name = "Appointment Location")
     private String location; //Location of the appointment
@@ -27,12 +27,12 @@ public class AppointmentEntity{
     private String typeOfAppt; //Classifies specifically what the appointment will consist of if not Doctor (i.e MRI, blood donation, etc.)
     
     @ColumnInfo(name = "RemindTableID")
-    private Integer remindTabID;
+    private long remindTabID;
 
     @ColumnInfo(name = "DoctorTableID")
-    private Integer docTabID;
+    private long docTabID;
 
-    public AppointmentEntity(String location, String tags, String notes, String typeOfAppt, Integer remindTabID, Integer docTabID){
+    public AppointmentEntity(String location, String tags, String notes, String typeOfAppt, long remindTabID, long docTabID){
        this.location = location;
        this.tags = tags;
        this.notes = notes;
@@ -58,11 +58,11 @@ public class AppointmentEntity{
         return this.typeOfAppt;
     }
 
-    public Integer getRemindTabID() { return this.remindTabID; }
+    public long getRemindTabID() { return this.remindTabID; }
 
-    public Integer getDocTabID() { return this.docTabID; }
+    public long getDocTabID() { return this.docTabID; }
 
-    public Integer getPrimaryKey(){
+    public long getPrimaryKey(){
         return this.primaryKey;           //Returns the primary key of the specific Appointment entity
     }
 
@@ -83,9 +83,11 @@ public class AppointmentEntity{
         this.typeOfAppt = ApptType;
     }
 
-    public void setRemindTabID(Integer remindTabID) { this.remindTabID = remindTabID; }
+    public void setRemindTabID(long remindTabID) { this.remindTabID = remindTabID; }
 
-    public void setDocTabID(Integer docTabID) { this.docTabID = docTabID; }
+    public void setDocTabID(long docTabID) { this.docTabID = docTabID; }
+
+    public void setPrimaryKey(long primaryKey) { this.primaryKey = primaryKey; }
 
 }
 
