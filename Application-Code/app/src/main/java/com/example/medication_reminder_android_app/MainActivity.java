@@ -16,6 +16,9 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
+import android.widget.Button;
+
 import androidx.core.app.NotificationCompat;
 
 import java.text.SimpleDateFormat;
@@ -51,6 +54,15 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState) ;
         setContentView(R.layout.activity_main);
+        Button btnIgnore = findViewById(R.id.btnIgnore);
+        Button btnAcknowledge = findViewById(R.id.btnAcknowledge);
+        btnAcknowledge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //scheduleNotification();
+
+            }
+        });
     }
 
     @Override
@@ -177,7 +189,7 @@ public class MainActivity extends AppCompatActivity{
       - TODO: Action when user clicks on notification and not on an action button (will lead to the notification
                in the app with all the extra info about it i.e. dosage, ingredients, etc.)
     */
-    private Notification buildNotification(){
+    private Notification buildNotification(Integer reminderID){
         //Gets the information by calling the methods
         String[] infoArray = this.getData(); //gets and sets member variable data
         setData(infoArray);
@@ -187,7 +199,7 @@ public class MainActivity extends AppCompatActivity{
         switch(typeNotif){
             case 'M': //Medication Notification
                 builder = new NotificationCompat.Builder(this, default_notification_channel_id)
-                        .setContentTitle("=========MEDICATION REMINDER===========")
+                        .setContentTitle("========= " + this.medicationName + " MEDICATION REMINDER===========")
                         .setContentText("Please take " + this.medicationName + " now!")
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -223,11 +235,11 @@ public class MainActivity extends AppCompatActivity{
 
 
     //TODO: we need call this somewhere; need to figure out where
-    private void scheduleNotification(Calendar myCalendar) {
+    private void scheduleNotification(Calendar myCalendar, Integer reminderID) {
             long chosenTime = myCalendar.getTimeInMillis();
             long currentTime = System.currentTimeMillis();
             long delay = chosenTime - currentTime;
-            startNotificationService(buildNotification(), System.currentTimeMillis() + delay);
+            startNotificationService(buildNotification(reminderID), System.currentTimeMillis() + delay);
     }
 
 
