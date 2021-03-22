@@ -28,6 +28,10 @@ public class NotificationPublisher extends BroadcastReceiver {
         notificationManager.notify(id, notification);
     }
 
+    public static void setNotificationID(Integer Id){
+        NOTIFICATION_ID = String.valueOf(Id);
+    }
+
 
 
 

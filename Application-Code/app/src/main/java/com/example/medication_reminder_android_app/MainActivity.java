@@ -16,6 +16,9 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
+import android.widget.Button;
+
 import androidx.core.app.NotificationCompat;
 
 import java.text.SimpleDateFormat;
@@ -26,6 +29,7 @@ import com.example.medication_reminder_android_app.NotificationRelay.Notificatio
 import com.example.medication_reminder_android_app.SQLiteDB.DatabaseRepository;
 import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
 import com.example.medication_reminder_android_app.SQLiteDB.ReminderEntity;
+import com.example.medication_reminder_android_app.UserInputHandler.AppointmentInputHandler;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -41,6 +45,7 @@ public class MainActivity extends AppCompatActivity{
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     private DatabaseRepository db;
     NotificationPublisher publisher = new NotificationPublisher();
+    Calendar myCalendar = Calendar.getInstance();
 
     public void setDatabase(DatabaseRepository repo){
         db = repo;
@@ -51,6 +56,18 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState) ;
         setContentView(R.layout.activity_main);
+        Button btnIgnore = findViewById(R.id.btnIgnore);
+        Button btnAcknowledge = findViewById(R.id.btnAcknowledge);
+        btnIgnore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Notification myNotif = scheduleNotification(myCalendar);
+                String medName = String.valueOf(NotificationCompat.getContentTitle(myNotif)).split(" ")[1];
+                //AppointmentInputHandler input = new AppointmentInputHandler();
+                //input.acknowledgeNotificationRequest(reminderID, true);
+
+            }
+        });
     }
 
     @Override
@@ -145,7 +162,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-    private void startNotificationService(Notification notification, long delay) {
+    private Notification startNotificationService(Notification notification, long delay) {
         //create a new intent to start the notification publisher
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
 
@@ -162,6 +179,7 @@ public class MainActivity extends AppCompatActivity{
 
         //send the notification using the specified delay; delay must be ms from now
         alarmManager.set(AlarmManager.RTC_WAKEUP, delay, pendingIntent) ;
+        return notification;
     }
 
 
@@ -187,7 +205,7 @@ public class MainActivity extends AppCompatActivity{
         switch(typeNotif){
             case 'M': //Medication Notification
                 builder = new NotificationCompat.Builder(this, default_notification_channel_id)
-                        .setContentTitle("=========MEDICATION REMINDER===========")
+                        .setContentTitle("========= " + this.medicationName + " MEDICATION REMINDER===========")
                         .setContentText("Please take " + this.medicationName + " now!")
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -224,11 +242,12 @@ public class MainActivity extends AppCompatActivity{
 
 
     //TODO: we need call this somewhere; need to figure out where
-    private void scheduleNotification(Calendar myCalendar) {
+    private Notification scheduleNotification(Calendar myCalendar) {
             long chosenTime = myCalendar.getTimeInMillis();
             long currentTime = System.currentTimeMillis();
             long delay = chosenTime - currentTime;
-            startNotificationService(buildNotification(), System.currentTimeMillis() + delay);
+            Notification myNotif = startNotificationService(buildNotification(), System.currentTimeMillis() + delay);
+            return myNotif;
     }
 
 
