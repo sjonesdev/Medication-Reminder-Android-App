@@ -4,7 +4,6 @@ package com.example.medication_reminder_android_app.UserInputHandler;
 
 
 import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
-import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
 
 import java.util.Map;
 
@@ -30,9 +29,10 @@ public class DoctorInputHandler extends InputHandler {
      *
      * @author Samuel Jones
      * @since 3-1-2021
+     * @return
      */
     @Override
-    void inputRequest(Map<String,String> info) {
+    int inputRequest(Map<String,String> info) {
         String name = info.get("name");
         String type = info.get("type");
         String locationsStr = info.get("locations");
@@ -45,6 +45,7 @@ public class DoctorInputHandler extends InputHandler {
 
         //mainViewModel.insertDoctor(name, dosage, recurring, startDate, endDate, interval,
         //       warnings, activeIngredient, tags);
+        return 0;
     }
 
     @Override
@@ -53,8 +54,9 @@ public class DoctorInputHandler extends InputHandler {
     }
 
     @Override
-    void acknowledgeNotificationRequest(int reminderID, boolean dismissed) {
+    String acknowledgeNotificationRequest(int reminderID, boolean dismissed) {
 
+        return null;
     }
 
     @Override
