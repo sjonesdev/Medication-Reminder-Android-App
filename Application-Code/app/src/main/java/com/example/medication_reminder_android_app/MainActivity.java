@@ -29,6 +29,7 @@ import com.example.medication_reminder_android_app.NotificationRelay.Notificatio
 import com.example.medication_reminder_android_app.SQLiteDB.DatabaseRepository;
 import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
 import com.example.medication_reminder_android_app.SQLiteDB.ReminderEntity;
+import com.example.medication_reminder_android_app.UserInputHandler.AppointmentInputHandler;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity{
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     private DatabaseRepository db;
     NotificationPublisher publisher = new NotificationPublisher();
+    Calendar myCalendar = Calendar.getInstance();
 
     public void setDatabase(DatabaseRepository repo){
         db = repo;
@@ -56,10 +58,13 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         Button btnIgnore = findViewById(R.id.btnIgnore);
         Button btnAcknowledge = findViewById(R.id.btnAcknowledge);
-        btnAcknowledge.setOnClickListener(new View.OnClickListener() {
+        btnIgnore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //scheduleNotification();
+                Notification myNotif = scheduleNotification(myCalendar);
+                String medName = String.valueOf(NotificationCompat.getContentTitle(myNotif)).split(" ")[1];
+                //AppointmentInputHandler input = new AppointmentInputHandler();
+                //input.acknowledgeNotificationRequest(reminderID, true);
 
             }
         });
@@ -157,7 +162,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-    private void startNotificationService(Notification notification, long delay) {
+    private Notification startNotificationService(Notification notification, long delay) {
         //create a new intent to start the notification publisher
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
 
@@ -174,6 +179,7 @@ public class MainActivity extends AppCompatActivity{
 
         //send the notification using the specified delay; delay must be ms from now
         alarmManager.set(AlarmManager.RTC_WAKEUP, delay, pendingIntent) ;
+        return notification;
     }
 
 
@@ -189,7 +195,7 @@ public class MainActivity extends AppCompatActivity{
       - TODO: Action when user clicks on notification and not on an action button (will lead to the notification
                in the app with all the extra info about it i.e. dosage, ingredients, etc.)
     */
-    private Notification buildNotification(Integer reminderID){
+    private Notification buildNotification(){
         //Gets the information by calling the methods
         String[] infoArray = this.getData(); //gets and sets member variable data
         setData(infoArray);
@@ -235,11 +241,12 @@ public class MainActivity extends AppCompatActivity{
 
 
     //TODO: we need call this somewhere; need to figure out where
-    private void scheduleNotification(Calendar myCalendar, Integer reminderID) {
+    private Notification scheduleNotification(Calendar myCalendar) {
             long chosenTime = myCalendar.getTimeInMillis();
             long currentTime = System.currentTimeMillis();
             long delay = chosenTime - currentTime;
-            startNotificationService(buildNotification(reminderID), System.currentTimeMillis() + delay);
+            Notification myNotif = startNotificationService(buildNotification(), System.currentTimeMillis() + delay);
+            return myNotif;
     }
 
 
