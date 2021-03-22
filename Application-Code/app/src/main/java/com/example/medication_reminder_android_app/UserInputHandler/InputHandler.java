@@ -1,13 +1,16 @@
 package com.example.medication_reminder_android_app.UserInputHandler;
 
-/*
-This class handles userInterface input
-Parent class for the specific input handlers
+import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
 
-TODO: add input handler class to instantiate handlers
+import java.util.Date;
+import java.util.Map;
+
+/**
+ * Base class for all input handlers.
+ *
+ * @author Samuel Jones
+ * @since 3-1-2021
  */
-
-//might end up as abstract class
 public abstract class InputHandler {
     //member variables for inputs
 
@@ -15,14 +18,12 @@ public abstract class InputHandler {
 
     }
 
-    private void parseInfo(){
-        //TODO
-        //method to parse XML from the UI
-    }
+    abstract int inputRequest(Map<String,String> info);
 
-    public void sendToDB(){
-        //TODO
-        //super class. send info to the SQLite DB
-    }
+    abstract void deleteRequest(String name);
+
+    abstract String acknowledgeNotificationRequest(int reminderID, boolean dismissed);
+
+    abstract void deleteAllRequest();
 
 }
