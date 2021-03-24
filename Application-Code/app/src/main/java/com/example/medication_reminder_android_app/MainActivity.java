@@ -37,17 +37,26 @@ import com.example.medication_reminder_android_app.UserInputHandler.InputWrapper
 public class MainActivity extends AppCompatActivity{
 
 
-    //member variables
+    //TODO: Aliza needs a notification object returned to her somehow so she can get
+    //the content title
+
+
+    //member variables pertaining to notification; these will get populated as we receive notifiction information
     private char typeNotif;
     private String doctorName;
     private String medicationName;
     private String notificationName; //This is if the notification does not fit the med or doctor appointment category
                                       // i.e. MRI, Blood donation, etc.
 
+
+    //notificatiion channel information
     private final static String default_notification_channel_id = "default" ;
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
+    //declare an instance of the db repository
     private DatabaseRepository db;
+    //instantiate a notification publisher
     NotificationPublisher publisher = new NotificationPublisher();
+    //create a calendar object
     Calendar myCalendar = Calendar.getInstance();
     MainViewModel model;
     InputWrapper input;
@@ -68,6 +77,7 @@ public class MainActivity extends AppCompatActivity{
         btnIgnore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Notification myNotif = scheduleNotification(myCalendar); //Is there a better way to get a notif object then calling it?
                 String medName = String.valueOf(NotificationCompat.getContentTitle(myNotif)).split(" ")[1];
                 input.processAcknowledgementRequest(InputWrapper.InputType.Medication, db.getReminderByMedName(medName).getPrimaryKey(), true);
@@ -76,6 +86,7 @@ public class MainActivity extends AppCompatActivity{
         btnAcknowledge.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+
 
             }
         });
@@ -110,8 +121,11 @@ public class MainActivity extends AppCompatActivity{
     /*
     @author: Karley Waguespack
     Last Modified: 03/06/2021
-    Gets data about the next upcoming reminder
-    returns a string array of information needed to build notification.
+
+    Description: Gets data about the reminder that was inputted
+                 returns a string array of information needed to build notification.
+
+    @params:
 
     Array contents:
                 0th element: medication or doctor name (or type of appointment if no doctor)
@@ -122,15 +136,14 @@ public class MainActivity extends AppCompatActivity{
                 Doctor Appointment = "APPT"
                 Extraneous Appointment = "EAPPT"
      */
-    protected String[] getData() {
+
+    //should take either a reminder or a reminder ID
+    protected String[] getData(Integer reminderID) {
 
         //string info array to be returned
         String[] infoArray = new String[2];
 
-        //gets the reminder entity object from livedata type
-        ReminderEntity[] reminderArray = db.getReminders(1).getValue();
-        //we just got one reminder, grab it
-        ReminderEntity reminder = reminderArray[0];
+        ReminderEntity reminder = db.getReminderById(reminderID);
 
         //what type of reminder is it?
         String reminderType = reminder.getClassification();
@@ -206,9 +219,9 @@ public class MainActivity extends AppCompatActivity{
       - TODO: Action when user clicks on notification and not on an action button (will lead to the notification
                in the app with all the extra info about it i.e. dosage, ingredients, etc.)
     */
-    private Notification buildNotification(){
+    private Notification buildNotification(Integer reminderID){
         //Gets the information by calling the methods
-        String[] infoArray = this.getData(); //gets and sets member variable data
+        String[] infoArray = this.getData(reminderID); //gets and sets member variable data
         setData(infoArray);
         Intent ignoreIntent = new Intent(MainActivity.this, BroadcastReceiver.class); //Change the broadcast receiver to be specific
         ignoreIntent.setAction("Ignore");
@@ -251,6 +264,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         }
+
         return builder.build();
     }
 
@@ -260,11 +274,11 @@ public class MainActivity extends AppCompatActivity{
 
 
     //TODO: we need call this somewhere; need to figure out where
-    private Notification scheduleNotification(Calendar myCalendar) {
+    private Notification scheduleNotification(Calendar myCalendar, Integer reminderID) {
             long chosenTime = myCalendar.getTimeInMillis();
             long currentTime = System.currentTimeMillis();
             long delay = chosenTime - currentTime;
-            Notification myNotif = startNotificationService(buildNotification(), System.currentTimeMillis() + delay);
+            Notification myNotif = startNotificationService(buildNotification(reminderID), System.currentTimeMillis() + delay);
             return myNotif;
     }
 
