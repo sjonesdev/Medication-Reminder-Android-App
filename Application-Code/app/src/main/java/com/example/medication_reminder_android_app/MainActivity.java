@@ -7,6 +7,7 @@ This is the starting point of the code.
 https://developer.android.com/guide/components/activities/activity-lifecycle#java
  */
 
+import android.content.BroadcastReceiver;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.core.app.NotificationCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,9 +29,10 @@ import java.util.Locale;
 
 import com.example.medication_reminder_android_app.NotificationRelay.NotificationPublisher;
 import com.example.medication_reminder_android_app.SQLiteDB.DatabaseRepository;
+import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
 import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
 import com.example.medication_reminder_android_app.SQLiteDB.ReminderEntity;
-import com.example.medication_reminder_android_app.UserInputHandler.AppointmentInputHandler;
+import com.example.medication_reminder_android_app.UserInputHandler.InputWrapper;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -46,6 +49,8 @@ public class MainActivity extends AppCompatActivity{
     private DatabaseRepository db;
     NotificationPublisher publisher = new NotificationPublisher();
     Calendar myCalendar = Calendar.getInstance();
+    MainViewModel model;
+    InputWrapper input;
 
     public void setDatabase(DatabaseRepository repo){
         db = repo;
@@ -58,13 +63,19 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         Button btnIgnore = findViewById(R.id.btnIgnore);
         Button btnAcknowledge = findViewById(R.id.btnAcknowledge);
+        model = new ViewModelProvider(this).get(MainViewModel.class);
+        input = new InputWrapper(model);
         btnIgnore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Notification myNotif = scheduleNotification(myCalendar);
+                Notification myNotif = scheduleNotification(myCalendar); //Is there a better way to get a notif object then calling it?
                 String medName = String.valueOf(NotificationCompat.getContentTitle(myNotif)).split(" ")[1];
-                //AppointmentInputHandler input = new AppointmentInputHandler();
-                //input.acknowledgeNotificationRequest(reminderID, true);
+                input.processAcknowledgementRequest(InputWrapper.InputType.Medication, db.getReminderByMedName(medName).getPrimaryKey(), true);
+            }
+        });
+        btnAcknowledge.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
 
             }
         });
@@ -199,6 +210,12 @@ public class MainActivity extends AppCompatActivity{
         //Gets the information by calling the methods
         String[] infoArray = this.getData(); //gets and sets member variable data
         setData(infoArray);
+        Intent ignoreIntent = new Intent(MainActivity.this, BroadcastReceiver.class); //Change the broadcast receiver to be specific
+        ignoreIntent.setAction("Ignore");
+        PendingIntent pintent = PendingIntent.getBroadcast(MainActivity.this, 0, ignoreIntent, 0);
+        Intent acknowledgeIntent = new Intent(MainActivity.this, BroadcastReceiver.class); //Change the broadcast receiver to be specific
+        ignoreIntent.setAction("Acknowledge");
+        PendingIntent pintent2 = PendingIntent.getBroadcast(MainActivity.this, 0, acknowledgeIntent, 0);
 
         NotificationCompat.Builder builder = null;
         //formats notification for user
@@ -210,6 +227,8 @@ public class MainActivity extends AppCompatActivity{
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                         .setAutoCancel(true)
+                        .addAction(R.drawable. ic_launcher_foreground , "Ignore" , pintent )
+                        .addAction(R.drawable.ic_launcher_background, "Acknowledge", pintent2)
                         .setChannelId(NOTIFICATION_CHANNEL_ID);
                 break;
             case 'A': //Doctor Appointment Notification
