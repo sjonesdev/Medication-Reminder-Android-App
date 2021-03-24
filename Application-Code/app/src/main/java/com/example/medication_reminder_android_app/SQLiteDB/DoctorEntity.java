@@ -9,14 +9,14 @@ import androidx.room.PrimaryKey;
 
 /**
 @author Karley Waguespack
- @lastModified 3/5/2021 by Hayley Roberts
+ @lastModified 3/22/2021 by Hayley Roberts
 */
 
 @Entity(tableName = "DoctorTable")
 public class DoctorEntity {
 
     public DoctorEntity(String drName, String phone, String officeLoc, String notes, String tags,
-                        String officeHrs, String hospitalName, Integer apptID){
+                        String officeHrs, String hospitalName, long apptID){
 
         this.drName = drName;
         this.phone = phone;
@@ -34,7 +34,7 @@ public class DoctorEntity {
 
 
     @PrimaryKey(autoGenerate = true)
-    private Integer primaryKey;
+    private long primaryKey;
 
     @ColumnInfo(name = "doctor_name")
     private String drName;
@@ -58,7 +58,7 @@ public class DoctorEntity {
     private String hospitalName;
 
     @ColumnInfo(name = "appointment_id")
-    private Integer apptID;
+    private long apptID;
 
 
     //Getters
@@ -88,14 +88,14 @@ public class DoctorEntity {
         return this.hospitalName;
     }
 
-    public Integer getApptID() { return this.apptID; }
+    public long getApptID() { return this.apptID; }
     
-    public Integer getPrimaryKey(){
+    public long getPrimaryKey(){
         return this.primaryKey;                   //Returns the primary key of the specific Doctor Information entity
     }
 
     //setters
-    public void setPrimaryKey(Integer primaryKey) { this.primaryKey = primaryKey; }
+    public void setPrimaryKey(long primaryKey) { this.primaryKey = primaryKey; }
 
     public void setDrName(String Name){
         this.drName = Name;
@@ -123,7 +123,7 @@ public class DoctorEntity {
         this.hospitalName = hospitalName;
     }
     
-    public void setApptID(Integer apptID) { this.apptID = apptID; }
+    public void setApptID(long apptID) { this.apptID = apptID; }
 
 
 }
