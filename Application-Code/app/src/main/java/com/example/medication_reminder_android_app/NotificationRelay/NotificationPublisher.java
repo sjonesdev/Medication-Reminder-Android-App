@@ -9,6 +9,14 @@ import android.content.Context ;
 import android.content.Intent ;
 import static com.example.medication_reminder_android_app.MainActivity.NOTIFICATION_CHANNEL_ID;
 
+ /*
+    @author: Aliza Siddiqui, Karley Waguespack
+    Last Modified: 03/15/2021
+
+    Description: Receiver class for the notification intents in MainActivity; listens for requests
+    and starts up the notification service
+
+  */
 
 public class NotificationPublisher extends BroadcastReceiver {
 

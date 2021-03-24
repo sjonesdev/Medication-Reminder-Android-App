@@ -27,6 +27,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import com.example.medication_reminder_android_app.NotificationRelay.AcknowledgeReceiver;
+import com.example.medication_reminder_android_app.NotificationRelay.IgnoreReceiver;
 import com.example.medication_reminder_android_app.NotificationRelay.NotificationPublisher;
 import com.example.medication_reminder_android_app.SQLiteDB.DatabaseRepository;
 import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
@@ -35,10 +37,6 @@ import com.example.medication_reminder_android_app.SQLiteDB.ReminderEntity;
 import com.example.medication_reminder_android_app.UserInputHandler.InputWrapper;
 
 public class MainActivity extends AppCompatActivity{
-
-
-    //TODO: Aliza needs a notification object returned to her somehow so she can get
-    //the content title
 
 
     //member variables pertaining to notification; these will get populated as we receive notifiction information
@@ -52,44 +50,23 @@ public class MainActivity extends AppCompatActivity{
     //notificatiion channel information
     private final static String default_notification_channel_id = "default" ;
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
-    //declare an instance of the db repository
-    private DatabaseRepository db;
+
     //instantiate a notification publisher
     NotificationPublisher publisher = new NotificationPublisher();
     //create a calendar object
     Calendar myCalendar = Calendar.getInstance();
+
+    //use mvm instead of database repository
     MainViewModel model;
     InputWrapper input;
-
-    public void setDatabase(DatabaseRepository repo){
-        db = repo;
-
-    }
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState) ;
         setContentView(R.layout.activity_main);
-        Button btnIgnore = findViewById(R.id.btnIgnore);
-        Button btnAcknowledge = findViewById(R.id.btnAcknowledge);
         model = new ViewModelProvider(this).get(MainViewModel.class);
         input = new InputWrapper(model);
-        btnIgnore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Notification myNotif = scheduleNotification(myCalendar); //Is there a better way to get a notif object then calling it?
-                String medName = String.valueOf(NotificationCompat.getContentTitle(myNotif)).split(" ")[1];
-                input.processAcknowledgementRequest(InputWrapper.InputType.Medication, db.getReminderByMedName(medName).getPrimaryKey(), true);
-            }
-        });
-        btnAcknowledge.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-
-
-            }
-        });
     }
 
     @Override
@@ -120,16 +97,17 @@ public class MainActivity extends AppCompatActivity{
 
     /*
     @author: Karley Waguespack
-    Last Modified: 03/06/2021
+    Last Modified: 03/22/2021
 
     Description: Gets data about the reminder that was inputted
                  returns a string array of information needed to build notification.
 
-    @params:
+    @params: reminderID: the id for the reminder
 
     Array contents:
                 0th element: medication or doctor name (or type of appointment if no doctor)
                 1st element: notification type
+                2nd element: the associated reminder id
 
     Notification type key:
                 Medication = "MED"
@@ -143,7 +121,7 @@ public class MainActivity extends AppCompatActivity{
         //string info array to be returned
         String[] infoArray = new String[2];
 
-        ReminderEntity reminder = db.getReminderById(reminderID);
+        ReminderEntity reminder = model.getReminderById(reminderID);
 
         //what type of reminder is it?
         String reminderType = reminder.getClassification();
@@ -152,7 +130,7 @@ public class MainActivity extends AppCompatActivity{
 
         if(reminderType.equals("M")){
             //retrieve the medication object from the reminder
-            MedicationEntity med = db.getMedById(reminder.getMedApptId());
+            MedicationEntity med = model.getMedById(reminder.getMedApptId());
             //get the med name
             infoArray[1] = med.getMedName();
         } else{
@@ -161,8 +139,11 @@ public class MainActivity extends AppCompatActivity{
             //TODO regular appointments get APPT, Extraneous ones get EAPPT; check if it has a doctorId
 
         }
+
+        infoArray[2] = Integer.toString(reminderID);
         return infoArray;
     }
+
 
     /*
    @author: Aliza Siddiqui
@@ -186,6 +167,18 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
+
+    /*
+    @author: Karley Waguespack
+    Last Modified: 03/11/2021
+
+    Description: sends an intent to the NotificationPublisher class to start up the notification service
+
+    @params: Notification: the notificaation to be sent.
+             delay: the time in miliseconds to send the notif
+
+    return value: the notification to be sent
+     */
     private Notification startNotificationService(Notification notification, long delay) {
         //create a new intent to start the notification publisher
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
@@ -209,7 +202,7 @@ public class MainActivity extends AppCompatActivity{
 
     /*
     @author: Aliza Siddiqui
-    Last Modified: 03/06/2021
+    Last Modified: 03/24/2021 by Karley
     MAIN PROCESSING METHOD:
       Will:
       - create the notification channel for medications (you can create multiple channels for each type of notif)
@@ -220,15 +213,23 @@ public class MainActivity extends AppCompatActivity{
                in the app with all the extra info about it i.e. dosage, ingredients, etc.)
     */
     private Notification buildNotification(Integer reminderID){
+
         //Gets the information by calling the methods
         String[] infoArray = this.getData(reminderID); //gets and sets member variable data
+        Integer reminderId = Integer.parseInt(infoArray[2]);
         setData(infoArray);
-        Intent ignoreIntent = new Intent(MainActivity.this, BroadcastReceiver.class); //Change the broadcast receiver to be specific
-        ignoreIntent.setAction("Ignore");
-        PendingIntent pintent = PendingIntent.getBroadcast(MainActivity.this, 0, ignoreIntent, 0);
-        Intent acknowledgeIntent = new Intent(MainActivity.this, BroadcastReceiver.class); //Change the broadcast receiver to be specific
-        ignoreIntent.setAction("Acknowledge");
-        PendingIntent pintent2 = PendingIntent.getBroadcast(MainActivity.this, 0, acknowledgeIntent, 0);
+
+        //create intents for the acknowledge and ignore button receivers; bundle the reminderId
+        Intent acknowledgeIntent = new Intent(this, AcknowledgeReceiver.class);
+        acknowledgeIntent.putExtra("reminderID", reminderId);
+        PendingIntent acknowledge_pintent = PendingIntent.getBroadcast(this, 0, acknowledgeIntent, 0);
+
+        Intent ignoreIntent = new Intent(this, IgnoreReceiver.class);
+        ignoreIntent.putExtra("reminderID", reminderId);
+        PendingIntent ignore_pintent = PendingIntent.getBroadcast(this, 0, ignoreIntent, 0);
+
+        //build the calendar object for sending out the notification; stored globally
+        myCalendar = createCalendarObject(reminderId);
 
         NotificationCompat.Builder builder = null;
         //formats notification for user
@@ -240,8 +241,8 @@ public class MainActivity extends AppCompatActivity{
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                         .setAutoCancel(true)
-                        .addAction(R.drawable. ic_launcher_foreground , "Ignore" , pintent )
-                        .addAction(R.drawable.ic_launcher_background, "Acknowledge", pintent2)
+                        .addAction(R.drawable. ic_launcher_foreground , "Acknowledge" , acknowledge_pintent)
+                        .addAction(R.drawable.ic_launcher_background, "Ignore", ignore_pintent)
                         .setChannelId(NOTIFICATION_CHANNEL_ID);
                 break;
             case 'A': //Doctor Appointment Notification
@@ -269,11 +270,110 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-    //TODO: create methods for parsing reminder times; create calendar object
-    //Move all of the methods into out of app notifications
+
+    /*
+    @author: Karley Waguespack
+    Last Modified: 03/24/2021
+
+    Description: gets time from the database and converts to an array of integers
+
+    @params: reminderID: the ID of the reminder
+
+    return value: the array of integers
+     */
+    protected int[] getTimeAsInt(Integer reminderID){
+
+        //takes the top reminder from the db
+        ReminderEntity reminder = model.getReminderById(reminderID);
+
+        String timeString = reminder.getTime();
+
+        //splice the time by colons
+        String timeStrings[] = timeString.split(":");
+        //parse each result in the array to an integer
+        int hour = Integer.parseInt(timeStrings[0]);
+        int minute = Integer.parseInt(timeStrings[1]);
+
+        int timeAsIntegers[] = {hour, minute};
+
+        return timeAsIntegers;
+
+    }
 
 
-    //TODO: we need call this somewhere; need to figure out where
+
+    /*
+    @author: Karley Waguespack
+    Last Modified: 03/11/2021
+
+    Description: gets the date from the database and converts it to an array of integers
+
+    @params: reminderID: the Id of the reminder
+
+    return value: the array of integers
+     */
+    protected int[] getDateAsInt(Integer reminderID){
+
+        //need to get date from sqlite db (stored as string) and parse each num to integer;
+
+        //takes the top reminder from the db
+        ReminderEntity reminder = model.getReminderById(reminderID);
+
+        String dateString = reminder.getDate();
+
+        //splice the date by dashes
+        String dateStrings[] = dateString.split("-");
+        //parse each result in the array to an integer
+        int month = Integer.parseInt(dateStrings[0]);
+        int day = Integer.parseInt(dateStrings[1]);
+        int year = Integer.parseInt(dateStrings[2]);
+
+        int dateAsIntegers[] = {month, day, year};
+
+        return dateAsIntegers;
+    }
+
+
+
+    /*
+    @author: Karley Waguespack
+    Last Modified: 03/11/2021
+
+    Description: creates a calendar object; sets all variables (MONTH, DAY, MINUTE, etc..) to the
+    correct value according to time information in the db
+
+    @params: reminder ID: the reminder associated with the notification
+
+    return value: the calendar object
+     */
+    Calendar createCalendarObject(Integer reminderID){
+
+        int date[] = getDateAsInt(reminderID);
+        int time[] = getTimeAsInt(reminderID);
+
+        Calendar myCalendar = Calendar.getInstance();
+        myCalendar.set(Calendar.MONTH, date[0]);
+        myCalendar.set(Calendar.DAY_OF_MONTH, date[1]);
+        myCalendar.set(Calendar.YEAR, date[2]);
+        myCalendar.set(Calendar.MINUTE, time[0]);
+        myCalendar.set(Calendar.HOUR, time[1]);
+
+        return myCalendar;
+    }
+
+
+
+    /*
+    @author: Karley Waguespack
+    Last Modified: 03/11/2021
+
+    Description: schedules and sends the notification to the user's device
+
+    @params: reminder ID: the reminder associated with the notification
+             myCalendar: the calendar object containing all of the timing information
+
+    return value: the notification
+     */
     private Notification scheduleNotification(Calendar myCalendar, Integer reminderID) {
             long chosenTime = myCalendar.getTimeInMillis();
             long currentTime = System.currentTimeMillis();

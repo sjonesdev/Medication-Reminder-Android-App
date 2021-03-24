@@ -23,8 +23,22 @@
 
         </activity>
 
+
+        //receivers for notification relay
         <receiver
-            android:name= "com.example.medication_reminder_android_app.NotificationRelay.NotificationPublisher"
+            android:name= ".NotificationRelay.NotificationPublisher"
+            android:enabled="true"
+            android:exported="false"
+            />
+
+        <receiver
+            android:name= ".NotificationRelay.AcknowledgeReceiver"
+            android:enabled="true"
+            android:exported="false"
+            />
+
+        <receiver
+            android:name= ".NotificationRelay.IgnoreReceiver"
             android:enabled="true"
             android:exported="false"
             />
