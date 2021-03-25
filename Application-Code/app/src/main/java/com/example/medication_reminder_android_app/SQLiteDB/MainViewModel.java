@@ -57,15 +57,17 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     //methods to insert rows into tables
-    //Maybe have all insertion return the primary keys
-    //For timing purposes maybe i have this method creating a reminder row inside of it.
     public long insertMedication(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
                                  String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags){
         Integer recurringBool = ifRecurring? 1 : 0;
         MedicationEntity medication = new MedicationEntity(medicationName, inputDosage, recurringBool, firstDate, endDate,
                 inputTimeRule, 0, "", inputWarnings, inputIngredients, inputTags);
-        repository.insertMed(medication);
-        return medication.getPrimaryKey();
+        return repository.insertMed(medication);
+    }
+
+    public long insertReminder(String classification, String time, String date, Integer timeIntervalIndex, long medApptId){
+        ReminderEntity reminder = new ReminderEntity(classification, time, date, timeIntervalIndex, medApptId);
+        return repository.insertReminder(reminder);
     }
 
     public long insertMedAndReminder(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
@@ -96,12 +98,6 @@ public class MainViewModel extends AndroidViewModel {
 
     public void updateReminderDateAndTime(ReminderEntity r, String date, String time, int timeIntervalIndex){
         repository.updateReminderDateAndTime(r, date, time, timeIntervalIndex);
-    }
-
-    public long insertReminder(String classification, String time, String date, Integer timeIntervalIndex, long medApptId){
-        ReminderEntity reminder = new ReminderEntity(classification, time, date, timeIntervalIndex, medApptId);
-        repository.insertReminder(reminder);
-        return reminder.getPrimaryKey();
     }
 
 
