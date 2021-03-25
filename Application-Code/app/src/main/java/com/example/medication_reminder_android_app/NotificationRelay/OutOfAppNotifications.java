@@ -4,7 +4,6 @@ package com.example.medication_reminder_android_app.NotificationRelay;
 //This handles out of app notifications
 
 import com.example.medication_reminder_android_app.R;
-import com.example.medication_reminder_android_app.SQLiteDB.*;
 
 import java.util.Calendar;
 import android.app.AlarmManager;
@@ -13,91 +12,59 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import androidx.core.app.NotificationCompat;
-import java.util.Locale;
 
 import com.example.medication_reminder_android_app.NotificationRelay.AcknowledgeReceiver;
 import com.example.medication_reminder_android_app.NotificationRelay.IgnoreReceiver;
 import com.example.medication_reminder_android_app.NotificationRelay.NotificationPublisher;
-import com.example.medication_reminder_android_app.SQLiteDB.DatabaseRepository;
 import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
-import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
 import com.example.medication_reminder_android_app.SQLiteDB.ReminderEntity;
 
 public class OutOfAppNotifications extends Notifications{
 
+    //member variable
     private Context context;
 
-    public OutOfAppNotifications(MainViewModel model, Context context){
-        super(model);
-        this. context = context;
-    }
-
-    //member variables pertaining to notification; these will get populated as we receive notifiction information
+    //variables pertaining to notification; these will get populated as we receive notifiction information
     private char typeNotif;
     private String doctorName;
     private String medicationName;
-    private String notificationName; //This is if the notification does not fit the med or doctor appointment category
-    // i.e. MRI, Blood donation, etc.
-
+    private String notificationName;
 
     //notificatiion channel information
     private final static String default_notification_channel_id = "default" ;
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
 
-    //instantiate a notification publisher
-    NotificationPublisher publisher = new NotificationPublisher();
     //create a calendar object
     Calendar myCalendar = Calendar.getInstance();
 
 
-     /*
-    @author: Karley Waguespack
-    Last Modified: 03/22/2021
-
-    Description: Gets data about the reminder that was inputted
-                 returns a string array of information needed to build notification.
-
-    @params: reminderID: the id for the reminder
-
-    Array contents:
-                0th element: medication or doctor name (or type of appointment if no doctor)
-                1st element: notification type
-                2nd element: the associated reminder id
-
-    Notification type key:
-                Medication = "MED"
-                Doctor Appointment = "APPT"
-                Extraneous Appointment = "EAPPT"
-     */
-
-    //should take either a reminder or a reminder ID
-    protected String[] getData(Integer reminderID) {
-
-        //string info array to be returned
-        String[] infoArray = new String[2];
-
-        ReminderEntity reminder = model.getReminderById(reminderID);
-
-        //what type of reminder is it?
-        String reminderType = reminder.getClassification();
-        //store immediately in the info array.
-        infoArray[0] = reminderType;
-
-        if(reminderType.equals("M")){
-            //retrieve the medication object from the reminder
-            MedicationEntity med = model.getMedById(reminder.getMedApptId());
-            //get the med name
-            infoArray[1] = med.getMedName();
-        } else{
-            //otherwise, we have an appointment;
-            //TODO create appointment entity from id
-            //TODO regular appointments get APPT, Extraneous ones get EAPPT; check if it has a doctorId
-
-        }
-
-        infoArray[2] = Integer.toString(reminderID);
-        return infoArray;
+    //constructor
+    public OutOfAppNotifications(MainViewModel model, Context context){
+        super(model);
+        this. context = context;
     }
+
+
+
+    /*
+    @author: Karley Waguespack
+    Last Modified: 03/11/2021
+
+    Description: schedules and sends the notification to the user's device
+
+    @params: reminder ID: the reminder associated with the notification
+             myCalendar: the calendar object containing all of the timing information
+
+    return value: the notification
+     */
+    public Notification scheduleNotification(Calendar myCalendar, Integer reminderID) {
+        long chosenTime = myCalendar.getTimeInMillis();
+        long currentTime = System.currentTimeMillis();
+        long delay = chosenTime - currentTime;
+        Notification myNotif = startNotificationService(buildNotification(reminderID), System.currentTimeMillis() + delay);
+        return myNotif;
+    }
+
 
 
     /*
@@ -236,7 +203,7 @@ public class OutOfAppNotifications extends Notifications{
 
     return value: the array of integers
      */
-    protected int[] getTimeAsInt(Integer reminderID){
+    private int[] getTimeAsInt(Integer reminderID){
 
         //takes the top reminder from the db
         ReminderEntity reminder = model.getReminderById(reminderID);
@@ -267,7 +234,7 @@ public class OutOfAppNotifications extends Notifications{
 
     return value: the array of integers
      */
-    protected int[] getDateAsInt(MainViewModel model, Integer reminderID){
+    private int[] getDateAsInt(MainViewModel model, Integer reminderID){
 
         //need to get date from sqlite db (stored as string) and parse each num to integer;
 
@@ -301,7 +268,7 @@ public class OutOfAppNotifications extends Notifications{
 
     return value: the calendar object
      */
-    Calendar createCalendarObject(Integer reminderID){
+    private Calendar createCalendarObject(Integer reminderID){
 
         int date[] = getDateAsInt(model, reminderID);
         int time[] = getTimeAsInt(reminderID);
@@ -315,28 +282,6 @@ public class OutOfAppNotifications extends Notifications{
 
         return myCalendar;
     }
-
-
-
-    /*
-    @author: Karley Waguespack
-    Last Modified: 03/11/2021
-
-    Description: schedules and sends the notification to the user's device
-
-    @params: reminder ID: the reminder associated with the notification
-             myCalendar: the calendar object containing all of the timing information
-
-    return value: the notification
-     */
-    private Notification scheduleNotification(Calendar myCalendar, Integer reminderID) {
-        long chosenTime = myCalendar.getTimeInMillis();
-        long currentTime = System.currentTimeMillis();
-        long delay = chosenTime - currentTime;
-        Notification myNotif = startNotificationService(buildNotification(reminderID), System.currentTimeMillis() + delay);
-        return myNotif;
-    }
-
 
 
 }

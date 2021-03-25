@@ -7,7 +7,7 @@ import android.app.NotificationManager ;
 import android.content.BroadcastReceiver ;
 import android.content.Context ;
 import android.content.Intent ;
-import static com.example.medication_reminder_android_app.MainActivity.NOTIFICATION_CHANNEL_ID;
+import static com.example.medication_reminder_android_app.NotificationRelay.OutOfAppNotifications.NOTIFICATION_CHANNEL_ID;
 
  /*
     @author: Aliza Siddiqui, Karley Waguespack
