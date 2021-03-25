@@ -27,7 +27,7 @@ public final class AppDatabase_Impl extends AppDatabase {
 
   @Override
   protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration configuration) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(1) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(2) {
       @Override
       public void createAllTables(SupportSQLiteDatabase _db) {
         _db.execSQL("CREATE TABLE IF NOT EXISTS `MedicationTable` (`primaryKey` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `med_name` TEXT, `dosage` TEXT, `recurring` INTEGER, `first_date` TEXT, `end_date` TEXT, `time_rule` TEXT, `reminder_id` INTEGER NOT NULL, `acknowledgements` TEXT, `warnings` TEXT, `ingredients` TEXT, `tags` TEXT)");
