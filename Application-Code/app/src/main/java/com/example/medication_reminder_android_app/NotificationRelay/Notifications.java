@@ -10,10 +10,10 @@ import com.example.medication_reminder_android_app.SQLiteDB.*;
 
 public class Notifications {
 
-    private DatabaseRepository db;
+    protected MainViewModel model;
 
-    public Notifications(DatabaseRepository repo){
-        db = repo;
+    public Notifications(MainViewModel model){
+        this.model = model;
 
     }
 
@@ -36,7 +36,7 @@ public class Notifications {
         String[] infoArray = new String[2];
 
         //gets the reminder entity object from livedata type
-        ReminderEntity reminderArray[] = db.getReminders(1).getValue();
+        ReminderEntity reminderArray[] = model.getReminders(1).getValue();
         //we just got one reminder, grab it
         ReminderEntity reminder = reminderArray[0];
 
@@ -47,7 +47,7 @@ public class Notifications {
 
         if(reminderType.equals("MED")){
             //retrieve the medication object from the reminder
-            MedicationEntity med = db.getMedById(reminder.getMedApptId());
+            MedicationEntity med = model.getMedById(reminder.getMedApptId());
             //put the med name in the array
             infoArray[1] = med.getMedName();
         } else{
