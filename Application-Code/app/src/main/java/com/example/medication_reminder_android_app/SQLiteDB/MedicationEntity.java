@@ -6,14 +6,14 @@ import androidx.room.PrimaryKey;
 
 /**
  * @author Hayley Roberts
- * @lastModified 3/5/2021 by Hayley Roberts
+ * @lastModified 3/22/2021 by Hayley Roberts
  */
 
 @Entity(tableName = "MedicationTable")
 public class MedicationEntity {
     //Variables and columns
     @PrimaryKey (autoGenerate = true)
-    private Integer primaryKey;
+    private long primaryKey;
 
     @ColumnInfo (name = "med_name")
     private String medName;
@@ -34,7 +34,7 @@ public class MedicationEntity {
     private String timeRule;
 
     @ColumnInfo (name  = "reminder_id")
-    private Integer reminderID;
+    private long reminderID;
 
     @ColumnInfo (name = "acknowledgements")
     private String acknowledgements;
@@ -51,7 +51,7 @@ public class MedicationEntity {
     //Constructor
     //TODO start date and end date,
     public MedicationEntity(String medName, String dosage, Integer recurring, String firstDate, String endDate,
-                            String timeRule, Integer reminderID, String acknowledgements, String warnings,
+                            String timeRule, long reminderID, String acknowledgements, String warnings,
                             String ingredients, String tags){
         this.medName = medName;
         this.dosage = dosage;
@@ -67,7 +67,7 @@ public class MedicationEntity {
     }
 
     //Getter Methods
-    public Integer getPrimaryKey(){
+    public long getPrimaryKey(){
         return this.primaryKey;
     }
 
@@ -91,7 +91,7 @@ public class MedicationEntity {
         return this.timeRule;
     }
 
-    public Integer getReminderID(){
+    public long getReminderID(){
         return this.reminderID;
     }
 
@@ -113,7 +113,7 @@ public class MedicationEntity {
 
 
     //Setter Methods
-    public void setPrimaryKey(Integer primaryKey){ this.primaryKey = primaryKey; }
+    public void setPrimaryKey(long primaryKey){ this.primaryKey = primaryKey; }
 
     public void setMedName(String medicationName){
         this.medName = medicationName;
@@ -135,7 +135,7 @@ public class MedicationEntity {
         this.timeRule = recurringRule;
     }
 
-    public void setReminderID(Integer reminderId){
+    public void setReminderID(long reminderId){
         this.reminderID = reminderId;
     }
 

@@ -13,7 +13,7 @@ import androidx.room.Update;
 
 /**
  * @author Hayley Roberts
- * @lastModified 3/5/2021 by Hayley Roberts
+ * @lastModified 3/22/2021 by Hayley Roberts
  */
 
 @Dao
@@ -34,13 +34,13 @@ public interface DataAccessObject {
     public MedicationEntity getMedicationByName(String name);
 
     @Query("SELECT * FROM MedicationTable WHERE primaryKey LIKE :pk")
-    public MedicationEntity getMedicationById(Integer pk);
+    public MedicationEntity getMedicationById(long pk);
 
     @Query("UPDATE MedicationTable SET acknowledgements = :a WHERE primarykey LIKE :pk")
-    public void updateAcknowledgements(Integer pk, String a);
+    public void updateAcknowledgements(long pk, String a);
 
     @Query("UPDATE MedicationTable SET reminder_id = :reminderPK WHERE primarykey LIKE :medPK")
-    public void addReminderID(Integer medPK, Integer reminderPK);
+    public void addReminderID(long medPK, long reminderPK);
 
     //Deletions
     @Delete
@@ -63,7 +63,7 @@ public interface DataAccessObject {
 
     //get a reminder
     @Query("SELECT * FROM ReminderTable WHERE rowid LIKE :primaryKey")
-    public ReminderEntity getReminder(int primaryKey);
+    public ReminderEntity getReminder(long primaryKey);
 
     //in-app and out-of-app notifications need diff number of reminders
     //LiveData here because we want the UI to update when there are new reminders.
@@ -71,7 +71,7 @@ public interface DataAccessObject {
     public ReminderEntity[] selectNextReminders(int numberOfReminders);
 
     @Query("UPDATE ReminderTable SET ApptDate = :date, ApptTime = :time, TimeInterval = :timeInterval WHERE rowid LIKE :primaryKey")
-    public void updateDateAndTime(int primaryKey, String date, String time, int timeInterval);
+    public void updateDateAndTime(long primaryKey, String date, String time, int timeInterval);
 
     @Delete
     public int deleteReminder(ReminderEntity reminder);
