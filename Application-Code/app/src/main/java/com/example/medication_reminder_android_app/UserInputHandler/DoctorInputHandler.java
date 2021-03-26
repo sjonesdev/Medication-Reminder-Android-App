@@ -32,7 +32,7 @@ public class DoctorInputHandler extends InputHandler {
      * @return
      */
     @Override
-    int inputRequest(Map<String,String> info) {
+    long inputRequest(Map<String,String> info) {
         String name = info.get("name");
         String type = info.get("type");
         String locationsStr = info.get("locations");

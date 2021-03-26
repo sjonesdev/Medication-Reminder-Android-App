@@ -35,7 +35,7 @@ public class AppointmentInputHandler extends InputHandler {
      * @return
      */
     @Override
-    int inputRequest(Map<String,String> info) {
+    long inputRequest(Map<String,String> info) {
         String locationName = info.get("locationName");
         String locationAddress = info.get("address");
         String apptName = info.get("name");

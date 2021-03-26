@@ -28,10 +28,9 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState) ;
         setContentView(R.layout.activity_main);
         model = new ViewModelProvider(this).get(MainViewModel.class);
-        input = new InputWrapper(model);
         //to call scheduleNotification: outOfAppNotifs.scheduleNotification(reminderID)
         OutOfAppNotifications outOfAppNotifs = new OutOfAppNotifications(model, this, input);
-
+        input = new InputWrapper(model, outOfAppNotifs);
     }
 
     @Override

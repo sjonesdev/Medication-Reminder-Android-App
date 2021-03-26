@@ -1,5 +1,6 @@
 package com.example.medication_reminder_android_app.UserInputHandler;
 
+import com.example.medication_reminder_android_app.NotificationRelay.OutOfAppNotifications;
 import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
 import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
 
@@ -15,6 +16,7 @@ import java.util.Map;
 public class InputWrapper {
 
     MainViewModel mainViewModel;
+    OutOfAppNotifications outOfAppNotifications;
     MedicationInputHandler medicationInputHandler;
     DoctorInputHandler doctorInputHandler;
     AppointmentInputHandler appointmentInputHandler;
@@ -25,7 +27,8 @@ public class InputWrapper {
     /**
      * Makes a new InputWrapper
      */
-    public InputWrapper(MainViewModel mainViewModel) {
+    public InputWrapper(MainViewModel mainViewModel, OutOfAppNotifications outOfAppNotifications) {
+        this.outOfAppNotifications = outOfAppNotifications;
         medicationInputHandler = new MedicationInputHandler(mainViewModel);
         doctorInputHandler = new DoctorInputHandler();
         appointmentInputHandler = new AppointmentInputHandler();
@@ -39,13 +42,14 @@ public class InputWrapper {
      * @throws InvalidParameterException If type is invalid or input map is null
      * @return The reminder ID of the reminder entity associated with the given input
      */
-    public int processInput(InputType type, Map<String,String> input) throws InvalidParameterException {
+    public void processInput(InputType type, Map<String,String> input) throws InvalidParameterException {
         if(input == null) {
             throw new InvalidParameterException("Invalid input map");
         }
         switch (type) {
             case Medication:
-                return medicationInputHandler.inputRequest(input);
+                long id = medicationInputHandler.inputRequest(input);
+                outOfAppNotifications.scheduleNotification(id);
             case Doctor:
                 //doctorInputHandler.inputRequest(input); TODO
                 break;
@@ -55,7 +59,6 @@ public class InputWrapper {
             default:
                 throw new InvalidParameterException("Invalid input type");
         }
-        return -1;
     }
 
 
@@ -94,17 +97,18 @@ public class InputWrapper {
      * @return A date & time string of the format "YYYY-MM-DD HH:MM" of the next date and time for
      *         the reminder being acknowledged
      */
-    public String processAcknowledgementRequest(InputType type, int reminderID, boolean dismissed) {
+    public void processAcknowledgementRequest(InputType type, int reminderID, boolean dismissed) {
         switch (type) {
             case Medication:
-                return medicationInputHandler.acknowledgeNotificationRequest(reminderID, dismissed);
+                medicationInputHandler.acknowledgeNotificationRequest(reminderID, dismissed);
+                outOfAppNotifications.scheduleNotification(reminderID);
+                break;
             case Appointment:
                 //return appointmentInputHandler.inputRequest(input); TODO
                 break;
             default:
                 throw new InvalidParameterException("Invalid type");
         }
-        return null;
     }
 
 
