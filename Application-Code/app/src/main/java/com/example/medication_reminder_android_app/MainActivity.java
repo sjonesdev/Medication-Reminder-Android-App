@@ -9,29 +9,51 @@ https://developer.android.com/guide/components/activities/activity-lifecycle#jav
 
 import android.content.BroadcastReceiver;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.medication_reminder_android_app.NotificationRelay.OutOfAppNotifications;
 import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
+import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
 import com.example.medication_reminder_android_app.UserInputHandler.InputWrapper;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity{
 
 
-    //use mvm instead of database repository
-    MainViewModel model;
-    InputWrapper input;
+    //private Application app = this.getApplication();
+    private MainViewModel mvm;
+    private InputWrapper input;
 
     @Override
-    protected void onCreate (Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState) ;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        model = new ViewModelProvider(this).get(MainViewModel.class);
-        input = new InputWrapper(model);
-        //to call scheduleNotification: outOfAppNotifs.scheduleNotification(reminderID)
-        OutOfAppNotifications outOfAppNotifs = new OutOfAppNotifications(model, this);
+        mvm = new ViewModelProvider(this).get(MainViewModel.class);
+        input = new InputWrapper(mvm);
+        Log.d("app-debug", "MVM & IW initialized");
+        //Log.d("app-debug", String.format("%d",runTests()));
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("app-debug", String.format("%d",runTests()));
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
     }
 
     @Override
@@ -59,5 +81,113 @@ public class MainActivity extends AppCompatActivity{
         super.onDestroy();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private int runTests() {
+        Log.d("app-debug", "Running Tests");
+        HashMap<String,String> med = new HashMap<>();
+
+        Log.d("app-debug", "makeMed");
+        makeMed(med, "med", "100 mg", "2021-03-21", "2021-03-30",
+                "1", "don't take too much", "crack",
+                "pain relief", "I'm hurtin'", "gamer,fook", true);
+        Log.d("app-debug", "makeMed successful");
+
+        HashMap<String,String> temp = new HashMap<>();
+        Log.d("app-debug", "temp made");
+
+        temp.putAll(med);
+        Log.d("app-debug", "med copied");
+
+        long id = 0;
+        //inputWrapper.processInput(InputType.Medication, temp);
+        try {
+            id = mvm.insertMedication("med", "100 mg", true, "2021-03-21 08:00", "2021-03-30 08:00",
+                    "1", "don't take too much", "crack",
+                    "pain relief");
+        } catch(Exception e) {
+            Log.d("app-debug", e.toString());
+        }
+        try { Thread.sleep(5000); } catch(Exception e) {};
+        Log.d("app-debug", "input inputted");
+
+
+        //MedicationEntity[] m = mainViewModel.getMeds().getValue();
+        MedicationEntity med2 = mvm.repository.getMedByName("med");
+        MedicationEntity med3 = mvm.repository.getMedById(id);
+        Log.d("app-debug", "med gotted");
+
+
+        /*try {
+            MedicationEntity medE = m[0];
+            Log.d("app-debug", "med isolated");
+            String str = getMedArr(m[0]).toString();
+            Log.d("app-debug", "str gotted");
+            Log.d("app-debug", str);
+        } catch(Exception e) { Log.d("app-debug", e.toString()); }*/
+
+
+        String str = getMedArr(med2).toString();
+        Log.d("app-debug", "str gotted");
+        Log.d("app-debug", str);
+
+        return 0;
+    }
+
+    private void makeMed(Map<String,String> map, String name, String dosage, String startDate, String endDate, String interval,
+                         String warnings, String activeIngredient, String purpose, String userPurpose,
+                         String tags, boolean recurring) {
+        map.put("name", name);
+        map.put("dosage", dosage);
+        map.put("startDate", startDate);
+        map.put("endDate", endDate);
+        map.put("interval", interval);
+        map.put("warnings", warnings);
+        map.put("activeIngredient", activeIngredient);
+        map.put("purpose", purpose);
+        map.put("userPurpose", userPurpose);
+        map.put("tags", tags);
+        map.put("recurring", String.format("%s", recurring));
+    }
+
+    private String[] getMedArr(MedicationEntity m) {
+        String[] arr = new String[9];
+        for(int i = 0; i < 9; i++) arr[i] = "";
+        try {
+            arr[0] = m.getMedName();
+            arr[1] = m.getDosage();
+            arr[2] = m.getFirstDate();
+            arr[3] = m.getEndDate();
+            arr[4] = m.getTimeRule();
+            arr[5] = m.getWarnings();
+            arr[6] = m.getIngredients();
+            arr[7] = m.getTags();
+            arr[8] = String.format("%s", m.getRecurring());
+            return arr;
+        } catch(Exception e) {
+            Log.d("app-debug", e.toString());
+        }
+        return arr;
+    }
 
 }

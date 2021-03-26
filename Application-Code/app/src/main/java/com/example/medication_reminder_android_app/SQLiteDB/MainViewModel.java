@@ -10,7 +10,7 @@ import androidx.lifecycle.MutableLiveData;
  */
 
 public class MainViewModel extends AndroidViewModel {
-    private final DatabaseRepository repository;
+    public final DatabaseRepository repository; //change back
     private final MutableLiveData<MedicationEntity[]> meds;
     private final MutableLiveData<ReminderEntity[]> reminders;
 
