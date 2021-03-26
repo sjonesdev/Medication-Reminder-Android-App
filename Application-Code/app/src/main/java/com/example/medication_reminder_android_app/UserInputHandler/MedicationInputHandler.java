@@ -41,7 +41,7 @@ class MedicationInputHandler extends InputHandler {
      * @return The reminder ID associated with the medication inserted
      */
     @Override
-    int inputRequest(Map<String,String> info) {
+    long inputRequest(Map<String,String> info) {
         String name = info.get("name"); //user inputted
         String dosage = info.get("dosage"); //units included
         String startDate = info.get("startDate"); //YYYY-MM-DD HH:MM

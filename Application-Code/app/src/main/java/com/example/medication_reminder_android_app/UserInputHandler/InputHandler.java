@@ -18,7 +18,7 @@ public abstract class InputHandler {
 
     }
 
-    abstract int inputRequest(Map<String,String> info);
+    abstract long inputRequest(Map<String,String> info);
 
     abstract void deleteRequest(String name);
 
