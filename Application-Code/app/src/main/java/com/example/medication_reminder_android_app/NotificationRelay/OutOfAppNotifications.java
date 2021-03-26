@@ -11,6 +11,8 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.renderscript.ScriptGroup;
+
 import androidx.core.app.NotificationCompat;
 
 import com.example.medication_reminder_android_app.NotificationRelay.AcknowledgeReceiver;
@@ -18,11 +20,22 @@ import com.example.medication_reminder_android_app.NotificationRelay.IgnoreRecei
 import com.example.medication_reminder_android_app.NotificationRelay.NotificationPublisher;
 import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
 import com.example.medication_reminder_android_app.SQLiteDB.ReminderEntity;
+import com.example.medication_reminder_android_app.UserInputHandler.InputWrapper;
+
+ /**
+    @authors: Aliza Siddiqui and Karley Waguespack
+    Last Modified: 03/24/2021
+
+    Description: collection of methods and fields for handling out of app notification functionality
+
+  */
 
 public class OutOfAppNotifications extends Notifications{
 
     //member variable
     private Context context;
+    //TODO: should this be declared static?
+    public static InputWrapper inputWrapper;
 
     //variables pertaining to notification; these will get populated as we receive notifiction information
     private char typeNotif;
@@ -39,25 +52,27 @@ public class OutOfAppNotifications extends Notifications{
 
 
     //constructor
-    public OutOfAppNotifications(MainViewModel model, Context context){
+    public OutOfAppNotifications(MainViewModel model, Context context, InputWrapper inputWrapper){
         super(model);
         this. context = context;
+        this.inputWrapper = inputWrapper;
     }
 
 
 
-    /*
+    /**
     @author: Karley Waguespack
     Last Modified: 03/11/2021
 
-    Description: schedules and sends the notification to the user's device
+    Description: schedules and sends the notification to the user's device; should be called by
+     user input handler any time a reminder is created or the time to send a reminder is updated
 
     @params: reminder ID: the reminder associated with the notification
              myCalendar: the calendar object containing all of the timing information
 
     return value: the notification
      */
-    public Notification scheduleNotification(Calendar myCalendar, Integer reminderID) {
+    public Notification scheduleNotification(long reminderID) {
         long chosenTime = myCalendar.getTimeInMillis();
         long currentTime = System.currentTimeMillis();
         long delay = chosenTime - currentTime;
@@ -67,7 +82,7 @@ public class OutOfAppNotifications extends Notifications{
 
 
 
-    /*
+    /**
    @author: Aliza Siddiqui
    Last Modified: 03/06/2021
    Sets appropriate member variables based on the type of Reminder
@@ -90,8 +105,8 @@ public class OutOfAppNotifications extends Notifications{
 
 
 
-    /*
-    @author: Karley Waguespack
+    /**
+    @authors: Aliza Siddiqui and Karley Waguespack
     Last Modified: 03/11/2021
 
     Description: sends an intent to the NotificationPublisher class to start up the notification service
@@ -122,7 +137,7 @@ public class OutOfAppNotifications extends Notifications{
     }
 
 
-    /*
+    /**
     @author: Aliza Siddiqui
     Last Modified: 03/24/2021 by Karley
     MAIN PROCESSING METHOD:
@@ -134,7 +149,7 @@ public class OutOfAppNotifications extends Notifications{
       - TODO: Action when user clicks on notification and not on an action button (will lead to the notification
                in the app with all the extra info about it i.e. dosage, ingredients, etc.)
     */
-    private Notification buildNotification(Integer reminderID){
+    private Notification buildNotification(long reminderID){
 
         //Gets the information by calling the methods
         String[] infoArray = this.getData(reminderID); //gets and sets member variable data
@@ -148,6 +163,7 @@ public class OutOfAppNotifications extends Notifications{
 
         Intent ignoreIntent = new Intent(context, IgnoreReceiver.class);
         ignoreIntent.putExtra("reminderID", reminderId);
+        //ignoreIntent.putExtra("inputWrapper", inputWrapper);
         PendingIntent ignore_pintent = PendingIntent.getBroadcast(context, 0, ignoreIntent, 0);
 
         //build the calendar object for sending out the notification; stored globally
@@ -193,7 +209,7 @@ public class OutOfAppNotifications extends Notifications{
 
 
 
-    /*
+    /**
     @author: Karley Waguespack
     Last Modified: 03/24/2021
 
@@ -224,7 +240,7 @@ public class OutOfAppNotifications extends Notifications{
 
 
 
-    /*
+    /**
     @author: Karley Waguespack
     Last Modified: 03/11/2021
 
@@ -257,7 +273,7 @@ public class OutOfAppNotifications extends Notifications{
 
 
 
-    /*
+    /**
     @author: Karley Waguespack
     Last Modified: 03/11/2021
 

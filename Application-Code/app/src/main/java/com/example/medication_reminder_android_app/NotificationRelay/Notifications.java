@@ -17,7 +17,7 @@ public class Notifications {
 
     }
 
-         /*
+    /**
     @author: Karley Waguespack
     Last Modified: 03/22/2021
 
@@ -38,7 +38,7 @@ public class Notifications {
      */
 
     //should take either a reminder or a reminder ID
-    protected String[] getData(Integer reminderID) {
+    protected String[] getData(long reminderID) {
 
         //string info array to be returned
         String[] infoArray = new String[2];
@@ -62,7 +62,7 @@ public class Notifications {
 
         }
 
-        infoArray[2] = Integer.toString(reminderID);
+        infoArray[2] = Long.toString(reminderID);
         return infoArray;
     }
 

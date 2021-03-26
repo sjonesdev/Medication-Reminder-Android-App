@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity{
         model = new ViewModelProvider(this).get(MainViewModel.class);
         input = new InputWrapper(model);
         //to call scheduleNotification: outOfAppNotifs.scheduleNotification(reminderID)
-        OutOfAppNotifications outOfAppNotifs = new OutOfAppNotifications(model, this);
+        OutOfAppNotifications outOfAppNotifs = new OutOfAppNotifications(model, this, input);
 
     }
 
