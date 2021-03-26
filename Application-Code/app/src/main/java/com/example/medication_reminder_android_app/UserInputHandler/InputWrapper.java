@@ -27,11 +27,15 @@ public class InputWrapper {
     /**
      * Makes a new InputWrapper
      */
-    public InputWrapper(MainViewModel mainViewModel, OutOfAppNotifications outOfAppNotifications) {
-        this.outOfAppNotifications = outOfAppNotifications;
+    public InputWrapper(MainViewModel mainViewModel) {
         medicationInputHandler = new MedicationInputHandler(mainViewModel);
         doctorInputHandler = new DoctorInputHandler();
         appointmentInputHandler = new AppointmentInputHandler();
+    }
+
+
+    public void provideOutOfAppNotificationsObject(OutOfAppNotifications outOfAppNotifications) {
+        this.outOfAppNotifications = outOfAppNotifications;
     }
 
 

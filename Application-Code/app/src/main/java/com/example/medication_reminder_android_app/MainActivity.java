@@ -8,6 +8,7 @@ https://developer.android.com/guide/components/activities/activity-lifecycle#jav
  */
 
 import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -31,27 +32,36 @@ public class MainActivity extends AppCompatActivity{
 
 
     //private Application app = this.getApplication();
-    private MainViewModel mvm;
+    private MainViewModel model;
     private InputWrapper input;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mvm = new ViewModelProvider(this).get(MainViewModel.class);
-        input = new InputWrapper(mvm);
+        input = new InputWrapper(model);
+        OutOfAppNotifications outOfAppNotifications = new OutOfAppNotifications(model, this, input);
+        input.provideOutOfAppNotificationsObject(outOfAppNotifications);
+        model = new ViewModelProvider(this).get(MainViewModel.class);
         Log.d("app-debug", "MVM & IW initialized");
         //Log.d("app-debug", String.format("%d",runTests()));
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        findViewById(R.id.viewInfoButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 Log.d("app-debug", String.format("%d",runTests()));
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //startActivity(new Intent(MainActivity.this, InfoViewActivity.class));
+            }
+        });
+
+        findViewById(R.id.viewNotifsButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, NotificationActivity.class));
+            }
+        });
+
+        findViewById(R.id.viewSettingsButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             }
         });
     }
@@ -81,27 +91,6 @@ public class MainActivity extends AppCompatActivity{
         super.onDestroy();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     private int runTests() {
         Log.d("app-debug", "Running Tests");
@@ -122,7 +111,7 @@ public class MainActivity extends AppCompatActivity{
         long id = 0;
         //inputWrapper.processInput(InputType.Medication, temp);
         try {
-            id = mvm.insertMedication("med", "100 mg", true, "2021-03-21 08:00", "2021-03-30 08:00",
+            id = model.insertMedication("med", "100 mg", true, "2021-03-21 08:00", "2021-03-30 08:00",
                     "1", "don't take too much", "crack",
                     "pain relief");
         } catch(Exception e) {
@@ -133,8 +122,8 @@ public class MainActivity extends AppCompatActivity{
 
 
         //MedicationEntity[] m = mainViewModel.getMeds().getValue();
-        MedicationEntity med2 = mvm.repository.getMedByName("med");
-        MedicationEntity med3 = mvm.repository.getMedById(id);
+        MedicationEntity med2 = model.repository.getMedByName("med");
+        MedicationEntity med3 = model.repository.getMedById(id);
         Log.d("app-debug", "med gotted");
 
 
