@@ -2,7 +2,12 @@ package com.example.medication_reminder_android_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +19,7 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
     private RecyclerView infoRecycler; /*Recycler view object that with display a scrolling list
                                         of cards showing each medication*/
 
+    private InfoRecyclerAdapter infoadapter;
     /**
      @author Robert Fahey
      When the activity is created, set the current layout being displayed to
@@ -35,9 +41,25 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
         and assign a linear layout manager to the recycler
         */
         infoRecycler = findViewById(R.id.info_recycler);
-        InfoRecyclerAdapter infoadapter = new InfoRecyclerAdapter(this, names, dosages, this);
+        infoadapter = new InfoRecyclerAdapter(this, names, dosages, this);
         infoRecycler.setAdapter(infoadapter);
         infoRecycler.setLayoutManager(new LinearLayoutManager(this));
+
+        //instantiate a SearchView object
+        SearchView medSearch = findViewById(R.id.med_search);
+        /* If the contents of the search bar are changed, filter the contents of the RecyclerView by the query*/
+        medSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                infoadapter.getFilter().filter(newText);
+                return false;
+            }
+        });
 
         /**
          @author Robert Fahey
@@ -72,4 +94,4 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
         Intent intent = new Intent(this, MedViewActivity.class);
         startActivity(intent);
     }
-}
+ }
