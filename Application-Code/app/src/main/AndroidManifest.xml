@@ -19,6 +19,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".InfoViewActivity"
+            android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar"></activity>
+        <activity
+            android:name=".InfoInputActivity"
+            android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar"></activity>
+        <activity
+            android:name=".NotificationActivity"
+            android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar"></activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar"></activity>
+        <activity
+            android:name=".MedViewActivity"
+            android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar"></activity>
+        <activity
+            android:name=".CreditsActivity"
+            android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar"></activity>
     </application>
-
 </manifest>
