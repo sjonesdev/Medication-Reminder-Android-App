@@ -4,6 +4,7 @@ package com.example.medication_reminder_android_app.SQLiteDB;
 Data Access Object (DAO) for all entities
  */
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -28,7 +29,7 @@ public interface DataAccessObject {
     //this method should be called successively for each tag the user inputs
     //TODO see how to make sure the parameter is being used, not the string ":tag"
     @Query("SELECT * FROM MedicationTable WHERE :likeTags")
-    public Single<MedicationEntity[]> loadFilteredMedications(String likeTags);
+    public LiveData<MedicationEntity[]> loadFilteredMedications(String likeTags);
 
     //get a medication by name
     @Query("SELECT * FROM MedicationTable WHERE med_name LIKE :name")

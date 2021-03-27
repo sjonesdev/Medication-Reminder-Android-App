@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.renderscript.ScriptGroup;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
@@ -23,8 +24,8 @@ public class DatabaseRepository {  //extends
     private final AppDatabase db;
 
     //Want the reminder and medication entities to be live
-    private final MutableLiveData<ReminderEntity[]> reminders = new MutableLiveData<>();
-    private final MutableLiveData<MedicationEntity[]> meds = new MutableLiveData<>();
+    //private final MutableLiveData<ReminderEntity[]> reminders = new MutableLiveData<>();
+    private final LiveData<MedicationEntity[]> meds;
 
     private MedicationEntity singleMed;
     private ReminderEntity singleReminder;
@@ -34,18 +35,19 @@ public class DatabaseRepository {  //extends
     public DatabaseRepository(Application application){
         db = AppDatabase.getDatabase(application);
         dao = db.dataAccessObject();
+        meds = dao.loadFilteredMedications("tags LIKE %%");
         lastMedPk = 0; //pk's techincally start with 1.
         lastReminderPk = 0;
     }
 
-    private void reminderAsyncFinished(ReminderEntity[] r){ reminders.setValue(r); }
-    private void medicationAsyncFilterFinished(MedicationEntity[] m) { meds.setValue(m); }
+    //private void reminderAsyncFinished(ReminderEntity[] r){ reminders.setValue(r); }
+    //private void medicationAsyncFilterFinished(MedicationEntity[] m) { meds.setValue(m); }
     private void getMedByNameAsyncFinished(MedicationEntity m) { singleMed = m; }
     private void getReminderAsyncFinished(ReminderEntity r) { singleReminder = r; }
     private void insertMedAsyncFinished(long medPk) { lastMedPk = medPk; }
     private void insertReminderAsyncFinished(long reminderPk) { lastReminderPk = reminderPk; }
 
-    public Single<MedicationEntity[]> filterMedications(String[] tags){
+    public LiveData<MedicationEntity[]> filterMedications(String[] tags){
         //because want to pull if have any tags, need to build the query WHERE clause as such
         String queryReq = ""; //to send to query so can get tags in any order
         if(tags.length > 1){
@@ -62,6 +64,9 @@ public class DatabaseRepository {  //extends
         return dao.loadFilteredMedications(queryReq);
     }
 
+    public LiveData<MedicationEntity[]> getAllMeds(){
+        return meds;
+    }
     public Single<ReminderEntity[]> getReminders(int numOfReminders){
         //new AsyncNotificationReminder(dao, this).execute(numOfReminders);
         return dao.selectNextReminders(numOfReminders);

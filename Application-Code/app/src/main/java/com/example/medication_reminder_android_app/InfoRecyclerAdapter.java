@@ -58,6 +58,12 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
         holder.dosageText.setText(medDisplayList.get(position));
     }
 
+    public void setWords(ArrayList<String> words){
+        medDisplayList = words;
+        notifyDataSetChanged();
+    }
+
+
     /**
      * @author Robert Fahey
      * @return the number of medications being displayed

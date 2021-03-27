@@ -2,6 +2,7 @@ package com.example.medication_reminder_android_app.SQLiteDB;
 
 import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.medication_reminder_android_app.NotificationRelay.Notifications;
@@ -20,58 +21,56 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MainViewModel extends AndroidViewModel {
     public final DatabaseRepository repository; //change back
-    //private final MutableLiveData<MedicationEntity[]> meds;
+    private final LiveData<MedicationEntity[]> meds;
     //private final MutableLiveData<ReminderEntity[]> reminders;
 
     public MainViewModel(Application application){
         super(application);
         repository = new DatabaseRepository(application);
-        //meds = repository.filterMedications(new String[] {""});
+        meds = repository.getAllMeds();
         //reminders = repository.getReminders(5);
     }
 
 
     //Methods to be used in other places in the code like the UI and notification
-    public Single<MedicationEntity[]> getMeds(String[] tags){
+    public LiveData<MedicationEntity[]> getMeds(String[] tags){
         return repository.filterMedications(tags);
     }
 
-    public Single<MedicationEntity[]> getMeds(){
-        return getMeds(new String[] {""});
-    }
+    public LiveData<MedicationEntity[]> getMeds(){ return meds; }
 
     public Single<ReminderEntity[]> getReminders(int numOfReminders){
         return repository.getReminders(numOfReminders);
     }
 
-    public MutableLiveData<String[]> getAllMedNames(){
-        MutableLiveData<String[]> retVal = new MutableLiveData<>();
-        MedicationEntity[][] meds = new MedicationEntity[1][1];
-
-        getMeds().subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<MedicationEntity[]>() {
-            @Override
-            public void onSuccess(@NonNull MedicationEntity[] medicationEntities) {
-                meds[0] = medicationEntities;
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-                meds[0] = null;
-            }
-        });
-
-        if(meds[0] != null){
-            MedicationEntity[] myMeds = meds[0];
-            String[] medNames = new String[myMeds.length];
-
-            for(int i = 0; i < myMeds.length; i++){
-                medNames[i] = myMeds[i].getMedName();
-            }
-
-            retVal.setValue(medNames);
-        }
-        return retVal;
-    }
+//    public MutableLiveData<String[]> getAllMedNames(){
+//        MutableLiveData<String[]> retVal = new MutableLiveData<>();
+//        MedicationEntity[][] meds = new MedicationEntity[1][1];
+//
+//        getMeds().subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<MedicationEntity[]>() {
+//            @Override
+//            public void onSuccess(@NonNull MedicationEntity[] medicationEntities) {
+//                meds[0] = medicationEntities;
+//            }
+//
+//            @Override
+//            public void onError(@NonNull Throwable e) {
+//                meds[0] = null;
+//            }
+//        });
+//
+//        if(meds[0] != null){
+//            MedicationEntity[] myMeds = meds[0];
+//            String[] medNames = new String[myMeds.length];
+//
+//            for(int i = 0; i < myMeds.length; i++){
+//                medNames[i] = myMeds[i].getMedName();
+//            }
+//
+//            retVal.setValue(medNames);
+//        }
+//        return retVal;
+//    }
 
     public Single<MedicationEntity> getMedById(long medId){
         return repository.getMedById(medId);

@@ -9,8 +9,16 @@ import android.view.View;
 import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
+import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
+
+import java.util.List;
+import java.util.ArrayList;
 
 public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerAdapter.OnItemListener{
 
@@ -20,6 +28,7 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
                                         of cards showing each medication*/
 
     private InfoRecyclerAdapter infoadapter;
+    private MainViewModel infoMVM;
     /**
      @author Robert Fahey
      When the activity is created, set the current layout being displayed to
@@ -31,6 +40,8 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
         //set the layout to "info_view" when creating the activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info_view);
+
+        infoMVM = new ViewModelProvider(this).get(MainViewModel.class);
 
         //populate the medication and dosage arrays
         names = getResources().getStringArray(R.array.debug_one);
@@ -44,6 +55,18 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
         infoadapter = new InfoRecyclerAdapter(this, names, dosages, this);
         infoRecycler.setAdapter(infoadapter);
         infoRecycler.setLayoutManager(new LinearLayoutManager(this));
+
+        infoMVM.getMeds().observe(this, new Observer<MedicationEntity[]>() {
+
+            @Override
+            public void onChanged(MedicationEntity[] medicationEntity) {
+                ArrayList<String> medsFromEntities = new ArrayList<>();
+                for(MedicationEntity me : medicationEntity){
+                    medsFromEntities.add(me.getMedName());
+                }
+                infoadapter.setWords(medsFromEntities);
+            }
+        });
 
         //instantiate a SearchView object
         SearchView medSearch = findViewById(R.id.med_search);
