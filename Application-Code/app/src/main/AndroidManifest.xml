@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.medication_reminder_android_app">
 
-    <uses-permission android:name = "android.permission.VIBRATE" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MedicationReminderAndroidApp">
         <activity
-            android:name="com.example.medication_reminder_android_app.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar">
             <intent-filter>
@@ -20,29 +18,24 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
-
-        //receivers for notification relay
-        <receiver
-            android:name= ".NotificationRelay.NotificationPublisher"
-            android:enabled="true"
-            android:exported="false"
-            />
-
-        <receiver
-            android:name= ".NotificationRelay.AcknowledgeReceiver"
-            android:enabled="true"
-            android:exported="false"
-            />
-
-        <receiver
-            android:name= ".NotificationRelay.IgnoreReceiver"
-            android:enabled="true"
-            android:exported="false"
-            />
-
+        <activity
+            android:name=".InfoViewActivity"
+            android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar"></activity>
+        <activity
+            android:name=".InfoInputActivity"
+            android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar"></activity>
+        <activity
+            android:name=".NotificationActivity"
+            android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar"></activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar"></activity>
+        <activity
+            android:name=".MedViewActivity"
+            android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar"></activity>
+        <activity
+            android:name=".CreditsActivity"
+            android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar"></activity>
     </application>
-
 </manifest>
