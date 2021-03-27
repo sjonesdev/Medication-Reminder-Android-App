@@ -21,22 +21,39 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class InfoInputActivity extends AppCompatActivity {
 
-    private String startDateString;
-    private String endDateString;
+    private String startDateString; //state date for reminders, to be passed to the input handler
+    private String endDateString; //end date for reminders, to be passed to the input handler
     private Boolean isStart = true;
 
     DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm");
+    //format string for dates
 
+    /**
+     * @author Robert Fahey
+     * When the activity is created, do the following:
+     * - set the current layout being displayed to "info_input"
+     * - create and setup date and time picker dialogs for date and time selection
+     * - set onClickListeners for the 5 buttons displayed onscreen
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info_input);
 
+        //instantiate a java calendar object to generate and store time/date data
         final Calendar cal = Calendar.getInstance();
+
+        //instantiate EditText objects for the text input fields on the screen
         EditText name = (EditText) findViewById(R.id.name_editText);
         EditText dosage = (EditText) findViewById(R.id.dosage_editText);
         EditText interval = (EditText)  findViewById(R.id.interval_editText);
 
+
+        /**
+         * @author Robert & Karley
+         * Set the OnTimeSetListener to store the selected time when the "ok" button
+         * on the dialog is clicked
+         */
         TimePickerDialog.OnTimeSetListener setTimeVariables = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hour, int minute) {
@@ -47,6 +64,11 @@ public class InfoInputActivity extends AppCompatActivity {
             }
         };
 
+        /**
+         * @author Robert & Karley
+         * Set the OnDateSetListener to store the selected date when the "ok" button
+         * on the dialog is clicked
+         */
         DatePickerDialog.OnDateSetListener setDateVariables = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -62,19 +84,27 @@ public class InfoInputActivity extends AppCompatActivity {
             }
         };
 
+        /*Instantiate a date picker dialog box. Pass in the context,
+        the previously set On___SetListener, and the current year, month, and day */
         DatePickerDialog dpg = new DatePickerDialog(InfoInputActivity.this, setDateVariables,
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH),
                 cal.get(Calendar.DAY_OF_MONTH)
         );
 
+        /*Instantiate a time picker dialog box. Pass in the context,
+        the previously set On___SetListener, the current hour and minute, and set the dialog to
+        display in the 24-hour time format */
         TimePickerDialog tpg = new TimePickerDialog( InfoInputActivity.this , setTimeVariables,
                 cal.get(Calendar.HOUR),
                 cal.get(Calendar.MINUTE),
                 true
         );
 
-        //Pick time button listener
+        /**
+         * @author Robert Fahey
+         * When the "pick a time" button is clicked, display the time picker prompt
+         */
         findViewById(R.id.pick_time_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,7 +112,11 @@ public class InfoInputActivity extends AppCompatActivity {
             }
         });
 
-        //Pick start day button listener
+        /**
+         * @author Robert Fahey
+         * When the "start date" button is clicked, set isStart to true and
+         * display the date picker prompt
+         */
         findViewById(R.id.pick_day_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,7 +125,11 @@ public class InfoInputActivity extends AppCompatActivity {
             }
         });
 
-        //Pick end day button listener
+        /**
+         * @author Robert Fahey
+         * When the "end date" button is clicked, set isTrue to false and
+         * display the date picker prompt
+         */
         findViewById(R.id.pick_end_day_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +138,11 @@ public class InfoInputActivity extends AppCompatActivity {
             }
         });
 
-        //Discard button listener
+        /**
+         * @author Robert Fahey
+         * When the "discard" button is clicked, empty the three text input fields,
+         * end the current activity, and change the current activity to InfoViewActivity
+         */
         findViewById(R.id.discard_med_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,11 +155,14 @@ public class InfoInputActivity extends AppCompatActivity {
             }
         });
 
-        //Save button listener
+        /**
+         * @author Robert Fahey
+         * When the "save" button is clicked, compile the information in the text boxes and
+         * date strings int a map. Pass the map to the input handler using the inputRequest method
+         */
         findViewById(R.id.save_med_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //call Sam's input method
 
                 Map<String, String> map = new HashMap<>();
                 map.put("name", name.getText().toString());
@@ -126,13 +171,8 @@ public class InfoInputActivity extends AppCompatActivity {
                 map.put("endDate", endDateString);
                 map.put("interval", interval.getText().toString());
 
-                //recurring?
-
-
                 //call Sam's input method
                 //MedicationInputHandler.inputRequest(map)
-                //call Karley's input method
-
 
                 name.getText().clear();
                 dosage.getText().clear();
@@ -141,35 +181,4 @@ public class InfoInputActivity extends AppCompatActivity {
             }
         });
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        //TODO
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        //TODO
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        //TODO
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroy() {
-        //TODO
-        super.onDestroy();
-    }
-
-
 }

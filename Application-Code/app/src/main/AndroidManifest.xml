@@ -34,6 +34,8 @@
         <activity
             android:name=".MedViewActivity"
             android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar"></activity>
+        <activity
+            android:name=".CreditsActivity"
+            android:theme="@style/Theme.MedicationReminderAndroidApp.NoActionBar"></activity>
     </application>
-
 </manifest>
