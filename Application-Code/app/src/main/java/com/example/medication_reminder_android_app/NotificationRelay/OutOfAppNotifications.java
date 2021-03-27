@@ -48,7 +48,7 @@ public class OutOfAppNotifications extends Notifications{
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
 
     //create a calendar object
-    Calendar myCalendar = Calendar.getInstance();
+    private Calendar myCalendar = Calendar.getInstance();
 
 
     //constructor
@@ -87,7 +87,7 @@ public class OutOfAppNotifications extends Notifications{
    Last Modified: 03/06/2021
    Sets appropriate member variables based on the type of Reminder
    */
-    public void setData(String[] infoArray){
+    private void setData(String[] infoArray){
         this.typeNotif = infoArray[1].charAt(0);
         switch (typeNotif){
             case 'M':
