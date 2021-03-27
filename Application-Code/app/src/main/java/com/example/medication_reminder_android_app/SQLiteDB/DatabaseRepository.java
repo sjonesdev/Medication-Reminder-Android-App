@@ -9,6 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
 
+import io.reactivex.Single;
+
 /**
  * @author Hayley Roberts
  * @lastModified 3/22/2021 by Hayley Roberts
@@ -43,35 +45,47 @@ public class DatabaseRepository {  //extends
     private void insertMedAsyncFinished(long medPk) { lastMedPk = medPk; }
     private void insertReminderAsyncFinished(long reminderPk) { lastReminderPk = reminderPk; }
 
-    public MutableLiveData<MedicationEntity[]> filterMedications(String[] tags){
-        new AsyncFilter(dao, this).execute(tags);
-        return meds;
+    public Single<MedicationEntity[]> filterMedications(String[] tags){
+        //because want to pull if have any tags, need to build the query WHERE clause as such
+        String queryReq = ""; //to send to query so can get tags in any order
+        if(tags.length > 1){
+            for(String tag: tags){
+                queryReq += " tags LIKE %" + tag + "% OR";
+            }
+            if(queryReq.length() > 4){
+                queryReq = queryReq.substring(0, queryReq.length() - 4); //Remove last OR
+            }
+        } else{
+            queryReq = "tags LIKE %%";
+        }
+
+        return dao.loadFilteredMedications(queryReq);
     }
 
-    public MutableLiveData<ReminderEntity[]> getReminders(int numOfReminders){
-        new AsyncNotificationReminder(dao, this).execute(numOfReminders);
-        return reminders;
+    public Single<ReminderEntity[]> getReminders(int numOfReminders){
+        //new AsyncNotificationReminder(dao, this).execute(numOfReminders);
+        return dao.selectNextReminders(numOfReminders);
     }
 
-    public MedicationEntity getMedByName(String medName){
-        new AsyncGetMedByName(dao, this).execute(medName);
-        return singleMed;
+    public Single<MedicationEntity> getMedByName(String medName){
+        //new AsyncGetMedByName(dao, this).execute(medName);
+        return dao.getMedicationByName(medName);
     }
 
-    public MedicationEntity getMedById(long entityId){
-        new AsyncGetMedById(dao, this).execute(entityId);
-        return singleMed;
+    public Single<MedicationEntity> getMedById(long entityId){
+        //new AsyncGetMedById(dao, this).execute(entityId);
+        return dao.getMedicationById(entityId);
     }
 
-    public ReminderEntity getReminderById(long entityId){
-        new AsyncGetReminderById(dao, this).execute(String.valueOf(entityId));
-        return singleReminder;
+    public Single<ReminderEntity> getReminderById(long entityId){
+        //new AsyncGetReminderById(dao, this).execute(String.valueOf(entityId));
+        return dao.getReminder(entityId);
     }
 
-    public ReminderEntity getReminderByMedName(String medName){
-        long reminderId = getMedByName(medName).getReminderID();
-        return getReminderById(reminderId);
-    }
+//    public Single<ReminderEntity> getReminderByMedName(String medName){
+//        long reminderId = getMedByName(medName).getReminderID();
+//        return getReminderById(reminderId);
+//    }
 
     public long insertMed(MedicationEntity m){
         new AsyncInsertMedication(dao, this).execute(m);
@@ -118,123 +132,123 @@ public class DatabaseRepository {  //extends
 
 
 
-    //Async classes so can do queries in background
-    private static class AsyncFilter extends AsyncTask<String, Void, MedicationEntity[]>{
-        private final DataAccessObject dao;
-        private final DatabaseRepository delegate;
+//    //Async classes so can do queries in background
+//    private static class AsyncFilter extends AsyncTask<String, Void, MedicationEntity[]>{
+//        private final DataAccessObject dao;
+//        private final DatabaseRepository delegate;
+//
+//        public AsyncFilter(DataAccessObject filter, DatabaseRepository repo){
+//            dao = filter;
+//            delegate = repo;
+//        }
+//
+//
+//        @Override
+//        protected MedicationEntity[] doInBackground(String... params){
+//            //because want to pull if have any tags, need to build the query WHERE clause as such
+//            String queryReq = ""; //to send to query so can get tags in any order
+//            if(params.length > 1){
+//                for(String tag: params){
+//                    queryReq += " tags LIKE %" + tag + "% OR";
+//                }
+//                if(queryReq.length() > 4){
+//                    queryReq = queryReq.substring(0, queryReq.length() - 4); //Remove last OR
+//                }
+//            } else{
+//                queryReq = "tags LIKE %%";
+//            }
+//
+//            return dao.loadFilteredMedications(queryReq);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(MedicationEntity[] meds) {
+//            delegate.medicationAsyncFilterFinished(meds);
+//        }
+//
+//    }
 
-        public AsyncFilter(DataAccessObject filter, DatabaseRepository repo){
-            dao = filter;
-            delegate = repo;
-        }
-
-
-        @Override
-        protected MedicationEntity[] doInBackground(String... params){
-            //because want to pull if have any tags, need to build the query WHERE clause as such
-            String queryReq = ""; //to send to query so can get tags in any order
-            if(params.length > 1){
-                for(String tag: params){
-                    queryReq += " tags LIKE %" + tag + "% OR";
-                }
-                if(queryReq.length() > 4){
-                    queryReq = queryReq.substring(0, queryReq.length() - 4); //Remove last OR
-                }
-            } else{
-                queryReq = "tags LIKE %%";
-            }
-
-            return dao.loadFilteredMedications(queryReq);
-        }
-
-        @Override
-        protected void onPostExecute(MedicationEntity[] meds) {
-            delegate.medicationAsyncFilterFinished(meds);
-        }
-
-    }
-
-    private static class AsyncGetMedByName extends AsyncTask<String, Void, MedicationEntity>{
-        private final DataAccessObject dao;
-        private final DatabaseRepository delegate;
-
-        public AsyncGetMedByName(DataAccessObject filter, DatabaseRepository repo){
-            dao = filter;
-            delegate = repo;
-        }
-
-        @Override
-        protected MedicationEntity doInBackground(String... params){
-            return dao.getMedicationByName(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(MedicationEntity result){
-            delegate.getMedByNameAsyncFinished(result);
-        }
-    }
-
-    private static class AsyncGetMedById extends AsyncTask<Long, Void, MedicationEntity>{
-        private final DataAccessObject dao;
-        private final DatabaseRepository delegate;
-
-        public AsyncGetMedById(DataAccessObject filter, DatabaseRepository repo){
-            dao = filter;
-            delegate = repo;
-        }
-
-        @Override
-        protected MedicationEntity doInBackground(Long... params){
-            return dao.getMedicationById(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(MedicationEntity result){
-            delegate.getMedByNameAsyncFinished(result);
-        }
-    }
-
-    private static class AsyncGetReminderById extends AsyncTask<String, Void, ReminderEntity>{
-        private final DatabaseRepository delegate;
-        private final DataAccessObject dao;
-
-        public AsyncGetReminderById(DataAccessObject filter, DatabaseRepository repo){
-            dao = filter;
-            delegate = repo;
-        }
-
-        @Override
-        protected ReminderEntity doInBackground(String... params){
-            return dao.getReminder(Long.getLong(params[0]));
-        }
-
-        @Override
-        protected void onPostExecute(ReminderEntity r){
-            delegate.getReminderAsyncFinished(r);
-        }
-    }
-
-
-    private static class AsyncNotificationReminder extends AsyncTask<Integer, Void, ReminderEntity[]>{
-        private final DatabaseRepository delegate;
-        private final DataAccessObject dao;
-
-        public AsyncNotificationReminder(DataAccessObject notif, DatabaseRepository repo){
-            dao = notif;
-            delegate = repo;
-        }
-
-        @Override
-        protected ReminderEntity[] doInBackground(Integer... params){
-            return dao.selectNextReminders(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(ReminderEntity[] results) {
-            delegate.reminderAsyncFinished(results);
-        }
-
-    }
+//    private static class AsyncGetMedByName extends AsyncTask<String, Void, MedicationEntity>{
+//        private final DataAccessObject dao;
+//        private final DatabaseRepository delegate;
+//
+//        public AsyncGetMedByName(DataAccessObject filter, DatabaseRepository repo){
+//            dao = filter;
+//            delegate = repo;
+//        }
+//
+//        @Override
+//        protected MedicationEntity doInBackground(String... params){
+//            return dao.getMedicationByName(params[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(MedicationEntity result){
+//            delegate.getMedByNameAsyncFinished(result);
+//        }
+//    }
+//
+//    private static class AsyncGetMedById extends AsyncTask<Long, Void, MedicationEntity>{
+//        private final DataAccessObject dao;
+//        private final DatabaseRepository delegate;
+//
+//        public AsyncGetMedById(DataAccessObject filter, DatabaseRepository repo){
+//            dao = filter;
+//            delegate = repo;
+//        }
+//
+//        @Override
+//        protected MedicationEntity doInBackground(Long... params){
+//            return dao.getMedicationById(params[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(MedicationEntity result){
+//            delegate.getMedByNameAsyncFinished(result);
+//        }
+//    }
+//
+//    private static class AsyncGetReminderById extends AsyncTask<String, Void, ReminderEntity>{
+//        private final DatabaseRepository delegate;
+//        private final DataAccessObject dao;
+//
+//        public AsyncGetReminderById(DataAccessObject filter, DatabaseRepository repo){
+//            dao = filter;
+//            delegate = repo;
+//        }
+//
+//        @Override
+//        protected ReminderEntity doInBackground(String... params){
+//            return dao.getReminder(Long.getLong(params[0]));
+//        }
+//
+//        @Override
+//        protected void onPostExecute(ReminderEntity r){
+//            delegate.getReminderAsyncFinished(r);
+//        }
+//    }
+//
+//
+//    private static class AsyncNotificationReminder extends AsyncTask<Integer, Void, ReminderEntity[]>{
+//        private final DatabaseRepository delegate;
+//        private final DataAccessObject dao;
+//
+//        public AsyncNotificationReminder(DataAccessObject notif, DatabaseRepository repo){
+//            dao = notif;
+//            delegate = repo;
+//        }
+//
+//        @Override
+//        protected ReminderEntity[] doInBackground(Integer... params){
+//            return dao.selectNextReminders(params[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(ReminderEntity[] results) {
+//            delegate.reminderAsyncFinished(results);
+//        }
+//
+//    }
 
     private static class AsyncInsertMedication extends AsyncTask<MedicationEntity, Void, Long>{
         private final DataAccessObject dao;
