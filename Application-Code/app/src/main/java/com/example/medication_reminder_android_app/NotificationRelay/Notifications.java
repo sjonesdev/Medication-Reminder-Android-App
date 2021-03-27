@@ -8,12 +8,18 @@ This handles external notifications
 
 import com.example.medication_reminder_android_app.SQLiteDB.*;
 
-public class Notifications {
+import io.reactivex.annotations.NonNull;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
+
+public abstract class Notifications {
 
     protected MainViewModel model;
+    protected String[] info;
 
     public Notifications(MainViewModel model){
         this.model = model;
+        this.info = new String[3];
 
     }
 
@@ -37,33 +43,67 @@ public class Notifications {
                 Extraneous Appointment = "EAPPT"
      */
 
+    protected abstract void sendInfoArray(String[] info, ReminderEntity reminder);
+
     //should take either a reminder or a reminder ID
-    protected String[] getData(long reminderID) {
+    protected void getData(long reminderID) {
 
-        //string info array to be returned
-        String[] infoArray = new String[2];
+        model.getReminderById(reminderID).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<ReminderEntity>() {
+            @Override
+            public void onSuccess(@NonNull ReminderEntity reminderEntity) {
+                getDataHelper1(reminderEntity);
+            }
 
-        ReminderEntity reminder = model.getReminderById(reminderID);
+            @Override
+            public void onError(@NonNull Throwable e) {
 
-        //what type of reminder is it?
+            }
+        });
+
+
+    }
+
+    private void getDataHelper1(ReminderEntity reminder){
         String reminderType = reminder.getClassification();
-        //store immediately in the info array.
-        infoArray[0] = reminderType;
 
         if(reminderType.equals("M")){
             //retrieve the medication object from the reminder
-            MedicationEntity med = model.getMedById(reminder.getMedApptId());
-            //get the med name
-            infoArray[1] = med.getMedName();
+            model.getMedById(reminder.getMedApptId()).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<MedicationEntity>() {
+                @Override
+                public void onSuccess(@NonNull MedicationEntity medicationEntity) {
+                    getDataHelperMed(medicationEntity, reminder);
+                }
+
+                @Override
+                public void onError(@NonNull Throwable e) {
+
+                }
+            });
+
         } else{
             //otherwise, we have an appointment;
             //TODO create appointment entity from id
             //TODO regular appointments get APPT, Extraneous ones get EAPPT; check if it has a doctorId
 
         }
+    }
 
-        infoArray[2] = Long.toString(reminderID);
-        return infoArray;
+    private void getDataHelperMed(MedicationEntity med, ReminderEntity r){
+        //string info array to be returned
+        String[] infoArray = new String[2];
+
+        infoArray[0] = "M ";
+        //get the med name
+        infoArray[1] = med.getMedName();
+        infoArray[2] = Long.toString(med.getReminderID());
+        sendInfoArray(infoArray, r);
+        //return infoArray;
+    }
+
+    private void getDataHelperDr(){
+        //otherwise, we have an appointment;
+        //TODO create appointment entity from id
+        //TODO regular appointments get APPT, Extraneous ones get EAPPT; check if it has a doctorId
     }
 
 
