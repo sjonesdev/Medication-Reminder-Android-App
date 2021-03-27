@@ -4,7 +4,7 @@ package com.example.medication_reminder_android_app.NotificationRelay;
 
 import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
 
-public class InAppNotification extends Notifications{ // extends Notifications{
+/*public class InAppNotification extends Notifications{ // extends Notifications{
 
 
     public InAppNotification(MainViewModel model){
@@ -12,4 +12,4 @@ public class InAppNotification extends Notifications{ // extends Notifications{
     }
 
 
-}
+}*/
