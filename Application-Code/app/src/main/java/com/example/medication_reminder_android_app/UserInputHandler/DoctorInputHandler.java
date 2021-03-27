@@ -54,9 +54,8 @@ public class DoctorInputHandler extends InputHandler {
     }
 
     @Override
-    String acknowledgeNotificationRequest(int reminderID, boolean dismissed) {
+    void acknowledgeNotificationRequest(int reminderID, boolean dismissed) {
 
-        return null;
     }
 
     @Override
