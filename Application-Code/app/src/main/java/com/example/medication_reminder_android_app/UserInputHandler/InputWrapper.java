@@ -15,7 +15,6 @@ import java.util.Map;
  */
 public class InputWrapper {
 
-    MainViewModel mainViewModel;
     OutOfAppNotifications outOfAppNotifications;
     MedicationInputHandler medicationInputHandler;
     DoctorInputHandler doctorInputHandler;
@@ -27,11 +26,14 @@ public class InputWrapper {
     /**
      * Makes a new InputWrapper
      */
-    public InputWrapper(MainViewModel mainViewModel, OutOfAppNotifications outOfAppNotifications) {
-        this.outOfAppNotifications = outOfAppNotifications;
+    public InputWrapper(MainViewModel mainViewModel) {
         medicationInputHandler = new MedicationInputHandler(mainViewModel);
         doctorInputHandler = new DoctorInputHandler();
         appointmentInputHandler = new AppointmentInputHandler();
+    }
+
+    public void setOutOfAppNotifications(OutOfAppNotifications a){
+        this.outOfAppNotifications = a;
     }
 
 

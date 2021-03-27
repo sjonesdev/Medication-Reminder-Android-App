@@ -2,6 +2,7 @@ package com.example.medication_reminder_android_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerAdapter.OnItemListener{
 
     private String names[]; //array of medication names to be displayed
-    private String dosages[]; //array of dosages to be displayed
     private RecyclerView infoRecycler; /*Recycler view object that with display a scrolling list
                                         of cards showing each medication*/
 
@@ -45,14 +45,13 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
 
         //populate the medication and dosage arrays
         names = getResources().getStringArray(R.array.debug_one);
-        dosages = getResources().getStringArray(R.array.debug_one);
 
         /*
         instantiate the RecyclerView and its adapter, attach the adapter to the recycler view,
         and assign a linear layout manager to the recycler
         */
         infoRecycler = findViewById(R.id.info_recycler);
-        infoadapter = new InfoRecyclerAdapter(this, names, dosages, this);
+        infoadapter = new InfoRecyclerAdapter(this, names,this);
         infoRecycler.setAdapter(infoadapter);
         infoRecycler.setLayoutManager(new LinearLayoutManager(this));
 
@@ -60,6 +59,7 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
 
             @Override
             public void onChanged(MedicationEntity[] medicationEntity) {
+                Log.d("app-debug", "Meds changed");
                 ArrayList<String> medsFromEntities = new ArrayList<>();
                 for(MedicationEntity me : medicationEntity){
                     medsFromEntities.add(me.getMedName());
@@ -115,6 +115,7 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
     @Override
     public void onItemClick(int position) {
         Intent intent = new Intent(this, MedViewActivity.class);
+        intent.putExtra("current_medication", infoadapter.getNameString(position));
         startActivity(intent);
     }
  }

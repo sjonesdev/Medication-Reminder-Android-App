@@ -18,7 +18,6 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
     private String[] mednames; //array of medication names pulled from the input handler
     private ArrayList<String> medSearchList; //medication name array list storing all medications
     private ArrayList<String> medDisplayList; //medication name array list containing only the medications being displayed on screen
-    private String[] meddosages; //array of medication dosages for display
     private Context context; //the current context
     private OnItemListener medItemListener; //click listener for medication cards in the RecyclerView
 
@@ -26,10 +25,9 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
      * @author Robert Fahey
      * Constructor for the InfoRecyclerAdapter
      */
-    public InfoRecyclerAdapter(Context cont, String[] names, String[] dosages, OnItemListener list){
+    public InfoRecyclerAdapter(Context cont, String[] names, OnItemListener list){
         context = cont;
         mednames = names;
-        meddosages = dosages;
         medItemListener = list;
 
         medSearchList = new ArrayList<>(Arrays.asList(mednames));
@@ -55,12 +53,15 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull InfoViewHolder holder, int position) {
         holder.medText.setText(medDisplayList.get(position));
-        holder.dosageText.setText(medDisplayList.get(position));
     }
 
     public void setWords(ArrayList<String> words){
         medDisplayList = words;
         notifyDataSetChanged();
+    }
+
+    public String getNameString(int position){
+        return medDisplayList.get(position);
     }
 
 
@@ -136,13 +137,11 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
     public class InfoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView medText;
-        TextView dosageText;
         OnItemListener onitemlistener;
 
         public InfoViewHolder(@NonNull View itemView, OnItemListener listener) {
             super(itemView);
             medText = itemView.findViewById(R.id.med_name);
-            dosageText = itemView.findViewById(R.id.med_dosage);
             onitemlistener = listener;
 
             itemView.setOnClickListener(this);

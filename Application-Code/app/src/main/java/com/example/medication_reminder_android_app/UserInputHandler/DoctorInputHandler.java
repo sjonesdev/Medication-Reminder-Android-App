@@ -18,7 +18,6 @@ public class DoctorInputHandler extends InputHandler {
      * @since 3-1-2021
      */
     public DoctorInputHandler() {
-        super();
         this.mainViewModel = mainViewModel;
     }
 

@@ -23,9 +23,8 @@ import io.reactivex.schedulers.Schedulers;
  * @author Samuel Jones
  * @since 3-1-2021
  */
-class MedicationInputHandler extends InputHandler {
+public class MedicationInputHandler extends InputHandler {
 
-    private final double HOURS_TO_MILLIS = 60*60*1000;
     private final int MAX_NUM_ACK = 30;
 
     private MainViewModel mainViewModel;
@@ -34,7 +33,6 @@ class MedicationInputHandler extends InputHandler {
      * Creates a MedicationInputHandler
      */
     public MedicationInputHandler(MainViewModel mainViewModel) {
-        super();
         this.mainViewModel = mainViewModel;
     }
 
@@ -45,7 +43,7 @@ class MedicationInputHandler extends InputHandler {
      * @return The reminder ID associated with the medication inserted
      */
     @Override
-    long inputRequest(Map<String,String> info) {
+    public long inputRequest(Map<String,String> info) {
         String name = info.get("name"); //user inputted
         String dosage = info.get("dosage"); //units included
         String startDate = info.get("startDate"); //YYYY-MM-DD HH:MM
@@ -69,7 +67,7 @@ class MedicationInputHandler extends InputHandler {
      */
     @Override
     void deleteRequest(String medName) {
-        //mainViewModel.deleteMedication(medName);
+        mainViewModel.deleteMedication(medName);
     }
 
 
@@ -88,7 +86,6 @@ class MedicationInputHandler extends InputHandler {
      * (medication was taken)
      * @param reminderID ID of the reminder to be updated
      * @param dismissed True if notification was dismissed, false if acknowledged
-     * @return A date & time string of the format YYYY-MM-DD HH:MM
      */
     @Override
     public void acknowledgeNotificationRequest(int reminderID, boolean dismissed) {
@@ -107,6 +104,12 @@ class MedicationInputHandler extends InputHandler {
     }
 
 
+    /**
+     * Helper method for acknowledgeNotificationRequest used to ensure the method logic does not
+     * execute until the database requests are processed.
+     * @param r
+     * @param dismissed
+     */
     private void acknowledgeHelper(ReminderEntity r, Boolean dismissed) {
         mainViewModel.getMedById(r.getMedApptId()).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<MedicationEntity>() {
             @Override
@@ -123,9 +126,17 @@ class MedicationInputHandler extends InputHandler {
     }
 
 
-    private String acknowledgeHelper2(MedicationEntity med, ReminderEntity r, Boolean dismissed) {
+    /**
+     * Helper method for acknowledgeNotificationRequest used to ensure the method logic does not
+     * execute until the database requests are processed. Contains the main logic of the method.
+     * @param med The MedicationEntity obtained in the first method
+     * @param r The ReminderEntity obtained in the first helper method
+     * @param dismissed The dismissed flag for the notification
+     */
+    private void acknowledgeHelper2(MedicationEntity med, ReminderEntity r, Boolean dismissed) {
         int intervalIndex = r.getTimeIntervalIndex();
         String[] interval = med.getTimeRule().split(",");
+        double HOURS_TO_MILLIS = 60 * 60 * 1000;
         long millisToAdd = (long) (Double.parseDouble(interval[intervalIndex]) * HOURS_TO_MILLIS);
         String lastReminderDateTime = r.getDate() + " " + r.getTime();
         String[] dateTime;
@@ -155,7 +166,7 @@ class MedicationInputHandler extends InputHandler {
             mainViewModel.updateAcknowledgements(med, newAckStr);
         }
 
-        return date + " " + time; //YYYY-MM-DD HH:MM
+        //return date + " " + time; //YYYY-MM-DD HH:MM
     }
 
 

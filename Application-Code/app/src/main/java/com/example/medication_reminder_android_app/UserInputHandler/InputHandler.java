@@ -11,10 +11,10 @@ import java.util.Map;
  * @author Samuel Jones
  * @since 3-1-2021
  */
-public abstract class InputHandler {
+abstract class InputHandler {
     //member variables for inputs
 
-    public InputHandler(){
+    InputHandler() {
 
     }
 

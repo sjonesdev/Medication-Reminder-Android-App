@@ -18,12 +18,19 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
+import com.example.medication_reminder_android_app.UserInputHandler.MedicationInputHandler;
 
 public class InfoInputActivity extends AppCompatActivity {
 
     private String startDateString; //state date for reminders, to be passed to the input handler
     private String endDateString; //end date for reminders, to be passed to the input handler
     private Boolean isStart = true;
+
+    private MainViewModel inputMVM;
+    private MedicationInputHandler handler;
 
     DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm");
     //format string for dates
@@ -39,6 +46,9 @@ public class InfoInputActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info_input);
+
+        inputMVM = new ViewModelProvider(this).get(MainViewModel.class);
+        handler = new MedicationInputHandler(inputMVM);
 
         //instantiate a java calendar object to generate and store time/date data
         final Calendar cal = Calendar.getInstance();
@@ -171,8 +181,15 @@ public class InfoInputActivity extends AppCompatActivity {
                 map.put("endDate", endDateString);
                 map.put("interval", interval.getText().toString());
 
+                map.put("warnings", "");
+                map.put("activeIngredient", "");
+                map.put("purpose", "");
+                map.put("userPurpose", "");
+                map.put("tags", "");
+                map.put("recurring", "true");
+
                 //call Sam's input method
-                //MedicationInputHandler.inputRequest(map)
+                handler.inputRequest(map);
 
                 name.getText().clear();
                 dosage.getText().clear();

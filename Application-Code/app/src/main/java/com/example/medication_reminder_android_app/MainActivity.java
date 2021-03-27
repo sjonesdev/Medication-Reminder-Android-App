@@ -2,10 +2,19 @@ package com.example.medication_reminder_android_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.example.medication_reminder_android_app.NotificationRelay.OutOfAppNotifications;
+import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
+import com.example.medication_reminder_android_app.UserInputHandler.InputWrapper;
 
 public class MainActivity extends AppCompatActivity {
+
+    MainViewModel model;
+    InputWrapper inputWrapper;
 
     /**
     @author Robert
@@ -16,6 +25,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        model = new ViewModelProvider(this).get(MainViewModel.class);
+        inputWrapper = new InputWrapper(model);
+        OutOfAppNotifications outOfAppNotifs = new OutOfAppNotifications(model, this, inputWrapper);
+        inputWrapper.setOutOfAppNotifications(outOfAppNotifs);
+
         setContentView(R.layout.activity_main);
 
         /**
