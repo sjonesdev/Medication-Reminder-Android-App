@@ -1,51 +1,62 @@
 package com.example.medication_reminder_android_app;
 
-import android.content.Intent;
+/*
+This class is the equivalent to the main class in Java.
+This is the starting point of the code.
+
+https://developer.android.com/guide/components/activities/activity-lifecycle#java
+ */
+
+import android.content.BroadcastReceiver;
 import android.os.Bundle;
-import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import com.example.medication_reminder_android_app.NotificationRelay.OutOfAppNotifications;
+import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
+import com.example.medication_reminder_android_app.UserInputHandler.InputWrapper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
-    /**
-    @author Robert
-    When the activity is created on app startup, set the current layout being displayed to
-    "activity_main" (which includes content_main, the layout file that contains the actual UI
-    elements) and set event listeners for the three buttons displayed onscreen
-     */
+
+    //use mvm instead of database repository
+    MainViewModel model;
+    InputWrapper input;
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate (Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState) ;
         setContentView(R.layout.activity_main);
-
-        /**
-        @author Robert
-        When the "View My Info button is clicked", swap activities from MainActivity to InfoViewActivity
-         */
-        findViewById(R.id.viewInfoButton).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, InfoViewActivity.class));
-            }
-        });
-
-        /**
-        @author Robert
-         When the "Notifications" button is clicked, swap activities from MainActivity to NotificationActivity
-         */
-        findViewById(R.id.viewNotifsButton).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, NotificationActivity.class));
-            }
-        });
-
-        /**
-        @author Robert
-        When the "Settings" button is clicked, swap activities from MainActivity to SettingsActivity
-         */
-        findViewById(R.id.viewSettingsButton).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-            }
-        });
+        model = new ViewModelProvider(this).get(MainViewModel.class);
+        //to call scheduleNotification: outOfAppNotifs.scheduleNotification(reminderID)
+        OutOfAppNotifications outOfAppNotifs = new OutOfAppNotifications(model, this, input);
+        input = new InputWrapper(model, outOfAppNotifs);
     }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+    }
+
+
 }
