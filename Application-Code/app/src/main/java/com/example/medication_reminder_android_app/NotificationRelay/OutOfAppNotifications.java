@@ -22,7 +22,11 @@ import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
 import com.example.medication_reminder_android_app.SQLiteDB.ReminderEntity;
 import com.example.medication_reminder_android_app.UserInputHandler.InputWrapper;
 
- /**
+import io.reactivex.annotations.NonNull;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
+
+/**
     @authors: Aliza Siddiqui and Karley Waguespack
     Last Modified: 03/24/2021
 
@@ -60,6 +64,13 @@ public class OutOfAppNotifications extends Notifications{
 
 
 
+    @Override
+    protected void sendInfoArray(String[] info, ReminderEntity r){
+        finishBuildNotif(info, r);
+    }
+
+
+
     /**
     @author: Karley Waguespack
     Last Modified: 03/11/2021
@@ -72,11 +83,24 @@ public class OutOfAppNotifications extends Notifications{
 
     return value: the notification
      */
-    public Notification scheduleNotification(long reminderID) {
+    public void scheduleNotification(long reminderID) {
+        buildNotification(reminderID);
+    }
+
+    /**
+     * @author Hayley Roberts
+     * Last modified: 03/26/2021
+     *
+     * Description: Separate the scheduling into 2 parts due to asynchrynous threading
+     * @param notification
+     * @return
+     */
+    //Have to break apart the scheduling to two parts because of asynchrynous threads
+    private Notification finishScheduling(Notification notification){
         long chosenTime = myCalendar.getTimeInMillis();
         long currentTime = System.currentTimeMillis();
         long delay = chosenTime - currentTime;
-        Notification myNotif = startNotificationService(buildNotification(reminderID), System.currentTimeMillis() + delay);
+        Notification myNotif = startNotificationService(notification, System.currentTimeMillis() + delay);
         return myNotif;
     }
 
@@ -149,10 +173,17 @@ public class OutOfAppNotifications extends Notifications{
       - TODO: Action when user clicks on notification and not on an action button (will lead to the notification
                in the app with all the extra info about it i.e. dosage, ingredients, etc.)
     */
-    private Notification buildNotification(long reminderID){
+    private void buildNotification(long reminderID) {
 
         //Gets the information by calling the methods
-        String[] infoArray = this.getData(reminderID); //gets and sets member variable data
+        this.getData(reminderID); //gets and sets member variable data
+
+    }
+
+    //Had to separate the buildNotification into 2 parts because of asynchrynous threads
+    //Had to separate the buildNotification into 2 parts because of asynchrynous threads
+    private void finishBuildNotif(String[] infoArray, ReminderEntity r){
+
         Integer reminderId = Integer.parseInt(infoArray[2]);
         setData(infoArray);
 
@@ -167,7 +198,7 @@ public class OutOfAppNotifications extends Notifications{
         PendingIntent ignore_pintent = PendingIntent.getBroadcast(context, 0, ignoreIntent, 0);
 
         //build the calendar object for sending out the notification; stored globally
-        myCalendar = createCalendarObject(reminderId);
+        myCalendar = createCalendarObject(r);
 
         NotificationCompat.Builder builder = null;
         //formats notification for user
@@ -204,7 +235,7 @@ public class OutOfAppNotifications extends Notifications{
 
         }
 
-        return builder.build();
+        finishScheduling(builder.build());
     }
 
 
@@ -219,11 +250,7 @@ public class OutOfAppNotifications extends Notifications{
 
     return value: the array of integers
      */
-    private int[] getTimeAsInt(Integer reminderID){
-
-        //takes the top reminder from the db
-        ReminderEntity reminder = model.getReminderById(reminderID);
-
+    private int[] getTimeAsInt(ReminderEntity reminder){
         String timeString = reminder.getTime();
 
         //splice the time by colons
@@ -250,13 +277,7 @@ public class OutOfAppNotifications extends Notifications{
 
     return value: the array of integers
      */
-    private int[] getDateAsInt(MainViewModel model, Integer reminderID){
-
-        //need to get date from sqlite db (stored as string) and parse each num to integer;
-
-        //takes the top reminder from the db
-        ReminderEntity reminder = model.getReminderById(reminderID);
-
+    private int[] getDateAsInt(ReminderEntity reminder){
         String dateString = reminder.getDate();
 
         //splice the date by dashes
@@ -284,10 +305,10 @@ public class OutOfAppNotifications extends Notifications{
 
     return value: the calendar object
      */
-    private Calendar createCalendarObject(Integer reminderID){
+    private Calendar createCalendarObject(ReminderEntity reminder){
 
-        int date[] = getDateAsInt(model, reminderID);
-        int time[] = getTimeAsInt(reminderID);
+        int date[] = getDateAsInt(reminder);
+        int time[] = getTimeAsInt(reminder);
 
         Calendar myCalendar = Calendar.getInstance();
         myCalendar.set(Calendar.MONTH, date[0]);
