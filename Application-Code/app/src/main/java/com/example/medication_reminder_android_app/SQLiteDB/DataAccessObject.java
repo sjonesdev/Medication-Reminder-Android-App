@@ -80,6 +80,9 @@ public interface DataAccessObject {
     @Delete
     public int deleteReminder(ReminderEntity reminder);
 
+    @Query("DELETE FROM ReminderTable WHERE primaryKey LIKE :pk")
+    public void deleteReminderById(long pk);
+
     @Query("DELETE FROM ReminderTable WHERE Classification like 'M'")
     public int deleteAllMedicationReminders();
 
