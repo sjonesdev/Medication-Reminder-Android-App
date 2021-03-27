@@ -13,6 +13,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
+import io.reactivex.annotations.NonNull;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * This class handles requests involving medications in the internal database
  *
@@ -65,7 +69,7 @@ class MedicationInputHandler extends InputHandler {
      */
     @Override
     void deleteRequest(String medName) {
-        mainViewModel.deleteMedication(medName);
+        //mainViewModel.deleteMedication(medName);
     }
 
 
@@ -87,9 +91,39 @@ class MedicationInputHandler extends InputHandler {
      * @return A date & time string of the format YYYY-MM-DD HH:MM
      */
     @Override
-    String acknowledgeNotificationRequest(int reminderID, boolean dismissed) {
-        ReminderEntity r = mainViewModel.getReminderById(reminderID);
-        MedicationEntity med = mainViewModel.getMedById(r.getMedApptId());
+    public void acknowledgeNotificationRequest(int reminderID, boolean dismissed) {
+        mainViewModel.getReminderById(reminderID).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<ReminderEntity>() {
+            @Override
+            public void onSuccess(@NonNull ReminderEntity reminderEntity) {
+                acknowledgeHelper(reminderEntity, dismissed);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+        });
+    }
+
+
+    private void acknowledgeHelper(ReminderEntity r, Boolean dismissed) {
+        mainViewModel.getMedById(r.getMedApptId()).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<MedicationEntity>() {
+            @Override
+            public void onSuccess(@NonNull MedicationEntity medicationEntity) {
+                acknowledgeHelper2(medicationEntity, r, dismissed);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+        });
+    }
+
+
+    private String acknowledgeHelper2(MedicationEntity med, ReminderEntity r, Boolean dismissed) {
         int intervalIndex = r.getTimeIntervalIndex();
         String[] interval = med.getTimeRule().split(",");
         long millisToAdd = (long) (Double.parseDouble(interval[intervalIndex]) * HOURS_TO_MILLIS);
