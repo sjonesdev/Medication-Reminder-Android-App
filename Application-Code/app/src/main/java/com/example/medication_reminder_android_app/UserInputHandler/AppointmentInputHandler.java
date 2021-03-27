@@ -8,7 +8,7 @@ import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
 
 import java.util.Map;
 
-public class AppointmentInputHandler extends InputHandler {
+class AppointmentInputHandler extends InputHandler {
 
     private MainViewModel mainViewModel;
     private CalenderEventCreator calenderEventCreator;
@@ -19,8 +19,7 @@ public class AppointmentInputHandler extends InputHandler {
      * @author Samuel Jones
      * @since 3-1-2021
      */
-    public AppointmentInputHandler() {
-        super();
+    AppointmentInputHandler() {
         this.mainViewModel = mainViewModel;
         calenderEventCreator = new CalenderEventCreator();
     }
@@ -35,7 +34,7 @@ public class AppointmentInputHandler extends InputHandler {
      * @return
      */
     @Override
-    long inputRequest(Map<String,String> info) {
+    long inputRequest(Map<String, String> info) {
         String locationName = info.get("locationName");
         String locationAddress = info.get("address");
         String apptName = info.get("name");

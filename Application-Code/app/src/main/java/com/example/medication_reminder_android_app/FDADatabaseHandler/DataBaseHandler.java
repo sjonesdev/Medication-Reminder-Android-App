@@ -29,7 +29,7 @@ public class DataBaseHandler {
 
 
     /**
-     *
+     * Enumeration for requesting specific data from database query results
      */
     public static enum SearchParameters{brandName(BRAND_NAME_INDEX), genericName(GENERIC_NAME_INDEX),
             substanceName(SUBSTANCE_NAME_INDEX), purpose(PURPOSE_INDEX), warnings(WARNINGS_INDEX);
@@ -41,8 +41,8 @@ public class DataBaseHandler {
 
 
     /**
-     *
-     * @param defaultNumResults
+     * Constructs a new DataBaseHandler with a defaultNumResults parameter
+     * @param defaultNumResults The default maximum number of results to get from the database
      */
     public DataBaseHandler(int defaultNumResults) {
         DEFAULT_NUM_RESULTS = defaultNumResults;
@@ -50,10 +50,10 @@ public class DataBaseHandler {
 
 
     /**
-     *
-     * @param parameter
-     * @return
-     * @throws IOException
+     * Searches the OpenFDA database with a given search parameter.
+     * @param parameter The value to search on
+     * @return A map containing the results
+     * @throws IOException if there is a problem connecting to the database.
      */
     public Map<Integer,String[]> searchOpenFDA(String parameter) throws IOException {
         Map<Integer,String[]> map = new HashMap<>();
@@ -103,9 +103,9 @@ public class DataBaseHandler {
 
 
     /**
-     *
-     * @param parameter
-     * @param index
+     * Gets specific data from a database request
+     * @param parameter The value to search on
+     * @param index The parameter to return
      * @return
      */
     public Map<Integer,String> searchOpenFDAAndGetResultsAtIndex(String parameter, SearchParameters index) {
@@ -124,9 +124,10 @@ public class DataBaseHandler {
 
 
     /**
-     *
-     * @param key
-     * @return
+     * Gets the full information associated with a given key in the map from the latest OpenFDA
+     * database search.
+     * @param key The key to get information from in the map
+     * @return A string array of the information
      */
     public String[] getFullResultByMapKeyFromLatestNamesSearch(int key) {
         return latestResults.get(key);

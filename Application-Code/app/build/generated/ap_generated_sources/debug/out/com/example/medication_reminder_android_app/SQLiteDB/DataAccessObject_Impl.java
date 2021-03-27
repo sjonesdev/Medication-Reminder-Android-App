@@ -41,7 +41,11 @@ public final class DataAccessObject_Impl implements DataAccessObject {
 
   private final SharedSQLiteStatement __preparedStmtOfClearAllMedications;
 
+  private final SharedSQLiteStatement __preparedStmtOfDeleteMedicationByName;
+
   private final SharedSQLiteStatement __preparedStmtOfUpdateDateAndTime;
+
+  private final SharedSQLiteStatement __preparedStmtOfDeleteReminderById;
 
   private final SharedSQLiteStatement __preparedStmtOfDeleteAllMedicationReminders;
 
@@ -232,10 +236,24 @@ public final class DataAccessObject_Impl implements DataAccessObject {
         return _query;
       }
     };
+    this.__preparedStmtOfDeleteMedicationByName = new SharedSQLiteStatement(__db) {
+      @Override
+      public String createQuery() {
+        final String _query = "DELETE FROM MedicationTable WHERE med_name LIKE ?";
+        return _query;
+      }
+    };
     this.__preparedStmtOfUpdateDateAndTime = new SharedSQLiteStatement(__db) {
       @Override
       public String createQuery() {
         final String _query = "UPDATE ReminderTable SET ApptDate = ?, ApptTime = ?, TimeInterval = ? WHERE rowid LIKE ?";
+        return _query;
+      }
+    };
+    this.__preparedStmtOfDeleteReminderById = new SharedSQLiteStatement(__db) {
+      @Override
+      public String createQuery() {
+        final String _query = "DELETE FROM ReminderTable WHERE primaryKey LIKE ?";
         return _query;
       }
     };
@@ -398,6 +416,26 @@ public final class DataAccessObject_Impl implements DataAccessObject {
   }
 
   @Override
+  public void deleteMedicationByName(final String medName) {
+    __db.assertNotSuspendingTransaction();
+    final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteMedicationByName.acquire();
+    int _argIndex = 1;
+    if (medName == null) {
+      _stmt.bindNull(_argIndex);
+    } else {
+      _stmt.bindString(_argIndex, medName);
+    }
+    __db.beginTransaction();
+    try {
+      _stmt.executeUpdateDelete();
+      __db.setTransactionSuccessful();
+    } finally {
+      __db.endTransaction();
+      __preparedStmtOfDeleteMedicationByName.release(_stmt);
+    }
+  }
+
+  @Override
   public void updateDateAndTime(final long primaryKey, final String date, final String time,
       final int timeInterval) {
     __db.assertNotSuspendingTransaction();
@@ -425,6 +463,22 @@ public final class DataAccessObject_Impl implements DataAccessObject {
     } finally {
       __db.endTransaction();
       __preparedStmtOfUpdateDateAndTime.release(_stmt);
+    }
+  }
+
+  @Override
+  public void deleteReminderById(final long pk) {
+    __db.assertNotSuspendingTransaction();
+    final SupportSQLiteStatement _stmt = __preparedStmtOfDeleteReminderById.acquire();
+    int _argIndex = 1;
+    _stmt.bindLong(_argIndex, pk);
+    __db.beginTransaction();
+    try {
+      _stmt.executeUpdateDelete();
+      __db.setTransactionSuccessful();
+    } finally {
+      __db.endTransaction();
+      __preparedStmtOfDeleteReminderById.release(_stmt);
     }
   }
 

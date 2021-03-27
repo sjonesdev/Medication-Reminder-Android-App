@@ -15,7 +15,6 @@ import java.util.Map;
  */
 public class InputWrapper {
 
-    MainViewModel mainViewModel;
     OutOfAppNotifications outOfAppNotifications;
     MedicationInputHandler medicationInputHandler;
     DoctorInputHandler doctorInputHandler;
