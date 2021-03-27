@@ -114,6 +114,8 @@ public class DatabaseRepository {  //extends
         new AsyncDeleteMedication(dao).execute(m);
     }
 
+    public void deleteMedByName(String medName) { new AsyncDeleteMedByName(dao).execute(medName); }
+
     public void deleteReminder(ReminderEntity r){
         new AsyncDeleteReminder(dao).execute(r);
     }
@@ -132,123 +134,6 @@ public class DatabaseRepository {  //extends
 
 
 
-//    //Async classes so can do queries in background
-//    private static class AsyncFilter extends AsyncTask<String, Void, MedicationEntity[]>{
-//        private final DataAccessObject dao;
-//        private final DatabaseRepository delegate;
-//
-//        public AsyncFilter(DataAccessObject filter, DatabaseRepository repo){
-//            dao = filter;
-//            delegate = repo;
-//        }
-//
-//
-//        @Override
-//        protected MedicationEntity[] doInBackground(String... params){
-//            //because want to pull if have any tags, need to build the query WHERE clause as such
-//            String queryReq = ""; //to send to query so can get tags in any order
-//            if(params.length > 1){
-//                for(String tag: params){
-//                    queryReq += " tags LIKE %" + tag + "% OR";
-//                }
-//                if(queryReq.length() > 4){
-//                    queryReq = queryReq.substring(0, queryReq.length() - 4); //Remove last OR
-//                }
-//            } else{
-//                queryReq = "tags LIKE %%";
-//            }
-//
-//            return dao.loadFilteredMedications(queryReq);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(MedicationEntity[] meds) {
-//            delegate.medicationAsyncFilterFinished(meds);
-//        }
-//
-//    }
-
-//    private static class AsyncGetMedByName extends AsyncTask<String, Void, MedicationEntity>{
-//        private final DataAccessObject dao;
-//        private final DatabaseRepository delegate;
-//
-//        public AsyncGetMedByName(DataAccessObject filter, DatabaseRepository repo){
-//            dao = filter;
-//            delegate = repo;
-//        }
-//
-//        @Override
-//        protected MedicationEntity doInBackground(String... params){
-//            return dao.getMedicationByName(params[0]);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(MedicationEntity result){
-//            delegate.getMedByNameAsyncFinished(result);
-//        }
-//    }
-//
-//    private static class AsyncGetMedById extends AsyncTask<Long, Void, MedicationEntity>{
-//        private final DataAccessObject dao;
-//        private final DatabaseRepository delegate;
-//
-//        public AsyncGetMedById(DataAccessObject filter, DatabaseRepository repo){
-//            dao = filter;
-//            delegate = repo;
-//        }
-//
-//        @Override
-//        protected MedicationEntity doInBackground(Long... params){
-//            return dao.getMedicationById(params[0]);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(MedicationEntity result){
-//            delegate.getMedByNameAsyncFinished(result);
-//        }
-//    }
-//
-//    private static class AsyncGetReminderById extends AsyncTask<String, Void, ReminderEntity>{
-//        private final DatabaseRepository delegate;
-//        private final DataAccessObject dao;
-//
-//        public AsyncGetReminderById(DataAccessObject filter, DatabaseRepository repo){
-//            dao = filter;
-//            delegate = repo;
-//        }
-//
-//        @Override
-//        protected ReminderEntity doInBackground(String... params){
-//            return dao.getReminder(Long.getLong(params[0]));
-//        }
-//
-//        @Override
-//        protected void onPostExecute(ReminderEntity r){
-//            delegate.getReminderAsyncFinished(r);
-//        }
-//    }
-//
-//
-//    private static class AsyncNotificationReminder extends AsyncTask<Integer, Void, ReminderEntity[]>{
-//        private final DatabaseRepository delegate;
-//        private final DataAccessObject dao;
-//
-//        public AsyncNotificationReminder(DataAccessObject notif, DatabaseRepository repo){
-//            dao = notif;
-//            delegate = repo;
-//        }
-//
-//        @Override
-//        protected ReminderEntity[] doInBackground(Integer... params){
-//            return dao.selectNextReminders(params[0]);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(ReminderEntity[] results) {
-//            delegate.reminderAsyncFinished(results);
-//        }
-//
-//    }
 
     private static class AsyncInsertMedication extends AsyncTask<MedicationEntity, Void, Long>{
         private final DataAccessObject dao;
@@ -356,6 +241,18 @@ public class DatabaseRepository {  //extends
         @Override
         protected Void doInBackground(MedicationEntity... meds){
             dao.deleteMedication(meds[0]);
+            return null;
+        }
+    }
+
+    private static class AsyncDeleteMedByName extends AsyncTask<String, Void, Void>{
+        private final DataAccessObject dao;
+
+        public AsyncDeleteMedByName(DataAccessObject d){ dao = d; }
+
+        @Override
+        protected Void doInBackground(String... params){
+            dao.deleteMedicationByName(params[0]);
             return null;
         }
     }

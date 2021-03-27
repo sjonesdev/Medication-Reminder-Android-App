@@ -50,6 +50,9 @@ public interface DataAccessObject {
     @Query("DELETE FROM MedicationTable")
     public void clearAllMedications();
 
+    @Query("DELETE FROM MedicationTable WHERE med_name LIKE :medName")
+    public void deleteMedicationByName(String medName);
+
 
 
 
