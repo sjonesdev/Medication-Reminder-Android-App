@@ -1,15 +1,10 @@
 <resources>
     <!-- General use strings-->
-    <string name="app_name">Medication-Reminder-Android-App</string>
+    <string name="app_name">MadMeds</string>
     <string name="action_settings">Settings</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
-    <!-- Obsolete strings from fragments that i'm too scared to get rid of -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="back">Back</string>
 
     <!-- content_main strings -->
     <string name="view_my_info">View My Info</string>
@@ -18,7 +13,6 @@
 
     <!-- info_view strings -->
     <string name="new_med_button">Add</string>
-    <string name="back">Back</string>
 
     <!-- info_input strings -->
     <string name="add_new_med">Add New Medication</string>
@@ -35,15 +29,28 @@
     <string name="pick_end_day">End Date</string>
     <string name="interval">Interval</string>
 
-    <!-- dont worry about this -->
+    <!-- individual item -->
+    <string name="delete_med">Delete Medication</string>
+
+    <!-- settings popup strings -->
+    <string name="deleteAll">Delete Everything!</string>
+    <string name="delete_warning">This will delete ALL of your information. Do you wish to proceed?</string>
+
+    <!-- super secret credits screen -->
+    <string name="rtt">Run Time Terror</string>
+    <string name="robert">Robert Fahey</string>
+    <string name="lucas">Lucas Colegrove</string>
+    <string name="sam">Sam Jones</string>
+    <string name="aliza">Aliza Siddiqui</string>
+    <string name="karley">Karley Waguespack</string>
+    <string name="Hayley">Hayley Roberts</string>
+    <string name="credits">Credits</string>
+
+    <!-- debug strings -->
     <string-array name="debug_one">
         <item>Thing 1</item>
         <item>Thing 2</item>
         <item>Thing 3</item>
-
     </string-array>
-
-    <string name="deleteAll">Delete Everything!</string>
-
 
 </resources>

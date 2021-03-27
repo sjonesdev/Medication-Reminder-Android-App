@@ -12,56 +12,43 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class NotificationActivity extends AppCompatActivity {
 
-    String[] notifTitles;
-    String[] contents;
-    RecyclerView notifRecycler;
+    String[] notifTitles; //array of notification titles to be displayed
+    String[] contents; //array of notification contents to be displayed
+    RecyclerView notifRecycler; /*Recycler view object that with display a scrolling list
+                                        of cards showing each notification*/
 
+    /**
+     * @author Robert Fahey
+     * When the activity is created, set the layout being displayed to "notification_view",
+     * setup the RecyclerView for displaying the notifications,
+     * and set an onCLickListener for the back button
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notification_view);
 
+        //populate the notification content arrays
         notifTitles = getResources().getStringArray(R.array.debug_one);
         contents = getResources().getStringArray(R.array.debug_one);
         notifRecycler = findViewById(R.id.notif_recycler);
 
+        /*
+        instantiate the RecyclerView and its adapter, attach the adapter to the recycler view,
+        and assign a linear layout manager to the recycler
+        */
         NotifRecyclerAdapter notifadapter = new NotifRecyclerAdapter(this, notifTitles, contents);
         notifRecycler.setAdapter(notifadapter);
         notifRecycler.setLayoutManager(new LinearLayoutManager(this));
 
+        /**
+        @author Robert Fahey
+        When the "Back" button is clicked, end the current activity and return to MainActivity
+         */
         findViewById(R.id.notifs_back_button).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 finish();
             }
         });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        //TODO
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        //TODO
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        //TODO
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroy() {
-        //TODO
-        super.onDestroy();
     }
 }
