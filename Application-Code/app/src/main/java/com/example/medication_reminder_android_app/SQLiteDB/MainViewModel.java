@@ -34,19 +34,6 @@ public class MainViewModel extends AndroidViewModel {
     //Methods to be used in other places in the code like the UI and notification
     public Single<MedicationEntity[]> getMeds(String[] tags){
         return repository.filterMedications(tags);
-//        final MedicationEntity[][] meds = new MedicationEntity[1][1];
-//        repository.filterMedications(tags).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<MedicationEntity[]>() {
-//            @Override
-//            public void onSuccess(@NonNull MedicationEntity[] medicationEntities) {
-//                meds[0] = medicationEntities;
-//            }
-//
-//            @Override
-//            public void onError(@NonNull Throwable e) {
-//                meds[0] = null;
-//            }
-//        });
-//        return meds[0];
     }
 
     public Single<MedicationEntity[]> getMeds(){
@@ -55,19 +42,6 @@ public class MainViewModel extends AndroidViewModel {
 
     public Single<ReminderEntity[]> getReminders(int numOfReminders){
         return repository.getReminders(numOfReminders);
-//        final ReminderEntity[][] reminders = new ReminderEntity[1][1];
-//        repository.getReminders(numOfReminders).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<ReminderEntity[]>() {
-//            @Override
-//            public void onSuccess(@NonNull ReminderEntity[] reminderEntities) {
-//                reminders[0] = reminderEntities;
-//            }
-//
-//            @Override
-//            public void onError(@NonNull Throwable e) {
-//                reminders[0] = null;
-//            }
-//        });
-//        return reminders[0];
     }
 
     public MutableLiveData<String[]> getAllMedNames(){
@@ -101,36 +75,10 @@ public class MainViewModel extends AndroidViewModel {
 
     public Single<MedicationEntity> getMedById(long medId){
         return repository.getMedById(medId);
-//        final MedicationEntity[] med = new MedicationEntity[1];
-//        repository.getMedById(medId).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<MedicationEntity>() {
-//            @Override
-//            public void onSuccess(@NonNull MedicationEntity medicationEntity) {
-//                med[0] = medicationEntity;
-//            }
-//
-//            @Override
-//            public void onError(@NonNull Throwable e) {
-//                med[0] = null;
-//            }
-//        });
-//        return med[0];
     }
 
     public Single<MedicationEntity> getMedByName(String name) {
         return repository.getMedByName(name);
-//        final MedicationEntity[] med = new MedicationEntity[1];
-//        repository.getMedByName(name).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<MedicationEntity>() {
-//            @Override
-//            public void onSuccess(@NonNull MedicationEntity medicationEntity) {
-//                med[0] = medicationEntity;
-//            }
-//
-//            @Override
-//            public void onError(@NonNull Throwable e) {
-//                med[0] = null;
-//            }
-//        });
-//        return med[0];
     }
 
     public void getReminderByIdForNotifRelay(long reminderId){
@@ -148,19 +96,6 @@ public class MainViewModel extends AndroidViewModel {
 
     public Single<ReminderEntity> getReminderById(long reminderId){
         return repository.getReminderById(reminderId);
-//        final ReminderEntity[] r = new ReminderEntity[1];
-//        repository.getReminderById(reminderId).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<ReminderEntity>() {
-//            @Override
-//            public void onSuccess(@NonNull ReminderEntity reminderEntity) {
-//                r[0] = reminderEntity;
-//            }
-//
-//            @Override
-//            public void onError(@NonNull Throwable e) {
-//                r[0] = null;
-//            }
-//        });
-//        return r[0];
     }
 
     //methods to insert rows into tables
@@ -213,12 +148,12 @@ public class MainViewModel extends AndroidViewModel {
 
 
     //methods to delete rows from tables
+
+    public void deleteReminder(MedicationEntity medEntity){
+        repository.deleteReminderById(medEntity.getReminderID());
+    }
+
     //TODO handle with SIngle and threads...
-//    public void deleteReminder(MedicationEntity medEntity){
-//        ReminderEntity r = getReminderById(medEntity.getReminderID());
-//        repository.deleteReminder(r);
-//    }
-//
 //    public void deleteReminder(AppointmentEntity apptEntity){
 //        ReminderEntity r = getReminderById(apptEntity.getRemindTabID());
 //        repository.deleteReminder(r);
@@ -230,14 +165,14 @@ public class MainViewModel extends AndroidViewModel {
 
     public void deleteMedication(MedicationEntity m){
         repository.deleteMed(m);
+        repository.deleteReminderById(m.getReminderID());
     }
 
-//    public void deleteMedication(String medName){
-//        MedicationEntity m = getMedByName(medName);
-//        long medRid = m.getReminderID();
-//        repository.deleteReminder(getReminderById(medRid));
-//        repository.deleteMed(m);
-//    }
+    //TODO make this delete the reminderEntity associated with med
+    public void deleteMedication(String medName){
+        repository.deleteMedByName(medName);
+        //repository.deleteReminder(m);
+    }
 
 
     //methods to clear tables of all values

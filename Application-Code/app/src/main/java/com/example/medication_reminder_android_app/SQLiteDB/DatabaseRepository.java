@@ -120,6 +120,8 @@ public class DatabaseRepository {  //extends
         new AsyncDeleteReminder(dao).execute(r);
     }
 
+    public void deleteReminderById(long reminderId) { new AsyncDeleteReminderById(dao).execute(reminderId); }
+
     public void deleteAllMedReminders() { new AsyncDeleteAllMedReminders(dao).execute(); }
 
     public void deleteAllApptReminders() { new AsyncDeleteAllApptReminders(dao).execute(); }
@@ -267,6 +269,20 @@ public class DatabaseRepository {  //extends
         @Override
         protected Void doInBackground(ReminderEntity... reminders){
             dao.deleteReminder(reminders[0]);
+            return null;
+        }
+    }
+
+    private static class AsyncDeleteReminderById extends AsyncTask<Long, Void, Void>{
+        private final DataAccessObject dao;
+
+        public AsyncDeleteReminderById(DataAccessObject inputHandler){
+            dao = inputHandler;
+        }
+
+        @Override
+        protected Void doInBackground(Long... params){
+            dao.deleteReminderById(params[0]);
             return null;
         }
     }
