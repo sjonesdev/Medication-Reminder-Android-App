@@ -69,7 +69,7 @@ class MedicationInputHandler extends InputHandler {
      */
     @Override
     void deleteRequest(String medName) {
-        //mainViewModel.deleteMedication(medName);
+        mainViewModel.deleteMedication(medName);
     }
 
 
