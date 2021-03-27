@@ -1,18 +1,23 @@
 package com.example.medication_reminder_android_app.SQLiteDB;
 
 import android.database.Cursor;
+import androidx.room.EmptyResultSetException;
 import androidx.room.EntityDeletionOrUpdateAdapter;
 import androidx.room.EntityInsertionAdapter;
 import androidx.room.RoomDatabase;
 import androidx.room.RoomSQLiteQuery;
+import androidx.room.RxRoom;
 import androidx.room.SharedSQLiteStatement;
 import androidx.room.util.CursorUtil;
 import androidx.room.util.DBUtil;
 import androidx.sqlite.db.SupportSQLiteStatement;
+import io.reactivex.Single;
+import java.lang.Exception;
 import java.lang.Integer;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.SuppressWarnings;
+import java.util.concurrent.Callable;
 
 @SuppressWarnings({"unchecked", "deprecation"})
 public final class DataAccessObject_Impl implements DataAccessObject {
@@ -468,7 +473,7 @@ public final class DataAccessObject_Impl implements DataAccessObject {
   }
 
   @Override
-  public MedicationEntity[] loadFilteredMedications(final String likeTags) {
+  public Single<MedicationEntity[]> loadFilteredMedications(final String likeTags) {
     final String _sql = "SELECT * FROM MedicationTable WHERE ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -477,67 +482,78 @@ public final class DataAccessObject_Impl implements DataAccessObject {
     } else {
       _statement.bindString(_argIndex, likeTags);
     }
-    __db.assertNotSuspendingTransaction();
-    final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
-    try {
-      final int _cursorIndexOfPrimaryKey = CursorUtil.getColumnIndexOrThrow(_cursor, "primaryKey");
-      final int _cursorIndexOfMedName = CursorUtil.getColumnIndexOrThrow(_cursor, "med_name");
-      final int _cursorIndexOfDosage = CursorUtil.getColumnIndexOrThrow(_cursor, "dosage");
-      final int _cursorIndexOfRecurring = CursorUtil.getColumnIndexOrThrow(_cursor, "recurring");
-      final int _cursorIndexOfFirstDate = CursorUtil.getColumnIndexOrThrow(_cursor, "first_date");
-      final int _cursorIndexOfEndDate = CursorUtil.getColumnIndexOrThrow(_cursor, "end_date");
-      final int _cursorIndexOfTimeRule = CursorUtil.getColumnIndexOrThrow(_cursor, "time_rule");
-      final int _cursorIndexOfReminderID = CursorUtil.getColumnIndexOrThrow(_cursor, "reminder_id");
-      final int _cursorIndexOfAcknowledgements = CursorUtil.getColumnIndexOrThrow(_cursor, "acknowledgements");
-      final int _cursorIndexOfWarnings = CursorUtil.getColumnIndexOrThrow(_cursor, "warnings");
-      final int _cursorIndexOfIngredients = CursorUtil.getColumnIndexOrThrow(_cursor, "ingredients");
-      final int _cursorIndexOfTags = CursorUtil.getColumnIndexOrThrow(_cursor, "tags");
-      final MedicationEntity[] _result = new MedicationEntity[_cursor.getCount()];
-      int _index = 0;
-      while(_cursor.moveToNext()) {
-        final MedicationEntity _item;
-        final String _tmpMedName;
-        _tmpMedName = _cursor.getString(_cursorIndexOfMedName);
-        final String _tmpDosage;
-        _tmpDosage = _cursor.getString(_cursorIndexOfDosage);
-        final Integer _tmpRecurring;
-        if (_cursor.isNull(_cursorIndexOfRecurring)) {
-          _tmpRecurring = null;
-        } else {
-          _tmpRecurring = _cursor.getInt(_cursorIndexOfRecurring);
+    return RxRoom.createSingle(new Callable<MedicationEntity[]>() {
+      @Override
+      public MedicationEntity[] call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfPrimaryKey = CursorUtil.getColumnIndexOrThrow(_cursor, "primaryKey");
+          final int _cursorIndexOfMedName = CursorUtil.getColumnIndexOrThrow(_cursor, "med_name");
+          final int _cursorIndexOfDosage = CursorUtil.getColumnIndexOrThrow(_cursor, "dosage");
+          final int _cursorIndexOfRecurring = CursorUtil.getColumnIndexOrThrow(_cursor, "recurring");
+          final int _cursorIndexOfFirstDate = CursorUtil.getColumnIndexOrThrow(_cursor, "first_date");
+          final int _cursorIndexOfEndDate = CursorUtil.getColumnIndexOrThrow(_cursor, "end_date");
+          final int _cursorIndexOfTimeRule = CursorUtil.getColumnIndexOrThrow(_cursor, "time_rule");
+          final int _cursorIndexOfReminderID = CursorUtil.getColumnIndexOrThrow(_cursor, "reminder_id");
+          final int _cursorIndexOfAcknowledgements = CursorUtil.getColumnIndexOrThrow(_cursor, "acknowledgements");
+          final int _cursorIndexOfWarnings = CursorUtil.getColumnIndexOrThrow(_cursor, "warnings");
+          final int _cursorIndexOfIngredients = CursorUtil.getColumnIndexOrThrow(_cursor, "ingredients");
+          final int _cursorIndexOfTags = CursorUtil.getColumnIndexOrThrow(_cursor, "tags");
+          final MedicationEntity[] _result = new MedicationEntity[_cursor.getCount()];
+          int _index = 0;
+          while(_cursor.moveToNext()) {
+            final MedicationEntity _item;
+            final String _tmpMedName;
+            _tmpMedName = _cursor.getString(_cursorIndexOfMedName);
+            final String _tmpDosage;
+            _tmpDosage = _cursor.getString(_cursorIndexOfDosage);
+            final Integer _tmpRecurring;
+            if (_cursor.isNull(_cursorIndexOfRecurring)) {
+              _tmpRecurring = null;
+            } else {
+              _tmpRecurring = _cursor.getInt(_cursorIndexOfRecurring);
+            }
+            final String _tmpFirstDate;
+            _tmpFirstDate = _cursor.getString(_cursorIndexOfFirstDate);
+            final String _tmpEndDate;
+            _tmpEndDate = _cursor.getString(_cursorIndexOfEndDate);
+            final String _tmpTimeRule;
+            _tmpTimeRule = _cursor.getString(_cursorIndexOfTimeRule);
+            final long _tmpReminderID;
+            _tmpReminderID = _cursor.getLong(_cursorIndexOfReminderID);
+            final String _tmpAcknowledgements;
+            _tmpAcknowledgements = _cursor.getString(_cursorIndexOfAcknowledgements);
+            final String _tmpWarnings;
+            _tmpWarnings = _cursor.getString(_cursorIndexOfWarnings);
+            final String _tmpIngredients;
+            _tmpIngredients = _cursor.getString(_cursorIndexOfIngredients);
+            final String _tmpTags;
+            _tmpTags = _cursor.getString(_cursorIndexOfTags);
+            _item = new MedicationEntity(_tmpMedName,_tmpDosage,_tmpRecurring,_tmpFirstDate,_tmpEndDate,_tmpTimeRule,_tmpReminderID,_tmpAcknowledgements,_tmpWarnings,_tmpIngredients,_tmpTags);
+            final long _tmpPrimaryKey;
+            _tmpPrimaryKey = _cursor.getLong(_cursorIndexOfPrimaryKey);
+            _item.setPrimaryKey(_tmpPrimaryKey);
+            _result[_index] = _item;
+            _index ++;
+          }
+          if(_result == null) {
+            throw new EmptyResultSetException("Query returned empty result set: " + _statement.getSql());
+          }
+          return _result;
+        } finally {
+          _cursor.close();
         }
-        final String _tmpFirstDate;
-        _tmpFirstDate = _cursor.getString(_cursorIndexOfFirstDate);
-        final String _tmpEndDate;
-        _tmpEndDate = _cursor.getString(_cursorIndexOfEndDate);
-        final String _tmpTimeRule;
-        _tmpTimeRule = _cursor.getString(_cursorIndexOfTimeRule);
-        final long _tmpReminderID;
-        _tmpReminderID = _cursor.getLong(_cursorIndexOfReminderID);
-        final String _tmpAcknowledgements;
-        _tmpAcknowledgements = _cursor.getString(_cursorIndexOfAcknowledgements);
-        final String _tmpWarnings;
-        _tmpWarnings = _cursor.getString(_cursorIndexOfWarnings);
-        final String _tmpIngredients;
-        _tmpIngredients = _cursor.getString(_cursorIndexOfIngredients);
-        final String _tmpTags;
-        _tmpTags = _cursor.getString(_cursorIndexOfTags);
-        _item = new MedicationEntity(_tmpMedName,_tmpDosage,_tmpRecurring,_tmpFirstDate,_tmpEndDate,_tmpTimeRule,_tmpReminderID,_tmpAcknowledgements,_tmpWarnings,_tmpIngredients,_tmpTags);
-        final long _tmpPrimaryKey;
-        _tmpPrimaryKey = _cursor.getLong(_cursorIndexOfPrimaryKey);
-        _item.setPrimaryKey(_tmpPrimaryKey);
-        _result[_index] = _item;
-        _index ++;
       }
-      return _result;
-    } finally {
-      _cursor.close();
-      _statement.release();
-    }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
   }
 
   @Override
-  public MedicationEntity getMedicationByName(final String name) {
+  public Single<MedicationEntity> getMedicationByName(final String name) {
     final String _sql = "SELECT * FROM MedicationTable WHERE med_name LIKE ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -546,260 +562,315 @@ public final class DataAccessObject_Impl implements DataAccessObject {
     } else {
       _statement.bindString(_argIndex, name);
     }
-    __db.assertNotSuspendingTransaction();
-    final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
-    try {
-      final int _cursorIndexOfPrimaryKey = CursorUtil.getColumnIndexOrThrow(_cursor, "primaryKey");
-      final int _cursorIndexOfMedName = CursorUtil.getColumnIndexOrThrow(_cursor, "med_name");
-      final int _cursorIndexOfDosage = CursorUtil.getColumnIndexOrThrow(_cursor, "dosage");
-      final int _cursorIndexOfRecurring = CursorUtil.getColumnIndexOrThrow(_cursor, "recurring");
-      final int _cursorIndexOfFirstDate = CursorUtil.getColumnIndexOrThrow(_cursor, "first_date");
-      final int _cursorIndexOfEndDate = CursorUtil.getColumnIndexOrThrow(_cursor, "end_date");
-      final int _cursorIndexOfTimeRule = CursorUtil.getColumnIndexOrThrow(_cursor, "time_rule");
-      final int _cursorIndexOfReminderID = CursorUtil.getColumnIndexOrThrow(_cursor, "reminder_id");
-      final int _cursorIndexOfAcknowledgements = CursorUtil.getColumnIndexOrThrow(_cursor, "acknowledgements");
-      final int _cursorIndexOfWarnings = CursorUtil.getColumnIndexOrThrow(_cursor, "warnings");
-      final int _cursorIndexOfIngredients = CursorUtil.getColumnIndexOrThrow(_cursor, "ingredients");
-      final int _cursorIndexOfTags = CursorUtil.getColumnIndexOrThrow(_cursor, "tags");
-      final MedicationEntity _result;
-      if(_cursor.moveToFirst()) {
-        final String _tmpMedName;
-        _tmpMedName = _cursor.getString(_cursorIndexOfMedName);
-        final String _tmpDosage;
-        _tmpDosage = _cursor.getString(_cursorIndexOfDosage);
-        final Integer _tmpRecurring;
-        if (_cursor.isNull(_cursorIndexOfRecurring)) {
-          _tmpRecurring = null;
-        } else {
-          _tmpRecurring = _cursor.getInt(_cursorIndexOfRecurring);
+    return RxRoom.createSingle(new Callable<MedicationEntity>() {
+      @Override
+      public MedicationEntity call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfPrimaryKey = CursorUtil.getColumnIndexOrThrow(_cursor, "primaryKey");
+          final int _cursorIndexOfMedName = CursorUtil.getColumnIndexOrThrow(_cursor, "med_name");
+          final int _cursorIndexOfDosage = CursorUtil.getColumnIndexOrThrow(_cursor, "dosage");
+          final int _cursorIndexOfRecurring = CursorUtil.getColumnIndexOrThrow(_cursor, "recurring");
+          final int _cursorIndexOfFirstDate = CursorUtil.getColumnIndexOrThrow(_cursor, "first_date");
+          final int _cursorIndexOfEndDate = CursorUtil.getColumnIndexOrThrow(_cursor, "end_date");
+          final int _cursorIndexOfTimeRule = CursorUtil.getColumnIndexOrThrow(_cursor, "time_rule");
+          final int _cursorIndexOfReminderID = CursorUtil.getColumnIndexOrThrow(_cursor, "reminder_id");
+          final int _cursorIndexOfAcknowledgements = CursorUtil.getColumnIndexOrThrow(_cursor, "acknowledgements");
+          final int _cursorIndexOfWarnings = CursorUtil.getColumnIndexOrThrow(_cursor, "warnings");
+          final int _cursorIndexOfIngredients = CursorUtil.getColumnIndexOrThrow(_cursor, "ingredients");
+          final int _cursorIndexOfTags = CursorUtil.getColumnIndexOrThrow(_cursor, "tags");
+          final MedicationEntity _result;
+          if(_cursor.moveToFirst()) {
+            final String _tmpMedName;
+            _tmpMedName = _cursor.getString(_cursorIndexOfMedName);
+            final String _tmpDosage;
+            _tmpDosage = _cursor.getString(_cursorIndexOfDosage);
+            final Integer _tmpRecurring;
+            if (_cursor.isNull(_cursorIndexOfRecurring)) {
+              _tmpRecurring = null;
+            } else {
+              _tmpRecurring = _cursor.getInt(_cursorIndexOfRecurring);
+            }
+            final String _tmpFirstDate;
+            _tmpFirstDate = _cursor.getString(_cursorIndexOfFirstDate);
+            final String _tmpEndDate;
+            _tmpEndDate = _cursor.getString(_cursorIndexOfEndDate);
+            final String _tmpTimeRule;
+            _tmpTimeRule = _cursor.getString(_cursorIndexOfTimeRule);
+            final long _tmpReminderID;
+            _tmpReminderID = _cursor.getLong(_cursorIndexOfReminderID);
+            final String _tmpAcknowledgements;
+            _tmpAcknowledgements = _cursor.getString(_cursorIndexOfAcknowledgements);
+            final String _tmpWarnings;
+            _tmpWarnings = _cursor.getString(_cursorIndexOfWarnings);
+            final String _tmpIngredients;
+            _tmpIngredients = _cursor.getString(_cursorIndexOfIngredients);
+            final String _tmpTags;
+            _tmpTags = _cursor.getString(_cursorIndexOfTags);
+            _result = new MedicationEntity(_tmpMedName,_tmpDosage,_tmpRecurring,_tmpFirstDate,_tmpEndDate,_tmpTimeRule,_tmpReminderID,_tmpAcknowledgements,_tmpWarnings,_tmpIngredients,_tmpTags);
+            final long _tmpPrimaryKey;
+            _tmpPrimaryKey = _cursor.getLong(_cursorIndexOfPrimaryKey);
+            _result.setPrimaryKey(_tmpPrimaryKey);
+          } else {
+            _result = null;
+          }
+          if(_result == null) {
+            throw new EmptyResultSetException("Query returned empty result set: " + _statement.getSql());
+          }
+          return _result;
+        } finally {
+          _cursor.close();
         }
-        final String _tmpFirstDate;
-        _tmpFirstDate = _cursor.getString(_cursorIndexOfFirstDate);
-        final String _tmpEndDate;
-        _tmpEndDate = _cursor.getString(_cursorIndexOfEndDate);
-        final String _tmpTimeRule;
-        _tmpTimeRule = _cursor.getString(_cursorIndexOfTimeRule);
-        final long _tmpReminderID;
-        _tmpReminderID = _cursor.getLong(_cursorIndexOfReminderID);
-        final String _tmpAcknowledgements;
-        _tmpAcknowledgements = _cursor.getString(_cursorIndexOfAcknowledgements);
-        final String _tmpWarnings;
-        _tmpWarnings = _cursor.getString(_cursorIndexOfWarnings);
-        final String _tmpIngredients;
-        _tmpIngredients = _cursor.getString(_cursorIndexOfIngredients);
-        final String _tmpTags;
-        _tmpTags = _cursor.getString(_cursorIndexOfTags);
-        _result = new MedicationEntity(_tmpMedName,_tmpDosage,_tmpRecurring,_tmpFirstDate,_tmpEndDate,_tmpTimeRule,_tmpReminderID,_tmpAcknowledgements,_tmpWarnings,_tmpIngredients,_tmpTags);
-        final long _tmpPrimaryKey;
-        _tmpPrimaryKey = _cursor.getLong(_cursorIndexOfPrimaryKey);
-        _result.setPrimaryKey(_tmpPrimaryKey);
-      } else {
-        _result = null;
       }
-      return _result;
-    } finally {
-      _cursor.close();
-      _statement.release();
-    }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
   }
 
   @Override
-  public MedicationEntity getMedicationById(final long pk) {
+  public Single<MedicationEntity> getMedicationById(final long pk) {
     final String _sql = "SELECT * FROM MedicationTable WHERE primaryKey LIKE ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
     _statement.bindLong(_argIndex, pk);
-    __db.assertNotSuspendingTransaction();
-    final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
-    try {
-      final int _cursorIndexOfPrimaryKey = CursorUtil.getColumnIndexOrThrow(_cursor, "primaryKey");
-      final int _cursorIndexOfMedName = CursorUtil.getColumnIndexOrThrow(_cursor, "med_name");
-      final int _cursorIndexOfDosage = CursorUtil.getColumnIndexOrThrow(_cursor, "dosage");
-      final int _cursorIndexOfRecurring = CursorUtil.getColumnIndexOrThrow(_cursor, "recurring");
-      final int _cursorIndexOfFirstDate = CursorUtil.getColumnIndexOrThrow(_cursor, "first_date");
-      final int _cursorIndexOfEndDate = CursorUtil.getColumnIndexOrThrow(_cursor, "end_date");
-      final int _cursorIndexOfTimeRule = CursorUtil.getColumnIndexOrThrow(_cursor, "time_rule");
-      final int _cursorIndexOfReminderID = CursorUtil.getColumnIndexOrThrow(_cursor, "reminder_id");
-      final int _cursorIndexOfAcknowledgements = CursorUtil.getColumnIndexOrThrow(_cursor, "acknowledgements");
-      final int _cursorIndexOfWarnings = CursorUtil.getColumnIndexOrThrow(_cursor, "warnings");
-      final int _cursorIndexOfIngredients = CursorUtil.getColumnIndexOrThrow(_cursor, "ingredients");
-      final int _cursorIndexOfTags = CursorUtil.getColumnIndexOrThrow(_cursor, "tags");
-      final MedicationEntity _result;
-      if(_cursor.moveToFirst()) {
-        final String _tmpMedName;
-        _tmpMedName = _cursor.getString(_cursorIndexOfMedName);
-        final String _tmpDosage;
-        _tmpDosage = _cursor.getString(_cursorIndexOfDosage);
-        final Integer _tmpRecurring;
-        if (_cursor.isNull(_cursorIndexOfRecurring)) {
-          _tmpRecurring = null;
-        } else {
-          _tmpRecurring = _cursor.getInt(_cursorIndexOfRecurring);
+    return RxRoom.createSingle(new Callable<MedicationEntity>() {
+      @Override
+      public MedicationEntity call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfPrimaryKey = CursorUtil.getColumnIndexOrThrow(_cursor, "primaryKey");
+          final int _cursorIndexOfMedName = CursorUtil.getColumnIndexOrThrow(_cursor, "med_name");
+          final int _cursorIndexOfDosage = CursorUtil.getColumnIndexOrThrow(_cursor, "dosage");
+          final int _cursorIndexOfRecurring = CursorUtil.getColumnIndexOrThrow(_cursor, "recurring");
+          final int _cursorIndexOfFirstDate = CursorUtil.getColumnIndexOrThrow(_cursor, "first_date");
+          final int _cursorIndexOfEndDate = CursorUtil.getColumnIndexOrThrow(_cursor, "end_date");
+          final int _cursorIndexOfTimeRule = CursorUtil.getColumnIndexOrThrow(_cursor, "time_rule");
+          final int _cursorIndexOfReminderID = CursorUtil.getColumnIndexOrThrow(_cursor, "reminder_id");
+          final int _cursorIndexOfAcknowledgements = CursorUtil.getColumnIndexOrThrow(_cursor, "acknowledgements");
+          final int _cursorIndexOfWarnings = CursorUtil.getColumnIndexOrThrow(_cursor, "warnings");
+          final int _cursorIndexOfIngredients = CursorUtil.getColumnIndexOrThrow(_cursor, "ingredients");
+          final int _cursorIndexOfTags = CursorUtil.getColumnIndexOrThrow(_cursor, "tags");
+          final MedicationEntity _result;
+          if(_cursor.moveToFirst()) {
+            final String _tmpMedName;
+            _tmpMedName = _cursor.getString(_cursorIndexOfMedName);
+            final String _tmpDosage;
+            _tmpDosage = _cursor.getString(_cursorIndexOfDosage);
+            final Integer _tmpRecurring;
+            if (_cursor.isNull(_cursorIndexOfRecurring)) {
+              _tmpRecurring = null;
+            } else {
+              _tmpRecurring = _cursor.getInt(_cursorIndexOfRecurring);
+            }
+            final String _tmpFirstDate;
+            _tmpFirstDate = _cursor.getString(_cursorIndexOfFirstDate);
+            final String _tmpEndDate;
+            _tmpEndDate = _cursor.getString(_cursorIndexOfEndDate);
+            final String _tmpTimeRule;
+            _tmpTimeRule = _cursor.getString(_cursorIndexOfTimeRule);
+            final long _tmpReminderID;
+            _tmpReminderID = _cursor.getLong(_cursorIndexOfReminderID);
+            final String _tmpAcknowledgements;
+            _tmpAcknowledgements = _cursor.getString(_cursorIndexOfAcknowledgements);
+            final String _tmpWarnings;
+            _tmpWarnings = _cursor.getString(_cursorIndexOfWarnings);
+            final String _tmpIngredients;
+            _tmpIngredients = _cursor.getString(_cursorIndexOfIngredients);
+            final String _tmpTags;
+            _tmpTags = _cursor.getString(_cursorIndexOfTags);
+            _result = new MedicationEntity(_tmpMedName,_tmpDosage,_tmpRecurring,_tmpFirstDate,_tmpEndDate,_tmpTimeRule,_tmpReminderID,_tmpAcknowledgements,_tmpWarnings,_tmpIngredients,_tmpTags);
+            final long _tmpPrimaryKey;
+            _tmpPrimaryKey = _cursor.getLong(_cursorIndexOfPrimaryKey);
+            _result.setPrimaryKey(_tmpPrimaryKey);
+          } else {
+            _result = null;
+          }
+          if(_result == null) {
+            throw new EmptyResultSetException("Query returned empty result set: " + _statement.getSql());
+          }
+          return _result;
+        } finally {
+          _cursor.close();
         }
-        final String _tmpFirstDate;
-        _tmpFirstDate = _cursor.getString(_cursorIndexOfFirstDate);
-        final String _tmpEndDate;
-        _tmpEndDate = _cursor.getString(_cursorIndexOfEndDate);
-        final String _tmpTimeRule;
-        _tmpTimeRule = _cursor.getString(_cursorIndexOfTimeRule);
-        final long _tmpReminderID;
-        _tmpReminderID = _cursor.getLong(_cursorIndexOfReminderID);
-        final String _tmpAcknowledgements;
-        _tmpAcknowledgements = _cursor.getString(_cursorIndexOfAcknowledgements);
-        final String _tmpWarnings;
-        _tmpWarnings = _cursor.getString(_cursorIndexOfWarnings);
-        final String _tmpIngredients;
-        _tmpIngredients = _cursor.getString(_cursorIndexOfIngredients);
-        final String _tmpTags;
-        _tmpTags = _cursor.getString(_cursorIndexOfTags);
-        _result = new MedicationEntity(_tmpMedName,_tmpDosage,_tmpRecurring,_tmpFirstDate,_tmpEndDate,_tmpTimeRule,_tmpReminderID,_tmpAcknowledgements,_tmpWarnings,_tmpIngredients,_tmpTags);
-        final long _tmpPrimaryKey;
-        _tmpPrimaryKey = _cursor.getLong(_cursorIndexOfPrimaryKey);
-        _result.setPrimaryKey(_tmpPrimaryKey);
-      } else {
-        _result = null;
       }
-      return _result;
-    } finally {
-      _cursor.close();
-      _statement.release();
-    }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
   }
 
   @Override
-  public ReminderEntity[] loadAllReminders() {
+  public Single<ReminderEntity[]> loadAllReminders() {
     final String _sql = "SELECT * FROM ReminderTable";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
-    __db.assertNotSuspendingTransaction();
-    final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
-    try {
-      final int _cursorIndexOfPrimaryKey = CursorUtil.getColumnIndexOrThrow(_cursor, "primaryKey");
-      final int _cursorIndexOfClassification = CursorUtil.getColumnIndexOrThrow(_cursor, "Classification");
-      final int _cursorIndexOfTime = CursorUtil.getColumnIndexOrThrow(_cursor, "ApptTime");
-      final int _cursorIndexOfDate = CursorUtil.getColumnIndexOrThrow(_cursor, "ApptDate");
-      final int _cursorIndexOfMedApptId = CursorUtil.getColumnIndexOrThrow(_cursor, "MedApptID");
-      final int _cursorIndexOfTimeIntervalIndex = CursorUtil.getColumnIndexOrThrow(_cursor, "TimeInterval");
-      final ReminderEntity[] _result = new ReminderEntity[_cursor.getCount()];
-      int _index = 0;
-      while(_cursor.moveToNext()) {
-        final ReminderEntity _item;
-        final String _tmpClassification;
-        _tmpClassification = _cursor.getString(_cursorIndexOfClassification);
-        final String _tmpTime;
-        _tmpTime = _cursor.getString(_cursorIndexOfTime);
-        final String _tmpDate;
-        _tmpDate = _cursor.getString(_cursorIndexOfDate);
-        final long _tmpMedApptId;
-        _tmpMedApptId = _cursor.getLong(_cursorIndexOfMedApptId);
-        final Integer _tmpTimeIntervalIndex;
-        if (_cursor.isNull(_cursorIndexOfTimeIntervalIndex)) {
-          _tmpTimeIntervalIndex = null;
-        } else {
-          _tmpTimeIntervalIndex = _cursor.getInt(_cursorIndexOfTimeIntervalIndex);
+    return RxRoom.createSingle(new Callable<ReminderEntity[]>() {
+      @Override
+      public ReminderEntity[] call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfPrimaryKey = CursorUtil.getColumnIndexOrThrow(_cursor, "primaryKey");
+          final int _cursorIndexOfClassification = CursorUtil.getColumnIndexOrThrow(_cursor, "Classification");
+          final int _cursorIndexOfTime = CursorUtil.getColumnIndexOrThrow(_cursor, "ApptTime");
+          final int _cursorIndexOfDate = CursorUtil.getColumnIndexOrThrow(_cursor, "ApptDate");
+          final int _cursorIndexOfMedApptId = CursorUtil.getColumnIndexOrThrow(_cursor, "MedApptID");
+          final int _cursorIndexOfTimeIntervalIndex = CursorUtil.getColumnIndexOrThrow(_cursor, "TimeInterval");
+          final ReminderEntity[] _result = new ReminderEntity[_cursor.getCount()];
+          int _index = 0;
+          while(_cursor.moveToNext()) {
+            final ReminderEntity _item;
+            final String _tmpClassification;
+            _tmpClassification = _cursor.getString(_cursorIndexOfClassification);
+            final String _tmpTime;
+            _tmpTime = _cursor.getString(_cursorIndexOfTime);
+            final String _tmpDate;
+            _tmpDate = _cursor.getString(_cursorIndexOfDate);
+            final long _tmpMedApptId;
+            _tmpMedApptId = _cursor.getLong(_cursorIndexOfMedApptId);
+            final Integer _tmpTimeIntervalIndex;
+            if (_cursor.isNull(_cursorIndexOfTimeIntervalIndex)) {
+              _tmpTimeIntervalIndex = null;
+            } else {
+              _tmpTimeIntervalIndex = _cursor.getInt(_cursorIndexOfTimeIntervalIndex);
+            }
+            _item = new ReminderEntity(_tmpClassification,_tmpTime,_tmpDate,_tmpTimeIntervalIndex,_tmpMedApptId);
+            final long _tmpPrimaryKey;
+            _tmpPrimaryKey = _cursor.getLong(_cursorIndexOfPrimaryKey);
+            _item.setPrimaryKey(_tmpPrimaryKey);
+            _result[_index] = _item;
+            _index ++;
+          }
+          if(_result == null) {
+            throw new EmptyResultSetException("Query returned empty result set: " + _statement.getSql());
+          }
+          return _result;
+        } finally {
+          _cursor.close();
         }
-        _item = new ReminderEntity(_tmpClassification,_tmpTime,_tmpDate,_tmpTimeIntervalIndex,_tmpMedApptId);
-        final long _tmpPrimaryKey;
-        _tmpPrimaryKey = _cursor.getLong(_cursorIndexOfPrimaryKey);
-        _item.setPrimaryKey(_tmpPrimaryKey);
-        _result[_index] = _item;
-        _index ++;
       }
-      return _result;
-    } finally {
-      _cursor.close();
-      _statement.release();
-    }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
   }
 
   @Override
-  public ReminderEntity getReminder(final long primaryKey) {
+  public Single<ReminderEntity> getReminder(final long primaryKey) {
     final String _sql = "SELECT * FROM ReminderTable WHERE rowid LIKE ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
     _statement.bindLong(_argIndex, primaryKey);
-    __db.assertNotSuspendingTransaction();
-    final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
-    try {
-      final int _cursorIndexOfPrimaryKey = CursorUtil.getColumnIndexOrThrow(_cursor, "primaryKey");
-      final int _cursorIndexOfClassification = CursorUtil.getColumnIndexOrThrow(_cursor, "Classification");
-      final int _cursorIndexOfTime = CursorUtil.getColumnIndexOrThrow(_cursor, "ApptTime");
-      final int _cursorIndexOfDate = CursorUtil.getColumnIndexOrThrow(_cursor, "ApptDate");
-      final int _cursorIndexOfMedApptId = CursorUtil.getColumnIndexOrThrow(_cursor, "MedApptID");
-      final int _cursorIndexOfTimeIntervalIndex = CursorUtil.getColumnIndexOrThrow(_cursor, "TimeInterval");
-      final ReminderEntity _result;
-      if(_cursor.moveToFirst()) {
-        final String _tmpClassification;
-        _tmpClassification = _cursor.getString(_cursorIndexOfClassification);
-        final String _tmpTime;
-        _tmpTime = _cursor.getString(_cursorIndexOfTime);
-        final String _tmpDate;
-        _tmpDate = _cursor.getString(_cursorIndexOfDate);
-        final long _tmpMedApptId;
-        _tmpMedApptId = _cursor.getLong(_cursorIndexOfMedApptId);
-        final Integer _tmpTimeIntervalIndex;
-        if (_cursor.isNull(_cursorIndexOfTimeIntervalIndex)) {
-          _tmpTimeIntervalIndex = null;
-        } else {
-          _tmpTimeIntervalIndex = _cursor.getInt(_cursorIndexOfTimeIntervalIndex);
+    return RxRoom.createSingle(new Callable<ReminderEntity>() {
+      @Override
+      public ReminderEntity call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfPrimaryKey = CursorUtil.getColumnIndexOrThrow(_cursor, "primaryKey");
+          final int _cursorIndexOfClassification = CursorUtil.getColumnIndexOrThrow(_cursor, "Classification");
+          final int _cursorIndexOfTime = CursorUtil.getColumnIndexOrThrow(_cursor, "ApptTime");
+          final int _cursorIndexOfDate = CursorUtil.getColumnIndexOrThrow(_cursor, "ApptDate");
+          final int _cursorIndexOfMedApptId = CursorUtil.getColumnIndexOrThrow(_cursor, "MedApptID");
+          final int _cursorIndexOfTimeIntervalIndex = CursorUtil.getColumnIndexOrThrow(_cursor, "TimeInterval");
+          final ReminderEntity _result;
+          if(_cursor.moveToFirst()) {
+            final String _tmpClassification;
+            _tmpClassification = _cursor.getString(_cursorIndexOfClassification);
+            final String _tmpTime;
+            _tmpTime = _cursor.getString(_cursorIndexOfTime);
+            final String _tmpDate;
+            _tmpDate = _cursor.getString(_cursorIndexOfDate);
+            final long _tmpMedApptId;
+            _tmpMedApptId = _cursor.getLong(_cursorIndexOfMedApptId);
+            final Integer _tmpTimeIntervalIndex;
+            if (_cursor.isNull(_cursorIndexOfTimeIntervalIndex)) {
+              _tmpTimeIntervalIndex = null;
+            } else {
+              _tmpTimeIntervalIndex = _cursor.getInt(_cursorIndexOfTimeIntervalIndex);
+            }
+            _result = new ReminderEntity(_tmpClassification,_tmpTime,_tmpDate,_tmpTimeIntervalIndex,_tmpMedApptId);
+            final long _tmpPrimaryKey;
+            _tmpPrimaryKey = _cursor.getLong(_cursorIndexOfPrimaryKey);
+            _result.setPrimaryKey(_tmpPrimaryKey);
+          } else {
+            _result = null;
+          }
+          if(_result == null) {
+            throw new EmptyResultSetException("Query returned empty result set: " + _statement.getSql());
+          }
+          return _result;
+        } finally {
+          _cursor.close();
         }
-        _result = new ReminderEntity(_tmpClassification,_tmpTime,_tmpDate,_tmpTimeIntervalIndex,_tmpMedApptId);
-        final long _tmpPrimaryKey;
-        _tmpPrimaryKey = _cursor.getLong(_cursorIndexOfPrimaryKey);
-        _result.setPrimaryKey(_tmpPrimaryKey);
-      } else {
-        _result = null;
       }
-      return _result;
-    } finally {
-      _cursor.close();
-      _statement.release();
-    }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
   }
 
   @Override
-  public ReminderEntity[] selectNextReminders(final int numberOfReminders) {
+  public Single<ReminderEntity[]> selectNextReminders(final int numberOfReminders) {
     final String _sql = "SELECT * FROM ReminderTable ORDER BY ApptDate, ApptTime LIMIT ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
     _statement.bindLong(_argIndex, numberOfReminders);
-    __db.assertNotSuspendingTransaction();
-    final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
-    try {
-      final int _cursorIndexOfPrimaryKey = CursorUtil.getColumnIndexOrThrow(_cursor, "primaryKey");
-      final int _cursorIndexOfClassification = CursorUtil.getColumnIndexOrThrow(_cursor, "Classification");
-      final int _cursorIndexOfTime = CursorUtil.getColumnIndexOrThrow(_cursor, "ApptTime");
-      final int _cursorIndexOfDate = CursorUtil.getColumnIndexOrThrow(_cursor, "ApptDate");
-      final int _cursorIndexOfMedApptId = CursorUtil.getColumnIndexOrThrow(_cursor, "MedApptID");
-      final int _cursorIndexOfTimeIntervalIndex = CursorUtil.getColumnIndexOrThrow(_cursor, "TimeInterval");
-      final ReminderEntity[] _result = new ReminderEntity[_cursor.getCount()];
-      int _index = 0;
-      while(_cursor.moveToNext()) {
-        final ReminderEntity _item;
-        final String _tmpClassification;
-        _tmpClassification = _cursor.getString(_cursorIndexOfClassification);
-        final String _tmpTime;
-        _tmpTime = _cursor.getString(_cursorIndexOfTime);
-        final String _tmpDate;
-        _tmpDate = _cursor.getString(_cursorIndexOfDate);
-        final long _tmpMedApptId;
-        _tmpMedApptId = _cursor.getLong(_cursorIndexOfMedApptId);
-        final Integer _tmpTimeIntervalIndex;
-        if (_cursor.isNull(_cursorIndexOfTimeIntervalIndex)) {
-          _tmpTimeIntervalIndex = null;
-        } else {
-          _tmpTimeIntervalIndex = _cursor.getInt(_cursorIndexOfTimeIntervalIndex);
+    return RxRoom.createSingle(new Callable<ReminderEntity[]>() {
+      @Override
+      public ReminderEntity[] call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfPrimaryKey = CursorUtil.getColumnIndexOrThrow(_cursor, "primaryKey");
+          final int _cursorIndexOfClassification = CursorUtil.getColumnIndexOrThrow(_cursor, "Classification");
+          final int _cursorIndexOfTime = CursorUtil.getColumnIndexOrThrow(_cursor, "ApptTime");
+          final int _cursorIndexOfDate = CursorUtil.getColumnIndexOrThrow(_cursor, "ApptDate");
+          final int _cursorIndexOfMedApptId = CursorUtil.getColumnIndexOrThrow(_cursor, "MedApptID");
+          final int _cursorIndexOfTimeIntervalIndex = CursorUtil.getColumnIndexOrThrow(_cursor, "TimeInterval");
+          final ReminderEntity[] _result = new ReminderEntity[_cursor.getCount()];
+          int _index = 0;
+          while(_cursor.moveToNext()) {
+            final ReminderEntity _item;
+            final String _tmpClassification;
+            _tmpClassification = _cursor.getString(_cursorIndexOfClassification);
+            final String _tmpTime;
+            _tmpTime = _cursor.getString(_cursorIndexOfTime);
+            final String _tmpDate;
+            _tmpDate = _cursor.getString(_cursorIndexOfDate);
+            final long _tmpMedApptId;
+            _tmpMedApptId = _cursor.getLong(_cursorIndexOfMedApptId);
+            final Integer _tmpTimeIntervalIndex;
+            if (_cursor.isNull(_cursorIndexOfTimeIntervalIndex)) {
+              _tmpTimeIntervalIndex = null;
+            } else {
+              _tmpTimeIntervalIndex = _cursor.getInt(_cursorIndexOfTimeIntervalIndex);
+            }
+            _item = new ReminderEntity(_tmpClassification,_tmpTime,_tmpDate,_tmpTimeIntervalIndex,_tmpMedApptId);
+            final long _tmpPrimaryKey;
+            _tmpPrimaryKey = _cursor.getLong(_cursorIndexOfPrimaryKey);
+            _item.setPrimaryKey(_tmpPrimaryKey);
+            _result[_index] = _item;
+            _index ++;
+          }
+          if(_result == null) {
+            throw new EmptyResultSetException("Query returned empty result set: " + _statement.getSql());
+          }
+          return _result;
+        } finally {
+          _cursor.close();
         }
-        _item = new ReminderEntity(_tmpClassification,_tmpTime,_tmpDate,_tmpTimeIntervalIndex,_tmpMedApptId);
-        final long _tmpPrimaryKey;
-        _tmpPrimaryKey = _cursor.getLong(_cursorIndexOfPrimaryKey);
-        _item.setPrimaryKey(_tmpPrimaryKey);
-        _result[_index] = _item;
-        _index ++;
       }
-      return _result;
-    } finally {
-      _cursor.close();
-      _statement.release();
-    }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
   }
 }
