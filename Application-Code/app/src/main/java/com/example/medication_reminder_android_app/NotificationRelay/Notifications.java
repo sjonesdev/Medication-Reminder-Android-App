@@ -6,70 +6,105 @@ This class handles formatting and sending notifications to the user
 This handles external notifications
  */
 
-
-/*notes:
-    -just doing medications; don't include any implementation code for appointment notifications
-
- */
-
-import androidx.lifecycle.MutableLiveData;
 import com.example.medication_reminder_android_app.SQLiteDB.*;
 
-public class Notifications {
+import io.reactivex.annotations.NonNull;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
-    private DatabaseRepository db;
+public abstract class Notifications {
 
-    public Notifications(DatabaseRepository repo){
-        db = repo;
+    protected MainViewModel model;
+    protected String[] info;
+
+    public Notifications(MainViewModel model){
+        this.model = model;
+        this.info = new String[3];
 
     }
 
-    /*
-    Gets data about the next upcoming reminder
-    returns a string array of information needed to build notification.
+    /**
+    @author: Karley Waguespack
+    Last Modified: 03/22/2021
+
+    Description: Gets data about the reminder that was inputted
+                 returns a string array of information needed to build notification.
+
+    @params: reminderID: the id for the reminder
 
     Array contents:
                 0th element: medication or doctor name (or type of appointment if no doctor)
                 1st element: notification type
+                2nd element: the associated reminder id
 
     Notification type key:
                 Medication = "MED"
                 Doctor Appointment = "APPT"
                 Extraneous Appointment = "EAPPT"
      */
-    protected String[] getData() {
 
-        //string info array to be returned
-        String[] infoArray = new String[2];
+    protected abstract void sendInfoArray(String[] info, ReminderEntity reminder);
 
-        //gets the reminder entity object from livedata type
-        ReminderEntity[] reminderArray = db.getReminders(1).getValue();
-        //we just got one reminder, grab it
-        ReminderEntity reminder = reminderArray[0];
+    //should take either a reminder or a reminder ID
+    protected void getData(long reminderID) {
 
-        //what type of reminder is it?
+        model.getReminderById(reminderID).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<ReminderEntity>() {
+            @Override
+            public void onSuccess(@NonNull ReminderEntity reminderEntity) {
+                getDataHelper1(reminderEntity);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+        });
+
+
+    }
+
+    private void getDataHelper1(ReminderEntity reminder){
         String reminderType = reminder.getClassification();
-        //store immediately in the info array.
-        infoArray[0] = reminderType;
 
-        if(reminderType.equals("MED")){
+        if(reminderType.equals("M")){
             //retrieve the medication object from the reminder
-            MedicationEntity med = db.getMedById(reminder.getMedApptId());
-            //get the med name
-            infoArray[1] = med.getMedName();
+            model.getMedById(reminder.getMedApptId()).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<MedicationEntity>() {
+                @Override
+                public void onSuccess(@NonNull MedicationEntity medicationEntity) {
+                    getDataHelperMed(medicationEntity, reminder);
+                }
+
+                @Override
+                public void onError(@NonNull Throwable e) {
+
+                }
+            });
+
         } else{
             //otherwise, we have an appointment;
             //TODO create appointment entity from id
             //TODO regular appointments get APPT, Extraneous ones get EAPPT; check if it has a doctorId
 
         }
-
-
-        return infoArray;
     }
 
-    //need to handle timing ourselves? This code may go in sendNotification
-    //need to get current time somehow and check it against next reminder time
+    private void getDataHelperMed(MedicationEntity med, ReminderEntity r){
+        //string info array to be returned
+        String[] infoArray = new String[2];
+
+        infoArray[0] = "M ";
+        //get the med name
+        infoArray[1] = med.getMedName();
+        infoArray[2] = Long.toString(med.getReminderID());
+        sendInfoArray(infoArray, r);
+        //return infoArray;
+    }
+
+    private void getDataHelperDr(){
+        //otherwise, we have an appointment;
+        //TODO create appointment entity from id
+        //TODO regular appointments get APPT, Extraneous ones get EAPPT; check if it has a doctorId
+    }
 
 
 }
