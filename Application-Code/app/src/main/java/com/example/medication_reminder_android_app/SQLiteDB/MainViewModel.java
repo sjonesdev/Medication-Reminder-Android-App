@@ -1,6 +1,8 @@
 package com.example.medication_reminder_android_app.SQLiteDB;
 
 import android.app.Application;
+import android.util.Log;
+
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -122,7 +124,9 @@ public class MainViewModel extends AndroidViewModel {
 
         long reminderPK = insertReminder("M", sepDate[1], sepDate[0], 0, medPK);
         //MedicationEntity m = getMedById(medPK);
+
         repository.addReminderID(medication, reminderPK);
+        Log.d("debug", "insertMedAndReminder: reposited");
         return reminderPK;
     }
 
