@@ -15,7 +15,7 @@ import java.util.*;
 
 public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapter.InfoViewHolder> implements Filterable {
 
-    private String[] mednames; //array of medication names pulled from the input handler
+    //private String[] mednames; //array of medication names pulled from the input handler
     private ArrayList<String> medSearchList; //medication name array list storing all medications
     private ArrayList<String> medDisplayList; //medication name array list containing only the medications being displayed on screen
     private Context context; //the current context
@@ -27,11 +27,11 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
      */
     public InfoRecyclerAdapter(Context cont, String[] names, OnItemListener list){
         context = cont;
-        mednames = names;
+        //mednames = names;
         medItemListener = list;
 
-        medSearchList = new ArrayList<>(Arrays.asList(mednames));
-        medDisplayList = new ArrayList<>(Arrays.asList(mednames));
+        medSearchList = new ArrayList<>();
+        medDisplayList = new ArrayList<>();
     }
 
     /**
@@ -57,6 +57,7 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
 
     public void setWords(ArrayList<String> words){
         medDisplayList = words;
+        medSearchList = words;
         notifyDataSetChanged();
     }
 
