@@ -120,73 +120,128 @@ public class DatabaseRepository {
     }
 
     /**
-     *
+     *@author Hayley Roberts
+     * Insert Medication into MedicationTable
      * @param m
      */
     public void insertMed(MedicationEntity m){
         new AsyncInsertMedication(dao, this).execute(m);
     }
 
+    /**
+     * @author Hayley Roberts
+     * insert Reminder into ReminderTable
+     * @param r
+     */
     public void insertReminder(ReminderEntity r){
         new AsyncInsertReminder(dao, this).execute(r);
     }
 
+    /**
+     * @author Hayley Roberts
+     * Insert a medication and reminder into the respective tables
+     * @param m
+     */
     public void insertMedAndReminder(MedicationEntity m){
         new AsyncInsertMedAndReminder(dao).execute(m);
     }
 
+    /**
+     * @author Hayley Roberts
+     * Update the acknowledgements in the Medication table for a medication entity
+     * @param m
+     * @param acknowledgementList
+     */
     public void updateAcknowledgements(MedicationEntity m, String acknowledgementList) {
         new AsyncUpdateAcknowledgement(dao, m).execute(acknowledgementList);
     }
 
+    /**
+     * @author Hayley Roberts
+     * Add a reminder ID to a medication entity
+     * @param m
+     * @param reminderPK
+     */
     public void addReminderID(MedicationEntity m, long reminderPK){ new AsyncAddReminderID(dao, m).execute(reminderPK); }
 
-    //update the ReminderEntity with next date and time.
-    //Date should be formatted as YYYY-MM-DD, and time should be formatted as HH:MM
+    /**
+     * @author Hayley Roberts
+     * update the ReminderEntity with next date and time.
+     * Date should be formatted as YYYY-MM-DD, and time should be formatted as HH:MM
+     * @param r
+     * @param date
+     * @param time
+     * @param timeIntervalIndex
+     */
     public void updateReminderDateAndTime(ReminderEntity r, String date, String time, int timeIntervalIndex){
         String dateTime = date + " " + time + " " + timeIntervalIndex;
         new AsyncReminderUpdateDateTime(dao, r).execute(dateTime);
     }
 
+    /**
+     * @author Hayley Roberts
+     * Delete medication from Medication table
+     * @param m
+     */
     public void deleteMed(MedicationEntity m){
         new AsyncDeleteMedication(dao).execute(m);
     }
 
+    /**
+     * @author Hayley Roberts
+     * Delete medication from Medication table
+     * @param medName
+     */
     public void deleteMedByName(String medName) { new AsyncDeleteMedByName(dao).execute(medName); }
 
+    /**
+     * @author Hayley Roberts
+     * Delete Reminder from reminderTable
+     * @param r
+     */
     public void deleteReminder(ReminderEntity r){
         new AsyncDeleteReminder(dao).execute(r);
     }
 
+    /**
+     * @author Hayley Roberts
+     * Delete reminder from ReminderTable
+     * @param reminderId
+     */
     public void deleteReminderById(long reminderId) { new AsyncDeleteReminderById(dao).execute(reminderId); }
 
+    /**
+     * @author Hayley Roberts
+     * Delete all reminders that are of Medication Classification
+     */
     public void deleteAllMedReminders() { new AsyncDeleteAllMedReminders(dao).execute(); }
 
+    /**
+     * @author Hayley Roberts
+     * Delete all reminders of Appointment classification
+     */
     public void deleteAllApptReminders() { new AsyncDeleteAllApptReminders(dao).execute(); }
 
+    /**
+     * @author Hayley Roberts
+     * Delete all medications from MedicationTable
+     */
     public void deleteAllMeds(){
         new AsyncDeleteAllMeds(dao).execute();
     }
 
+    /**
+     * @author Hayley Roberts
+     * Delete all reminders from ReminderTable
+     */
     public void deleteAllReminders(){
         new AsyncDeleteAllReminders(dao).execute();
     }
 
 
-
-//    private static class AsyncGetReminderByMedName extends AsyncTask<String, Void, Void>{
-//        DataAccessObject dao;
-//
-//        public AsyncGetReminderByMedName(DataAccessObject d){
-//            dao = d;
-//        }
-//
-//        @Override
-//        protected Void doInBackground(String... params){
-//            Single<MedicationEntity> m = dao.getMedicationByName(params[0]);
-//            m.
-//        }
-//    }
+    /*
+    All of the classes below are AsyncTasks that handle calling dao methods in a separate thread from the Main thread
+     */
 
     private static class AsyncInsertMedication extends AsyncTask<MedicationEntity, Void, Long>{
         private final DataAccessObject dao;

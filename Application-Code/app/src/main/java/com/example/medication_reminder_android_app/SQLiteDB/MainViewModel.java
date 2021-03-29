@@ -33,29 +33,66 @@ public class MainViewModel extends AndroidViewModel {
         meds = repository.getAllMeds();
     }
 
+    /**
+     * @author Hayley Roberts
+     * Return all of the medications in the Medication Table
+     * @return
+     */
     public LiveData<List<MedicationEntity>> getMeds(){ return meds; }
 
+    /**
+     * @author Hayley Roberts
+     * Get a certain number of reminders from the Reminder Table
+     * @param numOfReminders
+     * @return
+     */
     public Single<ReminderEntity[]> getReminders(int numOfReminders){
         return repository.getReminders(numOfReminders);
     }
 
-
+    /**
+     * @author Hayley Roberts
+     * Get a medication by primary key
+     * @param medId
+     * @return
+     */
     public Single<MedicationEntity> getMedById(long medId){
         return repository.getMedById(medId);
     }
 
+    /**
+     * @author Hayley Roberts
+     * Get a medication by medication name
+     * @param name
+     * @return
+     */
     public Single<MedicationEntity> getMedByName(String name) {
         return repository.getMedByName(name);
     }
 
-
+    /**
+     * @author Hayley Roberts
+     * Get a reminder by primary key
+     * @param reminderId
+     * @return
+     */
     public Single<ReminderEntity> getReminderById(long reminderId){
         return repository.getReminderById(reminderId);
     }
 
-
-    //methods to insert rows into tables
-    //insertMed and insertReminder can prob be removed.
+    /**
+     * @author Hayley Roberts
+     * Insert a medication into Medication table
+     * @param medicationName
+     * @param inputDosage
+     * @param ifRecurring
+     * @param firstDate
+     * @param endDate
+     * @param inputTimeRule
+     * @param inputWarnings
+     * @param inputIngredients
+     * @param inputTags
+     */
     public void insertMedication(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
                                  String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags){
         Integer recurringBool = ifRecurring? 1 : 0;
@@ -64,11 +101,33 @@ public class MainViewModel extends AndroidViewModel {
         repository.insertMed(medication);
     }
 
+    /**
+     * @author Hayley Roberts
+     * Insert Reminder into reminder Table
+     * @param classification
+     * @param time
+     * @param date
+     * @param timeIntervalIndex
+     * @param medApptId
+     */
     public void insertReminder(String classification, String time, String date, Integer timeIntervalIndex, long medApptId){
         ReminderEntity reminder = new ReminderEntity(classification, time, date, timeIntervalIndex, medApptId);
         repository.insertReminder(reminder);
     }
 
+    /**
+     * @author Hayley Roberts
+     * Insert a medication and the associated reminder into the respective tables
+     * @param medicationName
+     * @param inputDosage
+     * @param ifRecurring
+     * @param firstDate
+     * @param endDate
+     * @param inputTimeRule
+     * @param inputWarnings
+     * @param inputIngredients
+     * @param inputTags
+     */
     //TODO try to get back to not repeatin code from insertMedication
     public void insertMedAndReminder(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
                                      String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags){
@@ -78,11 +137,25 @@ public class MainViewModel extends AndroidViewModel {
         repository.insertMedAndReminder(medication);
     }
 
+    /**
+     * @author Hayley Roberts
+     * Update acknowledgement list for a medicatoin entity
+     * @param m
+     * @param newAcknowedgementList
+     */
     public void updateAcknowledgements(MedicationEntity m, String newAcknowedgementList){
         repository.updateAcknowledgements(m, newAcknowedgementList);
     }
 
 
+    /**
+     * @author Hayley Roberts
+     * Update the date and time of a reminder entity
+     * @param r
+     * @param date
+     * @param time
+     * @param timeIntervalIndex
+     */
     public void updateReminderDateAndTime(ReminderEntity r, String date, String time, int timeIntervalIndex){
         repository.updateReminderDateAndTime(r, date, time, timeIntervalIndex);
     }
@@ -90,6 +163,11 @@ public class MainViewModel extends AndroidViewModel {
 
     //methods to delete rows from tables
 
+    /**
+     * @author Hayley Roberts
+     * Delete a reminder from the Reminder Table
+     * @param medEntity
+     */
     public void deleteReminder(MedicationEntity medEntity){
         repository.deleteReminderById(medEntity.getReminderID());
     }
@@ -104,11 +182,21 @@ public class MainViewModel extends AndroidViewModel {
         repository.deleteReminder(r);
     }
 
+    /**
+     * @author Hayley Roberts
+     * Delete a medication from the Medication Table, and its associated reminders
+     * @param m
+     */
     public void deleteMedication(MedicationEntity m){
         repository.deleteMed(m);
         repository.deleteReminderById(m.getReminderID());
     }
 
+    /**
+     * @author Hayley Roberts
+     * Delete a medication from MEdication Table, and its associated reminder
+     * @param medName
+     */
     //TODO make this delete the reminderEntity associated with med
     public void deleteMedication(String medName){
         repository.deleteMedByName(medName);
@@ -117,11 +205,20 @@ public class MainViewModel extends AndroidViewModel {
 
 
     //methods to clear tables of all values
+
+    /**
+     * @author Hayley Roberts
+     * Delete all Medications from the Medication Table
+     */
     public void deleteAllMedications(){
         repository.deleteAllMeds();
         repository.deleteAllMedReminders();
     }
 
+    /**
+     * @author Hayley Roberts
+     * Delete all Remidners from the Reminder Table
+     */
     public void deleteAllReminders(){
         repository.deleteAllReminders();
     }
