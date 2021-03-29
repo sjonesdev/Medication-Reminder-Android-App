@@ -207,10 +207,10 @@ public class OutOfAppNotifications extends Notifications{
         switch(typeNotif){
             case 'M': //Medication Notification
                 builder = new NotificationCompat.Builder(context, default_notification_channel_id)
-                        .setContentTitle("========= " + this.medicationName + " MEDICATION REMINDER===========")
-                        .setContentText("Please take " + this.medicationName + " now!")
+                        .setContentTitle("Medication Reminder")
+                        .setContentText("It is time to take your dosage of " + this.medicationName + " !")
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
                         .addAction(R.drawable. ic_launcher_foreground , "Acknowledge" , acknowledge_pintent)
                         .addAction(R.drawable.ic_launcher_background, "Ignore", ignore_pintent)
@@ -221,7 +221,7 @@ public class OutOfAppNotifications extends Notifications{
                         .setContentTitle("=========DOCTOR APPOINTMENT REMINDER===========")
                         .setContentText("Meet with Dr. " + this.doctorName + " now!")
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel( true )
                         .setChannelId(NOTIFICATION_CHANNEL_ID);
                 break;
@@ -230,7 +230,7 @@ public class OutOfAppNotifications extends Notifications{
                         .setContentTitle("=======" + this.notificationName + " REMINDER========")
                         .setContentText("You need to do " + this.notificationName + " right now!")
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel( true )
                         .setChannelId(NOTIFICATION_CHANNEL_ID);
 
