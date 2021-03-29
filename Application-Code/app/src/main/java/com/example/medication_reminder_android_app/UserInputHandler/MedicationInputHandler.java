@@ -43,7 +43,7 @@ public class MedicationInputHandler extends InputHandler {
      * @return The reminder ID associated with the medication inserted
      */
     @Override
-    public long inputRequest(Map<String,String> info) {
+    public void inputRequest(Map<String,String> info) {
         String name = info.get("name"); //user inputted
         String dosage = info.get("dosage"); //units included
         String startDate = info.get("startDate"); //YYYY-MM-DD HH:MM
@@ -56,7 +56,7 @@ public class MedicationInputHandler extends InputHandler {
         String tags = info.get("tags"); //comma separated
         boolean recurring = Boolean.parseBoolean(info.get("recurring"));
 
-        return mainViewModel.insertMedAndReminder(name, dosage, recurring, startDate, endDate, interval,
+        mainViewModel.insertMedAndReminder(name, dosage, recurring, startDate, endDate, interval,
                 warnings, activeIngredient, tags);
     }
 

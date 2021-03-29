@@ -11,13 +11,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
+import com.example.medication_reminder_android_app.UserInterface.InfoInput;
+
 import java.util.*;
 
 public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapter.InfoViewHolder> implements Filterable {
 
-    private String[] mednames; //array of medication names pulled from the input handler
-    private ArrayList<String> medSearchList; //medication name array list storing all medications
-    private ArrayList<String> medDisplayList; //medication name array list containing only the medications being displayed on screen
+    private List<MedicationEntity> medEntities;
+
+    //private String[] mednames; //array of medication names pulled from the input handler
+    //private ArrayList<String> medSearchList; //medication name array list storing all medications
+    //private ArrayList<String> medDisplayList; //medication name array list containing only the medications being displayed on screen
     private Context context; //the current context
     private OnItemListener medItemListener; //click listener for medication cards in the RecyclerView
 
@@ -25,13 +30,14 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
      * @author Robert Fahey
      * Constructor for the InfoRecyclerAdapter
      */
-    public InfoRecyclerAdapter(Context cont, String[] names, OnItemListener list){
+    public InfoRecyclerAdapter(Context cont, List<MedicationEntity> medications, OnItemListener list){ //String[] names,
         context = cont;
-        mednames = names;
+        //mednames = names;
         medItemListener = list;
+        medEntities = medications;
 
-        medSearchList = new ArrayList<>(Arrays.asList(mednames));
-        medDisplayList = new ArrayList<>(Arrays.asList(mednames));
+        //medSearchList = new ArrayList<>(Arrays.asList(mednames));
+        //medDisplayList = new ArrayList<>(Arrays.asList(mednames));
     }
 
     /**
@@ -52,16 +58,23 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
      */
     @Override
     public void onBindViewHolder(@NonNull InfoViewHolder holder, int position) {
-        holder.medText.setText(medDisplayList.get(position));
+        if(medEntities != null){
+            MedicationEntity current = medEntities.get(position);
+            holder.medText.setText(current.getMedName());
+        } else{
+            holder.medText.setText("No Medications");
+        }
+
     }
 
-    public void setWords(ArrayList<String> words){
-        medDisplayList = words;
+    public void setWords(List<MedicationEntity> meds){
+        //medDisplayList = words;
+        medEntities = meds;
         notifyDataSetChanged();
     }
 
     public String getNameString(int position){
-        return medDisplayList.get(position);
+        return medEntities.get(position).getMedName();
     }
 
 
@@ -71,7 +84,8 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
      */
     @Override
     public int getItemCount() {
-        return medDisplayList.size();
+        if(medEntities != null) return medEntities.size();
+        return 0;
     }
 
     /**
@@ -91,10 +105,13 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
          */
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            ArrayList<String> filtered = new ArrayList<>(); // a new array list for storing filter results
+            ArrayList<MedicationEntity> filtered = new ArrayList<>(); // a new array list for storing filter results
 
             if(constraint == null || constraint.length() == 0){
-                filtered.addAll(medSearchList); //if the search bar is empty, display all medications
+                //if the search bar is empty, display all medications
+                for(MedicationEntity m: medEntities){
+                    filtered.add(m);
+                }
             } else {
                 // if the search bar isn't empty ...
                 String pattern = constraint.toString().toLowerCase().trim(); //get the text in the search bar, set it to lowercase
@@ -102,9 +119,9 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
                 /*for each string in the master medication array list,
                 compare the string to the previously declared pattern. If the string contains the pattern,
                 add the string to the filter results array*/
-                for(String s : medSearchList){
-                    if (s.toLowerCase().contains(pattern)){
-                        filtered.add(s);
+                for(MedicationEntity m : medEntities){
+                    if (m.getMedName().toLowerCase().contains(pattern)){
+                        filtered.add(m);
                     }
                 }
             }
@@ -123,8 +140,9 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
          */
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            medDisplayList.clear();
-            medDisplayList.addAll((List) results.values);
+            medEntities = (List<MedicationEntity>) results.values;
+//            medDisplayList.clear();
+//            medDisplayList.addAll((List) results.values);
             notifyDataSetChanged();
         }
     };
@@ -136,7 +154,7 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
      */
     public class InfoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        TextView medText;
+        private final TextView medText;
         OnItemListener onitemlistener;
 
         public InfoViewHolder(@NonNull View itemView, OnItemListener listener) {

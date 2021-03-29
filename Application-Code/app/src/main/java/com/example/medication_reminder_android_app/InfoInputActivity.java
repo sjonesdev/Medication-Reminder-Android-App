@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
@@ -20,17 +21,21 @@ import android.widget.TimePicker;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.medication_reminder_android_app.NotificationRelay.OutOfAppNotifications;
 import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
+import com.example.medication_reminder_android_app.UserInputHandler.InputWrapper;
 import com.example.medication_reminder_android_app.UserInputHandler.MedicationInputHandler;
 
 public class InfoInputActivity extends AppCompatActivity {
 
+    public static final String EXTRA_REPLY = "com.example.android.roomwordssample.REPLY";
     private String startDateString; //state date for reminders, to be passed to the input handler
     private String endDateString; //end date for reminders, to be passed to the input handler
     private Boolean isStart = true;
 
     private MainViewModel inputMVM;
-    private MedicationInputHandler handler;
+    private InputWrapper handler;
+    private OutOfAppNotifications oan;
 
     DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm");
     //format string for dates
@@ -48,7 +53,9 @@ public class InfoInputActivity extends AppCompatActivity {
         setContentView(R.layout.info_input);
 
         inputMVM = new ViewModelProvider(this).get(MainViewModel.class);
-        handler = new MedicationInputHandler(inputMVM);
+        handler = new InputWrapper(inputMVM);
+        oan = new OutOfAppNotifications(inputMVM, this, handler);
+        handler.setOutOfAppNotifications(oan);
 
         //instantiate a java calendar object to generate and store time/date data
         final Calendar cal = Calendar.getInstance();
@@ -189,7 +196,7 @@ public class InfoInputActivity extends AppCompatActivity {
                 map.put("recurring", "true");
 
                 //call Sam's input method
-                handler.inputRequest(map);
+                handler.processInput(InputWrapper.InputType.Medication, map);
 
                 name.getText().clear();
                 dosage.getText().clear();

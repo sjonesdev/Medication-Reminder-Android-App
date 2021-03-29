@@ -31,7 +31,7 @@ public class DoctorInputHandler extends InputHandler {
      * @return
      */
     @Override
-    long inputRequest(Map<String,String> info) {
+    void inputRequest(Map<String,String> info) {
         String name = info.get("name");
         String type = info.get("type");
         String locationsStr = info.get("locations");
@@ -44,7 +44,7 @@ public class DoctorInputHandler extends InputHandler {
 
         //mainViewModel.insertDoctor(name, dosage, recurring, startDate, endDate, interval,
         //       warnings, activeIngredient, tags);
-        return 0;
+        //       warnings, activeIngredient, tags);
     }
 
     @Override

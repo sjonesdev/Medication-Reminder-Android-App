@@ -44,12 +44,12 @@
         "source": "C:\\Users\\hayle\\AndroidStudioProjects\\MedicationReminderAndroidApp\\Application-Code\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v24\\ic_launcher_foreground.xml"
     },
     {
-        "merged": "C:\\Users\\hayle\\AndroidStudioProjects\\MedicationReminderAndroidApp\\Application-Code\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21_ic_launcher_background.xml.flat",
-        "source": "C:\\Users\\hayle\\AndroidStudioProjects\\MedicationReminderAndroidApp\\Application-Code\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\ic_launcher_background.xml"
-    },
-    {
         "merged": "C:\\Users\\hayle\\AndroidStudioProjects\\MedicationReminderAndroidApp\\Application-Code\\app\\build\\intermediates\\res\\merged\\debug\\layout_individual_med_view.xml.flat",
         "source": "C:\\Users\\hayle\\AndroidStudioProjects\\MedicationReminderAndroidApp\\Application-Code\\app\\src\\main\\res\\layout\\individual_med_view.xml"
+    },
+    {
+        "merged": "C:\\Users\\hayle\\AndroidStudioProjects\\MedicationReminderAndroidApp\\Application-Code\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi-v21_ic_launcher_background.xml.flat",
+        "source": "C:\\Users\\hayle\\AndroidStudioProjects\\MedicationReminderAndroidApp\\Application-Code\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v21\\ic_launcher_background.xml"
     },
     {
         "merged": "C:\\Users\\hayle\\AndroidStudioProjects\\MedicationReminderAndroidApp\\Application-Code\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_ic_launcher_background.png.flat",

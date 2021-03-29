@@ -112,17 +112,17 @@ public class OutOfAppNotifications extends Notifications{
    Sets appropriate member variables based on the type of Reminder
    */
     public void setData(String[] infoArray){
-        this.typeNotif = infoArray[1].charAt(0);
+        this.typeNotif = infoArray[0].charAt(0);
         switch (typeNotif){
             case 'M':
-                this.medicationName = infoArray[0]; //If it is a medication notification, only the medication name
+                this.medicationName = infoArray[1]; //If it is a medication notification, only the medication name
                 //variable will be assigned a value and the others will be null
                 break;
             case 'A':
-                this.doctorName = infoArray[0];
+                this.doctorName = infoArray[1];
                 break;
             case 'E':
-                this.notificationName = infoArray[0];
+                this.notificationName = infoArray[1];
                 break;
         }
     }
@@ -184,8 +184,9 @@ public class OutOfAppNotifications extends Notifications{
     //Had to separate the buildNotification into 2 parts because of asynchrynous threads
     private void finishBuildNotif(String[] infoArray, ReminderEntity r){
 
-        Integer reminderId = Integer.parseInt(infoArray[2]);
+        Long reminderId = Long.parseLong(infoArray[2]);
         setData(infoArray);
+        typeNotif = infoArray[0].charAt(0);
 
         //create intents for the acknowledge and ignore button receivers; bundle the reminderId
         Intent acknowledgeIntent = new Intent(context, AcknowledgeReceiver.class);
