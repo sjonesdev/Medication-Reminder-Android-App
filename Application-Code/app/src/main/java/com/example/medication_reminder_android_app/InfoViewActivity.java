@@ -29,13 +29,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerAdapter.OnItemListener{
 
-    //private String names[]; //array of medication names to be displayed
-    private RecyclerView infoRecycler; /*Recycler view object that with display a scrolling list
-                                        of cards showing each medication*/
-    //private MedicationEntity[] medicationEntityList;
-    private LiveData<List<MedicationEntity>> liveMeds;
-    private List<MedicationEntity> myMeds;
-
+    //Recycler view object that with display a scrolling list of cards showing each medication
+    private RecyclerView infoRecycler;
     private InfoRecyclerAdapter infoadapter;
     private MainViewModel infoMVM;
     /**
@@ -52,9 +47,6 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
 
         infoMVM = new ViewModelProvider(this).get(MainViewModel.class);
 
-        //populate the medication and dosage arrays
-        //names = getResources().getStringArray(R.array.debug_one);
-
         /*
         instantiate the RecyclerView and its adapter, attach the adapter to the recycler view,
         and assign a linear layout manager to the recycler
@@ -64,20 +56,13 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
         infoRecycler.setAdapter(infoadapter);
         infoRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-        liveMeds = infoMVM.getMeds();
-        myMeds = liveMeds.getValue();
-
-
-        liveMeds.observe(this, new Observer<List<MedicationEntity>>() {
+        /*
+        Get the list of all the medications from the SQLite Database
+         */
+        infoMVM.getMeds().observe(this, new Observer<List<MedicationEntity>>() {
             @Override
             public void onChanged(List<MedicationEntity> medicationEntityList) {
-                myMeds = liveMeds.getValue();
-                Log.d("app-debug", "Inside on changed");
-
-                if(myMeds == null) Log.d("app-debug", "myMeds is null");
-                else if(myMeds.size() == 0) Log.d("app-debug", "myMeds empty");
-                else Log.d("app-debug", "myMeds is "+myMeds.get(0).getMedName());
-                infoadapter.setWords(myMeds);
+                infoadapter.setWords(medicationEntityList); //UI method to show the list of Meds
             }
         });
 
