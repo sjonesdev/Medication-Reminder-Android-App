@@ -3,13 +3,11 @@ package com.example.medication_reminder_android_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,15 +15,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
 import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
+import com.example.medication_reminder_android_app.UserInterface.InfoInput;
 
 import java.util.List;
-import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.annotations.NonNull;
+import io.reactivex.internal.functions.Functions;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
 
 public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerAdapter.OnItemListener{
 
-    private String names[]; //array of medication names to be displayed
+    //private String names[]; //array of medication names to be displayed
     private RecyclerView infoRecycler; /*Recycler view object that with display a scrolling list
                                         of cards showing each medication*/
+    //private MedicationEntity[] medicationEntityList;
+    private LiveData<List<MedicationEntity>> liveMeds;
+    private List<MedicationEntity> myMeds;
 
     private InfoRecyclerAdapter infoadapter;
     private MainViewModel infoMVM;
@@ -44,27 +53,31 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
         infoMVM = new ViewModelProvider(this).get(MainViewModel.class);
 
         //populate the medication and dosage arrays
-        names = getResources().getStringArray(R.array.debug_one);
+        //names = getResources().getStringArray(R.array.debug_one);
 
         /*
         instantiate the RecyclerView and its adapter, attach the adapter to the recycler view,
         and assign a linear layout manager to the recycler
         */
         infoRecycler = findViewById(R.id.info_recycler);
-        infoadapter = new InfoRecyclerAdapter(this, names,this);
+        infoadapter = new InfoRecyclerAdapter(this, null, this);
         infoRecycler.setAdapter(infoadapter);
         infoRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-        infoMVM.getMeds().observe(this, new Observer<MedicationEntity[]>() {
+        liveMeds = infoMVM.getMeds();
+        myMeds = liveMeds.getValue();
 
+
+        liveMeds.observe(this, new Observer<List<MedicationEntity>>() {
             @Override
-            public void onChanged(MedicationEntity[] medicationEntity) {
-                Log.d("app-debug", "Meds changed");
-                ArrayList<String> medsFromEntities = new ArrayList<>();
-                for(MedicationEntity me : medicationEntity){
-                    medsFromEntities.add(me.getMedName());
-                }
-                infoadapter.setWords(medsFromEntities);
+            public void onChanged(List<MedicationEntity> medicationEntityList) {
+                myMeds = liveMeds.getValue();
+                Log.d("app-debug", "Inside on changed");
+
+                if(myMeds == null) Log.d("app-debug", "myMeds is null");
+                else if(myMeds.size() == 0) Log.d("app-debug", "myMeds empty");
+                else Log.d("app-debug", "myMeds is "+myMeds.get(0).getMedName());
+                infoadapter.setWords(myMeds);
             }
         });
 
@@ -107,6 +120,7 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
         });
     }
 
+
     /**
      @author Robert Fahey
      When a medication card in the RecyclerView is clicked change activities to MedViewActivity
@@ -118,4 +132,6 @@ public class InfoViewActivity extends AppCompatActivity implements InfoRecyclerA
         intent.putExtra("current_medication", infoadapter.getNameString(position));
         startActivity(intent);
     }
+
+
  }

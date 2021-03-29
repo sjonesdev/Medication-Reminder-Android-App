@@ -6,10 +6,14 @@ This class handles formatting and sending notifications to the user
 This handles external notifications
  */
 
+import android.util.Log;
+
 import com.example.medication_reminder_android_app.SQLiteDB.*;
 
 import io.reactivex.annotations.NonNull;
+import io.reactivex.internal.functions.Functions;
 import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
 public abstract class Notifications {
@@ -68,7 +72,8 @@ public abstract class Notifications {
 
         if(reminderType.equals("M")){
             //retrieve the medication object from the reminder
-            model.getMedById(reminder.getMedApptId()).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<MedicationEntity>() {
+            long medPk = reminder.getMedApptId();
+            model.getMedById(medPk).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<MedicationEntity>() {
                 @Override
                 public void onSuccess(@NonNull MedicationEntity medicationEntity) {
                     getDataHelperMed(medicationEntity, reminder);
@@ -76,7 +81,7 @@ public abstract class Notifications {
 
                 @Override
                 public void onError(@NonNull Throwable e) {
-
+                    RxJavaPlugins.setErrorHandler(Functions.<Throwable>emptyConsumer());
                 }
             });
 
@@ -89,10 +94,17 @@ public abstract class Notifications {
     }
 
     private void getDataHelperMed(MedicationEntity med, ReminderEntity r){
-        //string info array to be returned
-        String[] infoArray = new String[2];
+        if(r == null){
+            Log.d("app-notif-debug", "Reminder is null. line 100");
+        }
 
-        infoArray[0] = "M ";
+        if(med == null){
+            Log.d("app-notif-debug", "Med is null. line 104");
+        }
+        //string info array to be returned
+        String[] infoArray = new String[3];
+
+        infoArray[0] = "M";
         //get the med name
         infoArray[1] = med.getMedName();
         infoArray[2] = Long.toString(med.getReminderID());

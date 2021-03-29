@@ -1,11 +1,17 @@
 package com.example.medication_reminder_android_app.UserInputHandler;
 
+import android.util.Log;
+
 import com.example.medication_reminder_android_app.NotificationRelay.OutOfAppNotifications;
 import com.example.medication_reminder_android_app.SQLiteDB.MainViewModel;
 import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
 
 import java.security.InvalidParameterException;
 import java.util.Map;
+
+import io.reactivex.annotations.NonNull;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Used to contain the input handlers and send data to them to process.
@@ -19,6 +25,7 @@ public class InputWrapper {
     MedicationInputHandler medicationInputHandler;
     DoctorInputHandler doctorInputHandler;
     AppointmentInputHandler appointmentInputHandler;
+    MainViewModel mvm;
 
     public enum InputType{Medication, Doctor, Appointment}
 
@@ -27,6 +34,7 @@ public class InputWrapper {
      * Makes a new InputWrapper
      */
     public InputWrapper(MainViewModel mainViewModel) {
+        mvm = mainViewModel;
         medicationInputHandler = new MedicationInputHandler(mainViewModel);
         doctorInputHandler = new DoctorInputHandler();
         appointmentInputHandler = new AppointmentInputHandler();
@@ -50,8 +58,19 @@ public class InputWrapper {
         }
         switch (type) {
             case Medication:
-                long id = medicationInputHandler.inputRequest(input);
-                outOfAppNotifications.scheduleNotification(id);
+                medicationInputHandler.inputRequest(input);
+                String medName = input.get("name");
+                mvm.getMedByName(medName).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<MedicationEntity>() {
+                    @Override
+                    public void onSuccess(@NonNull MedicationEntity medicationEntity) {
+                        outOfAppNotifications.scheduleNotification(medicationEntity.getReminderID());
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        Log.d("app-debug", "Did not schedule Notif ", e);
+                    }
+                });
             case Doctor:
                 //doctorInputHandler.inputRequest(input); TODO
                 break;

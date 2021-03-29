@@ -4,13 +4,24 @@ import android.app.Application;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.renderscript.ScriptGroup;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+
+import com.example.medication_reminder_android_app.UserInterface.InfoInput;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.Single;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author Hayley Roberts
@@ -25,19 +36,19 @@ public class DatabaseRepository {  //extends
 
     //Want the reminder and medication entities to be live
     //private final MutableLiveData<ReminderEntity[]> reminders = new MutableLiveData<>();
-    private final LiveData<MedicationEntity[]> meds;
+    //private final LiveData<List<MedicationEntity>> liveMeds;// = new MutableLiveData<>();
 
     private MedicationEntity singleMed;
     private ReminderEntity singleReminder;
-    private long lastMedPk; // keep track of medication primary keys. Use bc pk auto-incr
-    private long lastReminderPk; //leep track of last reminder pk. Use bc pk auto-incr
+    private long lastMedPk = 0; // keep track of medication primary keys. Use bc pk auto-incr
+    private long lastReminderPk = 0; //leep track of last reminder pk. Use bc pk auto-incr
 
     public DatabaseRepository(Application application){
         db = AppDatabase.getDatabase(application);
         dao = db.dataAccessObject();
-        meds = dao.loadFilteredMedications("tags LIKE %%");
-        lastMedPk = 0; //pk's techincally start with 1.
-        lastReminderPk = 0;
+        //liveMeds = dao.loadFilteredMedications("tags LIKE %%");
+        //lastMedPk = 0; //pk's techincally start with 1.
+        //lastReminderPk = 0;
     }
 
     //private void reminderAsyncFinished(ReminderEntity[] r){ reminders.setValue(r); }
@@ -47,26 +58,32 @@ public class DatabaseRepository {  //extends
     private void insertMedAsyncFinished(long medPk) { lastMedPk = medPk; }
     private void insertReminderAsyncFinished(long reminderPk) { lastReminderPk = reminderPk; }
 
-    public LiveData<MedicationEntity[]> filterMedications(String[] tags){
-        //because want to pull if have any tags, need to build the query WHERE clause as such
-        String queryReq = ""; //to send to query so can get tags in any order
-        if(tags.length > 1){
-            for(String tag: tags){
-                queryReq += " tags LIKE %" + tag + "% OR";
-            }
-            if(queryReq.length() > 4){
-                queryReq = queryReq.substring(0, queryReq.length() - 4); //Remove last OR
-            }
-        } else{
-            queryReq = "tags LIKE %%";
-        }
+//    public LiveData<List<MedicationEntity>> filterMedications(String[] tags){
+//        //because want to pull if have any tags, need to build the query WHERE clause as such
+//        String queryReq = ""; //to send to query so can get tags in any order
+//        if(tags.length > 1){
+//            for(String tag: tags){
+//                queryReq += " tags LIKE %" + tag + "% OR";
+//            }
+//            if(queryReq.length() > 4){
+//                queryReq = queryReq.substring(0, queryReq.length() - 4); //Remove last OR
+//            }
+//        } else{
+//            queryReq = "tags LIKE %%";
+//        }
+//
+//        return dao.loadFilteredMedications(queryReq);
+//    }
 
-        return dao.loadFilteredMedications(queryReq);
+
+    public LiveData<List<MedicationEntity>> getAllMeds(){
+        LiveData<List<MedicationEntity>> blah =  dao.getAllMeds();
+        if(blah == null) Log.d("app-debug", "blah is null");
+        else if(blah.getValue() == null) Log.d("app-debug", "blah.getValue is null");
+        else Log.d("app-debug", "Blah is gotten size: " + blah.getValue().size());
+        return blah;
     }
 
-    public LiveData<MedicationEntity[]> getAllMeds(){
-        return meds;
-    }
     public Single<ReminderEntity[]> getReminders(int numOfReminders){
         //new AsyncNotificationReminder(dao, this).execute(numOfReminders);
         return dao.selectNextReminders(numOfReminders);
@@ -87,19 +104,16 @@ public class DatabaseRepository {  //extends
         return dao.getReminder(entityId);
     }
 
-//    public Single<ReminderEntity> getReminderByMedName(String medName){
-//        long reminderId = getMedByName(medName).getReminderID();
-//        return getReminderById(reminderId);
-//    }
-
-    public long insertMed(MedicationEntity m){
+    public void insertMed(MedicationEntity m){
         new AsyncInsertMedication(dao, this).execute(m);
-        return lastMedPk + 1;
     }
 
-    public long insertReminder(ReminderEntity r){
+    public void insertReminder(ReminderEntity r){
         new AsyncInsertReminder(dao, this).execute(r);
-        return lastReminderPk + 1;
+    }
+
+    public void insertMedAndReminder(MedicationEntity m){
+        new AsyncInsertMedAndReminder(dao).execute(m);
     }
 
     public void updateAcknowledgements(MedicationEntity m, String acknowledgementList) {
@@ -141,6 +155,19 @@ public class DatabaseRepository {  //extends
 
 
 
+//    private static class AsyncGetReminderByMedName extends AsyncTask<String, Void, Void>{
+//        DataAccessObject dao;
+//
+//        public AsyncGetReminderByMedName(DataAccessObject d){
+//            dao = d;
+//        }
+//
+//        @Override
+//        protected Void doInBackground(String... params){
+//            Single<MedicationEntity> m = dao.getMedicationByName(params[0]);
+//            m.
+//        }
+//    }
 
     private static class AsyncInsertMedication extends AsyncTask<MedicationEntity, Void, Long>{
         private final DataAccessObject dao;
@@ -152,9 +179,9 @@ public class DatabaseRepository {  //extends
         }
 
         @Override
-        protected Long doInBackground(MedicationEntity... meds){
-            Long pk = dao.insertMedication(meds[0]);
-            meds[0].setPrimaryKey(pk);
+        protected Long doInBackground(MedicationEntity... params){
+            Long pk = dao.insertMedication(params[0]);
+            params[0].setPrimaryKey(pk);
             return pk;
         }
 
@@ -185,6 +212,25 @@ public class DatabaseRepository {  //extends
         protected void onPostExecute(Long pk){
             delegate.insertReminderAsyncFinished(pk);
         }
+    }
+
+    private static class AsyncInsertMedAndReminder extends AsyncTask<MedicationEntity, Void, Void> {
+        private DataAccessObject dao;
+
+        public AsyncInsertMedAndReminder(DataAccessObject d){
+            dao = d;
+        }
+
+        @Override
+        protected Void doInBackground(MedicationEntity... m){
+            long medPk = dao.insertMedication(m[0]);
+            String[] sepDate = m[0].getFirstDate().split(" ");
+            ReminderEntity reminder = new ReminderEntity("M", sepDate[1], sepDate[0], 0, medPk);
+            long reminderPk = dao.insertReminder(reminder);
+            dao.addReminderID(medPk, reminderPk);
+            return null;
+        }
+
     }
 
     private static class AsyncUpdateAcknowledgement extends AsyncTask<String, Void, Void>{

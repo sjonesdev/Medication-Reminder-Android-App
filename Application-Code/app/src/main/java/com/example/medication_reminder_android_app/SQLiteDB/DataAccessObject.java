@@ -11,6 +11,9 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
+
+import java.util.List;
+
 import io.reactivex.Single;
 
 /**
@@ -29,7 +32,10 @@ public interface DataAccessObject {
     //this method should be called successively for each tag the user inputs
     //TODO see how to make sure the parameter is being used, not the string ":tag"
     @Query("SELECT * FROM MedicationTable WHERE :likeTags")
-    public LiveData<MedicationEntity[]> loadFilteredMedications(String likeTags);
+    public LiveData<List<MedicationEntity>> loadFilteredMedications(String likeTags);
+
+    @Query("SELECT * FROM MedicationTable")
+    public LiveData<List<MedicationEntity>> getAllMeds();
 
     //get a medication by name
     @Query("SELECT * FROM MedicationTable WHERE med_name LIKE :name")

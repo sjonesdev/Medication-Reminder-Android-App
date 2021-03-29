@@ -1,12 +1,17 @@
 package com.example.medication_reminder_android_app.SQLiteDB;
 
 import android.app.Application;
+import android.util.Log;
+
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.medication_reminder_android_app.NotificationRelay.Notifications;
 import com.example.medication_reminder_android_app.UserInterface.InfoInput;
+
+import java.util.List;
 
 import io.reactivex.Scheduler;
 import io.reactivex.Single;
@@ -21,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MainViewModel extends AndroidViewModel {
     public final DatabaseRepository repository; //change back
-    private final LiveData<MedicationEntity[]> meds;
+    private final LiveData<List<MedicationEntity>> meds;
     //private final MutableLiveData<ReminderEntity[]> reminders;
 
     public MainViewModel(Application application){
@@ -33,11 +38,11 @@ public class MainViewModel extends AndroidViewModel {
 
 
     //Methods to be used in other places in the code like the UI and notification
-    public LiveData<MedicationEntity[]> getMeds(String[] tags){
-        return repository.filterMedications(tags);
-    }
+//    public LiveData<List<MedicationEntity>> getMeds(String[] tags){
+//        return repository.filterMedications(tags);
+//    }
 
-    public LiveData<MedicationEntity[]> getMeds(){ return meds; }
+    public LiveData<List<MedicationEntity>> getMeds(){ return meds; }
 
     public Single<ReminderEntity[]> getReminders(int numOfReminders){
         return repository.getReminders(numOfReminders);
@@ -80,50 +85,46 @@ public class MainViewModel extends AndroidViewModel {
         return repository.getMedByName(name);
     }
 
-    public void getReminderByIdForNotifRelay(long reminderId){
-        repository.getReminderById(reminderId).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<ReminderEntity>() {
-            @Override
-            public void onSuccess(@NonNull ReminderEntity reminderEntity) {
-
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-            }
-        });
-    }
+//    public void getReminderByIdForNotifRelay(long reminderId){
+//        repository.getReminderById(reminderId).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<ReminderEntity>() {
+//            @Override
+//            public void onSuccess(@NonNull ReminderEntity reminderEntity) {
+//
+//            }
+//
+//            @Override
+//            public void onError(@NonNull Throwable e) {
+//            }
+//        });
+//    }
 
     public Single<ReminderEntity> getReminderById(long reminderId){
         return repository.getReminderById(reminderId);
     }
 
+
     //methods to insert rows into tables
-    public long insertMedication(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
+    //insertMed and insertReminder can prob be removed.
+    public void insertMedication(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
                                  String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags){
         Integer recurringBool = ifRecurring? 1 : 0;
         MedicationEntity medication = new MedicationEntity(medicationName, inputDosage, recurringBool, firstDate, endDate,
                 inputTimeRule, 0, "", inputWarnings, inputIngredients, inputTags);
-        return repository.insertMed(medication);
+        repository.insertMed(medication);
     }
 
-    public long insertReminder(String classification, String time, String date, Integer timeIntervalIndex, long medApptId){
+    public void insertReminder(String classification, String time, String date, Integer timeIntervalIndex, long medApptId){
         ReminderEntity reminder = new ReminderEntity(classification, time, date, timeIntervalIndex, medApptId);
-        return repository.insertReminder(reminder);
+        repository.insertReminder(reminder);
     }
 
     //TODO try to get back to not repeatin code from insertMedication
-    public long insertMedAndReminder(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
+    public void insertMedAndReminder(String medicationName, String inputDosage, boolean ifRecurring, String firstDate, String endDate,
                                      String inputTimeRule, String inputWarnings, String inputIngredients, String inputTags){
         Integer recurringBool = ifRecurring? 1 : 0;
         MedicationEntity medication = new MedicationEntity(medicationName, inputDosage, recurringBool, firstDate, endDate,
                 inputTimeRule, 0, "", inputWarnings, inputIngredients, inputTags);
-        long medPK = repository.insertMed(medication);
-        String[] sepDate = firstDate.split(" ");
-
-        long reminderPK = insertReminder("M", sepDate[1], sepDate[0], 0, medPK);
-        //MedicationEntity m = getMedById(medPK);
-        repository.addReminderID(medication, reminderPK);
-        return reminderPK;
+        repository.insertMedAndReminder(medication);
     }
 
     public void updateAcknowledgements(MedicationEntity m, String newAcknowedgementList){
