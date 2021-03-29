@@ -12,17 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medication_reminder_android_app.SQLiteDB.MedicationEntity;
-import com.example.medication_reminder_android_app.UserInterface.InfoInput;
 
 import java.util.*;
 
 public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapter.InfoViewHolder> implements Filterable {
 
     private List<MedicationEntity> medEntities;
-
-    //private String[] mednames; //array of medication names pulled from the input handler
-    //private ArrayList<String> medSearchList; //medication name array list storing all medications
-    //private ArrayList<String> medDisplayList; //medication name array list containing only the medications being displayed on screen
     private Context context; //the current context
     private OnItemListener medItemListener; //click listener for medication cards in the RecyclerView
 
@@ -32,12 +27,8 @@ public class InfoRecyclerAdapter extends RecyclerView.Adapter<InfoRecyclerAdapte
      */
     public InfoRecyclerAdapter(Context cont, List<MedicationEntity> medications, OnItemListener list){ //String[] names,
         context = cont;
-        //mednames = names;
         medItemListener = list;
         medEntities = medications;
-
-        //medSearchList = new ArrayList<>(Arrays.asList(mednames));
-        //medDisplayList = new ArrayList<>(Arrays.asList(mednames));
     }
 
     /**

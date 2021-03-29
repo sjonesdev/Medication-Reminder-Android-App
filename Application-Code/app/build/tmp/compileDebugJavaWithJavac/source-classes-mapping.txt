@@ -6,11 +6,6 @@ com/example/medication_reminder_android_app/NotificationRelay/IgnoreReceiver.jav
  com.example.medication_reminder_android_app.NotificationRelay.IgnoreReceiver
 com/example/medication_reminder_android_app/NotificationRelay/OutOfAppNotifications.java
  com.example.medication_reminder_android_app.NotificationRelay.OutOfAppNotifications
-com/example/medication_reminder_android_app/UserInterface/InfoInput.java
- com.example.medication_reminder_android_app.UserInterface.InfoInput
- com.example.medication_reminder_android_app.UserInterface.InfoInput$Appointment
- com.example.medication_reminder_android_app.UserInterface.InfoInput$Doctor
- com.example.medication_reminder_android_app.UserInterface.InfoInput$Medication
 com/example/medication_reminder_android_app/SettingsActivity.java
  com.example.medication_reminder_android_app.SettingsActivity
  com.example.medication_reminder_android_app.SettingsActivity$1
@@ -62,8 +57,6 @@ com/example/medication_reminder_android_app/InfoInputActivity.java
 com/example/medication_reminder_android_app/FDADatabaseHandler/DataBaseHandler.java
  com.example.medication_reminder_android_app.FDADatabaseHandler.DataBaseHandler
  com.example.medication_reminder_android_app.FDADatabaseHandler.DataBaseHandler$SearchParameters
-com/example/medication_reminder_android_app/UserInterface/ItemDeletion.java
- com.example.medication_reminder_android_app.UserInterface.ItemDeletion
 com/example/medication_reminder_android_app/SQLiteDB/ReminderEntity.java
  com.example.medication_reminder_android_app.SQLiteDB.ReminderEntity
 com/example/medication_reminder_android_app/MainActivity.java
@@ -103,10 +96,6 @@ com/example/medication_reminder_android_app/UserInputHandler/CalenderEventCreato
  com.example.medication_reminder_android_app.UserInputHandler.CalenderEventCreator
 com/example/medication_reminder_android_app/SQLiteDB/DoctorEntity.java
  com.example.medication_reminder_android_app.SQLiteDB.DoctorEntity
-com/example/medication_reminder_android_app/UserInterface/EventHandler.java
- com.example.medication_reminder_android_app.UserInterface.EventHandler
-com/example/medication_reminder_android_app/UserInterface/AuthRequestHandler.java
- com.example.medication_reminder_android_app.UserInterface.AuthRequestHandler
 com/example/medication_reminder_android_app/SQLiteDB/DatabaseRepository.java
  com.example.medication_reminder_android_app.SQLiteDB.DatabaseRepository
  com.example.medication_reminder_android_app.SQLiteDB.DatabaseRepository$AsyncAddReminderID

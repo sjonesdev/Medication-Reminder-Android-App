@@ -61,10 +61,12 @@ public class MedViewActivity extends AppCompatActivity {
         TextView endLabel = findViewById(R.id.end_date_view_label);
         TextView recurringLabel = findViewById(R.id.recurring_view_label);
 
+        String recur = currentMedEntity.getRecurring() == 1? "Recurring": "Not REcurring";
+
         nameLabel.setText(currentMedEntity.getMedName());
         dosageLabel.setText(currentMedEntity.getDosage());
         startLabel.setText(currentMedEntity.getFirstDate());
         endLabel.setText(currentMedEntity.getEndDate());
-        recurringLabel.setText(currentMedEntity.getRecurring());
+        recurringLabel.setText(recur);
     }
 }

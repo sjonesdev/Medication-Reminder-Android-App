@@ -9,7 +9,6 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.medication_reminder_android_app.NotificationRelay.Notifications;
-import com.example.medication_reminder_android_app.UserInterface.InfoInput;
 
 import java.util.List;
 
@@ -25,22 +24,14 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class MainViewModel extends AndroidViewModel {
-    public final DatabaseRepository repository; //change back
+    public final DatabaseRepository repository;
     private final LiveData<List<MedicationEntity>> meds;
-    //private final MutableLiveData<ReminderEntity[]> reminders;
 
     public MainViewModel(Application application){
         super(application);
         repository = new DatabaseRepository(application);
         meds = repository.getAllMeds();
-        //reminders = repository.getReminders(5);
     }
-
-
-    //Methods to be used in other places in the code like the UI and notification
-//    public LiveData<List<MedicationEntity>> getMeds(String[] tags){
-//        return repository.filterMedications(tags);
-//    }
 
     public LiveData<List<MedicationEntity>> getMeds(){ return meds; }
 
@@ -48,34 +39,6 @@ public class MainViewModel extends AndroidViewModel {
         return repository.getReminders(numOfReminders);
     }
 
-//    public MutableLiveData<String[]> getAllMedNames(){
-//        MutableLiveData<String[]> retVal = new MutableLiveData<>();
-//        MedicationEntity[][] meds = new MedicationEntity[1][1];
-//
-//        getMeds().subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<MedicationEntity[]>() {
-//            @Override
-//            public void onSuccess(@NonNull MedicationEntity[] medicationEntities) {
-//                meds[0] = medicationEntities;
-//            }
-//
-//            @Override
-//            public void onError(@NonNull Throwable e) {
-//                meds[0] = null;
-//            }
-//        });
-//
-//        if(meds[0] != null){
-//            MedicationEntity[] myMeds = meds[0];
-//            String[] medNames = new String[myMeds.length];
-//
-//            for(int i = 0; i < myMeds.length; i++){
-//                medNames[i] = myMeds[i].getMedName();
-//            }
-//
-//            retVal.setValue(medNames);
-//        }
-//        return retVal;
-//    }
 
     public Single<MedicationEntity> getMedById(long medId){
         return repository.getMedById(medId);
@@ -85,18 +48,6 @@ public class MainViewModel extends AndroidViewModel {
         return repository.getMedByName(name);
     }
 
-//    public void getReminderByIdForNotifRelay(long reminderId){
-//        repository.getReminderById(reminderId).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<ReminderEntity>() {
-//            @Override
-//            public void onSuccess(@NonNull ReminderEntity reminderEntity) {
-//
-//            }
-//
-//            @Override
-//            public void onError(@NonNull Throwable e) {
-//            }
-//        });
-//    }
 
     public Single<ReminderEntity> getReminderById(long reminderId){
         return repository.getReminderById(reminderId);
@@ -131,16 +82,6 @@ public class MainViewModel extends AndroidViewModel {
         repository.updateAcknowledgements(m, newAcknowedgementList);
     }
 
-    //TODO handle with SIngle and threads
-//    public void updateAcknowledgements(String medName, String newAcknowledgementList){
-//        MedicationEntity m = getMedByName(medName);
-//        repository.updateAcknowledgements(m, newAcknowledgementList);
-//    }
-
-//    public void updateAcknowledgements(MedicationEntity m, String newAcknowledgementList){
-//        //MedicationEntity m = getMedById(MedPrimaryKey);
-//        repository.updateAcknowledgements(m, newAcknowledgementList);
-//    }
 
     public void updateReminderDateAndTime(ReminderEntity r, String date, String time, int timeIntervalIndex){
         repository.updateReminderDateAndTime(r, date, time, timeIntervalIndex);

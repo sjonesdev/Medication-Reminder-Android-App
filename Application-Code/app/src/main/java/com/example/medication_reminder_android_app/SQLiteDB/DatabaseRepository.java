@@ -11,8 +11,6 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
-import com.example.medication_reminder_android_app.UserInterface.InfoInput;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,14 +27,10 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 
-public class DatabaseRepository {  //extends
+public class DatabaseRepository {
 
     private final DataAccessObject dao;
     private final AppDatabase db;
-
-    //Want the reminder and medication entities to be live
-    //private final MutableLiveData<ReminderEntity[]> reminders = new MutableLiveData<>();
-    //private final LiveData<List<MedicationEntity>> liveMeds;// = new MutableLiveData<>();
 
     private MedicationEntity singleMed;
     private ReminderEntity singleReminder;
@@ -46,18 +40,14 @@ public class DatabaseRepository {  //extends
     public DatabaseRepository(Application application){
         db = AppDatabase.getDatabase(application);
         dao = db.dataAccessObject();
-        //liveMeds = dao.loadFilteredMedications("tags LIKE %%");
-        //lastMedPk = 0; //pk's techincally start with 1.
-        //lastReminderPk = 0;
     }
 
-    //private void reminderAsyncFinished(ReminderEntity[] r){ reminders.setValue(r); }
-    //private void medicationAsyncFilterFinished(MedicationEntity[] m) { meds.setValue(m); }
     private void getMedByNameAsyncFinished(MedicationEntity m) { singleMed = m; }
     private void getReminderAsyncFinished(ReminderEntity r) { singleReminder = r; }
     private void insertMedAsyncFinished(long medPk) { lastMedPk = medPk; }
     private void insertReminderAsyncFinished(long reminderPk) { lastReminderPk = reminderPk; }
 
+    //TODO: finish this: tags need to be added to Med on input
 //    public LiveData<List<MedicationEntity>> filterMedications(String[] tags){
 //        //because want to pull if have any tags, need to build the query WHERE clause as such
 //        String queryReq = ""; //to send to query so can get tags in any order
@@ -76,6 +66,11 @@ public class DatabaseRepository {  //extends
 //    }
 
 
+    /**
+     * @author Hayley Roberts
+     * returns list of all Medications wrapped in live data for UI
+     * @return
+     */
     public LiveData<List<MedicationEntity>> getAllMeds(){
         LiveData<List<MedicationEntity>> blah =  dao.getAllMeds();
         if(blah == null) Log.d("app-debug", "blah is null");
@@ -84,26 +79,50 @@ public class DatabaseRepository {  //extends
         return blah;
     }
 
+    /**
+     * @author Hayley Roberts
+     * loads a number of reminders from reminders table
+     * @param numOfReminders
+     * @return
+     */
     public Single<ReminderEntity[]> getReminders(int numOfReminders){
-        //new AsyncNotificationReminder(dao, this).execute(numOfReminders);
         return dao.selectNextReminders(numOfReminders);
     }
 
+    /**
+     * @author Hayley Roberts
+     * grabs medicationEntity by medName from MedTable
+     * @param medName
+     * @return
+     */
     public Single<MedicationEntity> getMedByName(String medName){
-        //new AsyncGetMedByName(dao, this).execute(medName);
         return dao.getMedicationByName(medName);
     }
 
+    /**
+     * @author Hayley Roberts
+     * grabs MedicationEntity from MedTable by Primary Key
+     * @param entityId
+     * @return
+     */
     public Single<MedicationEntity> getMedById(long entityId){
-        //new AsyncGetMedById(dao, this).execute(entityId);
         return dao.getMedicationById(entityId);
     }
 
+    /**
+     * @author Hayley Roberts
+     * grabs ReminderEntity from ReminderTable by primary key
+     * @param entityId
+     * @return
+     */
     public Single<ReminderEntity> getReminderById(long entityId){
-        //new AsyncGetReminderById(dao, this).execute(String.valueOf(entityId));
         return dao.getReminder(entityId);
     }
 
+    /**
+     *
+     * @param m
+     */
     public void insertMed(MedicationEntity m){
         new AsyncInsertMedication(dao, this).execute(m);
     }
