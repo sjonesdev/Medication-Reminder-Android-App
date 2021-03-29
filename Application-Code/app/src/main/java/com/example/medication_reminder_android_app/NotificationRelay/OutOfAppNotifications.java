@@ -12,6 +12,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.renderscript.ScriptGroup;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -284,11 +285,11 @@ public class OutOfAppNotifications extends Notifications{
         //splice the date by dashes
         String dateStrings[] = dateString.split("-");
         //parse each result in the array to an integer
-        int month = Integer.parseInt(dateStrings[0]);
-        int day = Integer.parseInt(dateStrings[1]);
-        int year = Integer.parseInt(dateStrings[2]);
+        int month = Integer.parseInt(dateStrings[1]) - 1;
+        int day = Integer.parseInt(dateStrings[2]);
+        int year = Integer.parseInt(dateStrings[0]);
 
-        int dateAsIntegers[] = {month, day, year};
+        int dateAsIntegers[] = {year, month, day};
 
         return dateAsIntegers;
     }
@@ -312,11 +313,15 @@ public class OutOfAppNotifications extends Notifications{
         int time[] = getTimeAsInt(reminder);
 
         Calendar myCalendar = Calendar.getInstance();
-        myCalendar.set(Calendar.MONTH, date[0]);
-        myCalendar.set(Calendar.DAY_OF_MONTH, date[1]);
-        myCalendar.set(Calendar.YEAR, date[2]);
-        myCalendar.set(Calendar.MINUTE, time[0]);
-        myCalendar.set(Calendar.HOUR, time[1]);
+        Log.d("notif-debug", date[0] + ":" + date[1] + ":" + date[2]);
+        Log.d("notif-debug", time[0] + ":" + time[1]);
+        myCalendar.set(Calendar.MONTH, date[1]);
+        myCalendar.set(Calendar.DAY_OF_MONTH, date[2]);
+        myCalendar.set(Calendar.YEAR, date[0]);
+        myCalendar.set(Calendar.MINUTE, time[1]);
+        myCalendar.set(Calendar.HOUR, time[0]);
+        myCalendar.set(Calendar.SECOND, 0);
+        myCalendar.set(Calendar.MILLISECOND, 0);
 
         return myCalendar;
     }

@@ -1,4 +1,4 @@
-#Mon Mar 29 00:34:47 CDT 2021
-base.0=C\:\\Users\\hayle\\AndroidStudioProjects\\MedicationReminderAndroidApp\\Application-Code\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+#Mon Mar 29 01:47:01 CDT 2021
+base.0=C\:\\Users\\karle\\Desktop\\Medication-Reminder-Android-App\\Application-Code\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 path.0=classes.dex
 renamed.0=classes.dex

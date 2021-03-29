@@ -13,6 +13,7 @@ import java.util.Map;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -37,7 +38,7 @@ public class InfoInputActivity extends AppCompatActivity {
     private InputWrapper handler;
     private OutOfAppNotifications oan;
 
-    DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm");
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
     //format string for dates
 
     /**
@@ -93,8 +94,11 @@ public class InfoInputActivity extends AppCompatActivity {
                 cal.set(Calendar.MONTH, monthOfYear);
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
+                Log.d("notif-debug", "Cal:" + monthOfYear);
+
                 if(isStart){
                     startDateString = dateFormat.format(cal.getTime());
+                    Log.d("notif-debug", "Cal.getTime " + startDateString);
                 }else{
                     endDateString = dateFormat.format(cal.getTime());
                 }
@@ -115,7 +119,7 @@ public class InfoInputActivity extends AppCompatActivity {
         TimePickerDialog tpg = new TimePickerDialog( InfoInputActivity.this , setTimeVariables,
                 cal.get(Calendar.HOUR),
                 cal.get(Calendar.MINUTE),
-                true
+                false
         );
 
         /**
