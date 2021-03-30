@@ -118,7 +118,7 @@ public class InputWrapper {
      * @return A date & time string of the format "YYYY-MM-DD HH:MM" of the next date and time for
      *         the reminder being acknowledged
      */
-    public void processAcknowledgementRequest(InputType type, int reminderID, boolean dismissed) {
+    public void processAcknowledgementRequest(InputType type, long reminderID, boolean dismissed) {
         switch (type) {
             case Medication:
                 medicationInputHandler.acknowledgeNotificationRequest(reminderID, dismissed);

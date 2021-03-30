@@ -62,7 +62,7 @@ class AppointmentInputHandler extends InputHandler {
     }
 
     @Override
-    void acknowledgeNotificationRequest(int reminderID, boolean dismissed) {
+    void acknowledgeNotificationRequest(long reminderID, boolean dismissed) {
 
     }
 

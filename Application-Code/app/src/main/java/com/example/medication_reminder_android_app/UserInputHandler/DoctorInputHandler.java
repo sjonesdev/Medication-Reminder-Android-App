@@ -53,7 +53,7 @@ public class DoctorInputHandler extends InputHandler {
     }
 
     @Override
-    void acknowledgeNotificationRequest(int reminderID, boolean dismissed) {
+    void acknowledgeNotificationRequest(long reminderID, boolean dismissed) {
 
     }
 

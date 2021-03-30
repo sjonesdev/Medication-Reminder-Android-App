@@ -88,7 +88,7 @@ public class MedicationInputHandler extends InputHandler {
      * @param dismissed True if notification was dismissed, false if acknowledged
      */
     @Override
-    public void acknowledgeNotificationRequest(int reminderID, boolean dismissed) {
+    public void acknowledgeNotificationRequest(long reminderID, boolean dismissed) {
         mainViewModel.getReminderById(reminderID).subscribeOn(Schedulers.io()).subscribe(new DisposableSingleObserver<ReminderEntity>() {
             @Override
             public void onSuccess(@NonNull ReminderEntity reminderEntity) {
@@ -134,10 +134,10 @@ public class MedicationInputHandler extends InputHandler {
      * @param dismissed The dismissed flag for the notification
      */
     private void acknowledgeHelper2(MedicationEntity med, ReminderEntity r, Boolean dismissed) {
-        int intervalIndex = r.getTimeIntervalIndex();
+        int intervalIndex = r.getTimeIntervalIndex(); //TODO right now, we only have one index in the interval array
         String[] interval = med.getTimeRule().split(",");
-        double HOURS_TO_MILLIS = 60 * 60 * 1000;
-        long millisToAdd = (long) (Double.parseDouble(interval[intervalIndex]) * HOURS_TO_MILLIS);
+        double HOURS_TO_MILLIS = 60 * 60 * 1000; //TODO the TimeRule is in days, not hours
+        long millisToAdd = (long) (Double.parseDouble(interval[intervalIndex]) * HOURS_TO_MILLIS); //TODO: using index 1 when should be 0
         String lastReminderDateTime = r.getDate() + " " + r.getTime();
         String[] dateTime;
         String date = "";
@@ -155,7 +155,7 @@ public class MedicationInputHandler extends InputHandler {
             Date now = new Date();
             dateTime = getSQLDateFormatFromDate(now);
             String dateTimeStr = dateTime[0] + " " + dateTime[1];
-            String ackStr = med.getAcknowledgements();
+            String ackStr = med.getAcknowledgements(); //TODO handle when ackStr is ""
             String[] ack = ackStr.split(",");
             ArrayList<String> ackList = new ArrayList<String>(Arrays.asList(ack));
             if(ackList.size() >= MAX_NUM_ACK) {

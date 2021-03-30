@@ -208,7 +208,7 @@ public class OutOfAppNotifications extends Notifications{
             case 'M': //Medication Notification
                 builder = new NotificationCompat.Builder(context, default_notification_channel_id)
                         .setContentTitle("Medication Reminder")
-                        .setContentText("It is time to take your dosage of " + this.medicationName + " !")
+                        .setContentText("It is time to take your dosage of " + this.medicationName + "!")
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)

@@ -19,7 +19,7 @@ import com.example.medication_reminder_android_app.UserInputHandler.InputWrapper
 public class AcknowledgeReceiver extends BroadcastReceiver{
 
 
-    private Integer reminderID = new Integer(0); //holds reminder ID associated with this request
+    private Long reminderID = new Long(0); //holds reminder ID associated with this request
     private final boolean ACKNOWLEDGED = false; //acknowledged is represented by a false boolean variable
 
 
