@@ -9,11 +9,11 @@ keeping track of associated doctor information and appointments can become burde
 This prototype medication mobile application is designed to become an extension of a medical patient’s brain—whether 
 they are elderly or a child—and structure their medical life. 
 The app has three main components:  
-      * User is able to input and store a list of current medications they are taking (name, required dosage, type of medication, etc.)  
-      * User can input and store their doctor information (name, type of doctor, phone no, office address, etc.)  
-      * User will have the option to receive reminders about their current medication and doctor appointment times  
-          -They will be able to snooze the reminder and recieve another notification (after a specific time interval)   
-          -Alternatively, they can acknowledge that they made the doctor visit/took the medication  
+           * User is able to input and store a list of current medications they are taking (name, required dosage, type of medication, etc.)  
+           * User can input and store their doctor information (name, type of doctor, phone no, office address, etc.)  
+           * User will have the option to receive reminders about their current medication and doctor appointment times  
+               -They will be able to snooze the reminder and recieve another notification (after a specific time interval)   
+               -Alternatively, they can acknowledge that they made the doctor visit/took the medication  
 
 Technologies utilized to create application:  
       * Android Studio Software  
