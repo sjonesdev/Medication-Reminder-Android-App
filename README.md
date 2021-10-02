@@ -1,5 +1,5 @@
 # Medication-Reminder-Android-App
-LSU CSC 3380 Project
+LSU CSC 3380 Project  
 Hayley Roberts, Sam Jones, Karley Waguespack, Lucas Colegrove, Aliza Siddiqui, and Robert Fahey
 
 Due to the large number of illnesses and their respective medications, it can become difficult to organize 
